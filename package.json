@@ -1,5 +1,9 @@
 {
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.1"
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/multer": "^1.4.7"
+  },
+  "dependencies": {
+    "multer": "^1.4.5-lts.1"
   }
 }

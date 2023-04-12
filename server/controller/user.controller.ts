@@ -5,6 +5,7 @@ import UnauthenticatedError from "../errors/unauthenticated";
 
 import User from "../models/user.model";
 
+//login action
 export const login = async (req: Request, res: Response) => {
   console.log(req.body);
   const { email, password } = req.body;
@@ -24,19 +25,69 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ user, token });
+  res.status(StatusCodes.OK).json({ userId: user.user_id, token });
 };
 
+//regiser / signup action
 export const signup = async (req: Request, res: Response) => {
   console.log(req.body);
 
   const user = await User.create({ ...req.body });
   const token = user.createJWT();
-  res.status(StatusCodes.CREATED).send({ user, token });
+  res.status(StatusCodes.CREATED).send({ userId: user.user_id, token });
 };
 
-//temporary
+//update action
+export const updateUser = async (req: Request, res: Response) => {
+  //send formData object in req.body in action application eg React
+  const formData = req.body;
+  // console.log("data from form: ", formData);
+  // console.log(res.locals.user);
+
+  //use cookies in actual application for userID
+  console.log(formData);
+  const updatedDocument = {
+    $set: {
+      first_name: formData.first_name,
+      dob_day: formData.dob_day,
+      dob_month: formData.dob_month,
+      dob_year: formData.dob_year,
+      show_gender: formData.show_gender == "1" ? true : false,
+      gender_identity: formData.gender_identity,
+      gender_interest: formData.gender_interest,
+      url: formData.url,
+      about: formData.about,
+      matched: formData.matches,
+    },
+  };
+  const updatedUser = await User.updateOne(
+    { _id: res.locals.user.userID },
+    updatedDocument
+  );
+  res.status(200).send(updatedUser);
+  // res.send(res.locals.user);
+};
+
+//get one
 export const getUser = async (req: Request, res: Response) => {
+  //send from front end as params
+  const userID = req.query.id;
+  console.log(req.query);
+  const user = await User.findById(userID);
+  res.status(200).json(user);
+};
+
+//get all
+export const getAllUsers = async (req: Request, res: Response) => {
   const users = await User.find();
+  res.status(StatusCodes.OK).send(users);
+};
+
+//get all (filtered)
+export const getUsers = async (req: Request, res: Response) => {
+  const gender = req.query.gender;
+  console.log(gender);
+  const query = { gender_identity: gender };
+  const users = await User.find(query);
   res.status(StatusCodes.OK).send(users);
 };

@@ -50,7 +50,13 @@ const UserSchema = new mongoose.Schema({
   dob_month: { type: Number },
   dob_year: { type: Number },
   show_gender: { type: Boolean, default: false },
-  gender_identity: { type: String },
+  gender_identity: {
+    type: String,
+    enum: {
+      values: ["man", "woman", "others"],
+      message: "{VALUE} is not supported! fku",
+    },
+  },
   gender_interest: { type: String },
   url: { type: String },
   about: { type: String },
@@ -65,7 +71,7 @@ UserSchema.pre("save", async function () {
 //instance methods
 UserSchema.methods.createJWT = function (this: UserInput) {
   return jwt.sign(
-    { userID: this.user_id, name: this.first_name },
+    { userID: this._id, email: this.email },
     process.env.JWT_SECRET as string,
     {
       expiresIn: process.env.JWT_LIFETIME,
