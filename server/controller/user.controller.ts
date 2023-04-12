@@ -77,13 +77,25 @@ export const getUser = async (req: Request, res: Response) => {
   res.status(200).json(user);
 };
 
+//matched users
+export const matchUser = async (req: Request, res: Response) => {
+  const { userId, matchedUserId } = req.body;
+  const query = { _id: userId };
+  const updateDocument = {
+    $push: { matches: { _id: matchedUserId } },
+  };
+
+  const matchUser = await User.updateOne(query, updateDocument);
+  res.send(matchUser);
+};
+
 //get all
 export const getAllUsers = async (req: Request, res: Response) => {
   const users = await User.find();
   res.status(StatusCodes.OK).send(users);
 };
 
-//get all (filtered)
+//get all (filtered by gender)
 export const getUsers = async (req: Request, res: Response) => {
   const gender = req.query.gender;
   console.log(gender);

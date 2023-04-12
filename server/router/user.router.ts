@@ -9,4 +9,5 @@ userRouter.get("/gendered-users", userController.getUsers);
 userRouter.get("/all", userController.getAllUsers);
 userRouter.get("/", userController.getUser);
 userRouter.put("/", isLoggedIn, userController.updateUser);
+userRouter.put("/match", userController.matchUser);
 export default userRouter;
