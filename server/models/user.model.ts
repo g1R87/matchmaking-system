@@ -1,6 +1,25 @@
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
-import { hashPassword } from "../utils/password";
+import { hashPassword, verifyPassword } from "../utils/password";
+
+export interface UserInput extends mongoose.Document {
+  user_id: string;
+  first_name: string;
+  email: string;
+  password: string;
+  dob_day: number;
+  dob_month: number;
+  dob_year: number;
+  show_gender: boolean;
+  gender_identity: string;
+  gender_interest: string;
+  url: string;
+  about: string;
+  matches: Array<object>;
+  createJWT(): string;
+  checkPassword(password: string): boolean;
+}
 
 const UserSchema = new mongoose.Schema({
   user_id: {
@@ -43,4 +62,21 @@ UserSchema.pre("save", async function () {
   this.password = await hashPassword(this.password);
 });
 
-export default mongoose.model("User", UserSchema);
+//instance methods
+UserSchema.methods.createJWT = function (this: UserInput) {
+  return jwt.sign(
+    { userID: this.user_id, name: this.first_name },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
+};
+
+UserSchema.methods.checkPassword = async function (
+  password: string
+): Promise<boolean> {
+  return await verifyPassword(password, this.password);
+};
+
+export default mongoose.model<UserInput>("User", UserSchema);

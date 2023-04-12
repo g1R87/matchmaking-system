@@ -3,7 +3,8 @@ import msgRouter from "./message.router";
 import userRouter from "./user.router";
 const appRouter = Router();
 
-appRouter.use("/user", userRouter);
 appRouter.use("/msg", msgRouter);
+// appRouter.use("/", (_req, res) => res.send("testing"));
+appRouter.use("/user", userRouter);
 
 export default appRouter;
