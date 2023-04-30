@@ -5,6 +5,12 @@ import UnauthenticatedError from "../errors/unauthenticated";
 
 import User from "../models/user.model";
 
+interface reqbody {
+  email: String;
+  password: String;
+  confirmPassword: String;
+}
+
 //login action
 export const login = async (req: Request, res: Response) => {
   console.log(req.body);
@@ -31,8 +37,13 @@ export const login = async (req: Request, res: Response) => {
 //regiser / signup action
 export const signup = async (req: Request, res: Response) => {
   console.log(req.body);
+  const { email, password, confirmPassword } = req.body;
 
-  const user = await User.create({ ...req.body });
+  if (password != confirmPassword) {
+    throw new BadRequestError("Passwords dont match");
+  }
+
+  const user = await User.create({ email, password });
   const token = user.createJWT();
   res.status(StatusCodes.CREATED).send({ userId: user.user_id, token });
 };

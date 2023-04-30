@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/pages/birthday.dart';
 import 'package:online_matchmaking_system/pages/signup.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -135,15 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: const Color(0xff2B2D42),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(28))),
-                onPressed: () {
-                  final isValid = _key.currentState!.validate();
-                  if (isValid) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const DetailsPage();
-                    }));
-                  }
-                },
+                onPressed: loginFunc,
                 child: const Text("LOG IN"),
               ),
             ),
@@ -271,5 +265,46 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> loginFunc() async {
+    //gettting data from form
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final body = {
+      "email": email,
+      "password": password,
+    };
+    //sending req
+    const url = "http://172.22.210.245:5300/user/login";
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(body),
+      headers: {"Content-type": "application/json"},
+    );
+    if (response.statusCode == 200) {
+      showSuccessMessage("nice!");
+    } else {
+      showFailureMessage("wtf?");
+    }
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showFailureMessage(String message) {
+    final snackBar = SnackBar(
+      backgroundColor: Colors.red,
+      content: Text(
+        message,
+        style: const TextStyle(
+          color: Colors.white,
+        ),
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
