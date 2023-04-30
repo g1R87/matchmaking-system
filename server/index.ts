@@ -16,7 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use("/", appRouter);
-
+const host = "192.168.1.109";
+app.use("/", (req, res) => {
+  res.send("helo");
+});
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
@@ -26,7 +29,9 @@ const start = async () => {
   try {
     mongoose.set("strictQuery", false);
     await connectDB(process.env.MONGO_URI as string);
-    app.listen(PORT, () => console.log(`Running on port ${PORT}`));
+    app.listen(PORT as number, "0.0.0.0", () =>
+      console.log(`Running on port ${PORT}`)
+    );
   } catch (error) {
     console.log(error);
   }
