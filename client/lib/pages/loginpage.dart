@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/pages/birthday.dart';
 import 'package:online_matchmaking_system/pages/signup.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
 
@@ -270,6 +271,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> loginFunc() async {
+    final appurl = dotenv.env["appurl"];
+
     //gettting data from form
     final email = _emailController.text;
     final password = _passwordController.text;
@@ -278,7 +281,7 @@ class _LoginPageState extends State<LoginPage> {
       "password": password,
     };
     //sending req
-    const url = "http://172.22.210.245:5300/user/login";
+    final url = "$appurl/user/login";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,

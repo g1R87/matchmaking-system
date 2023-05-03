@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
@@ -324,6 +325,7 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   Future<void> updateFunc() async {
+    final appurl = dotenv.env["appurl"];
     //get form data
     final bday = dateinput.text.split("-");
     final fname = fnamecontroller.text;
@@ -342,7 +344,7 @@ class _DetailsPageState extends State<DetailsPage> {
     };
     final token = await NetworkHandler.getToken("token");
     //put request
-    const url = "http://172.22.210.245:5300/user";
+    final url = "$appurl/user";
     final uri = Uri.parse(url);
     final response = await http.put(
       uri,

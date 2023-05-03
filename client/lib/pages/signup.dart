@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/pages/loginpage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -284,6 +285,8 @@ class _SignupState extends State<Signup> {
   }
 
   Future<void> signupFunc() async {
+    final appurl = dotenv.env["appurl"];
+
     //gettting data from form
     final email = _userController.text;
     final password = _passwordContoller.text;
@@ -294,7 +297,7 @@ class _SignupState extends State<Signup> {
       "confirmPassword": conpas,
     };
     //sending req
-    const url = "http://172.22.210.245:5300/user/signup";
+    final url = "$appurl/user/signup";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,
