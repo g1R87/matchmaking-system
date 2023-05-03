@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/pages/loginpage.dart';
+import 'package:http/http.dart' as http;
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -170,15 +173,7 @@ class _SignupState extends State<Signup> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28)),
                       backgroundColor: const Color(0xff2B2D42)),
-                  onPressed: () {
-                    final isValid = _key.currentState!.validate();
-                    if (isValid) {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return const LoginPage();
-                      }));
-                    }
-                  },
+                  onPressed: signupFunc,
                   child: const Text("SIGN UP")),
             ),
             SizedBox(
@@ -286,5 +281,32 @@ class _SignupState extends State<Signup> {
         ),
       ),
     );
+  }
+
+  Future<void> signupFunc() async {
+    //gettting data from form
+    final email = _userController.text;
+    final password = _passwordContoller.text;
+    final conpas = _repasswordController.text;
+    final body = {
+      "email": email,
+      "password": password,
+      "confirmPassword": conpas,
+    };
+    //sending req
+    const url = "http://172.22.210.245:5300/user/signup";
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(body),
+      headers: {
+        "Content-type": "application/json",
+      },
+    );
+    if (response.statusCode == 201) {
+      print("nice!");
+    } else {
+      print("wtf?");
+    }
   }
 }

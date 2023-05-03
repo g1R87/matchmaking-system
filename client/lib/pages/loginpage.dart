@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/pages/birthday.dart';
 import 'package:online_matchmaking_system/pages/signup.dart';
 import 'package:http/http.dart' as http;
+import 'package:online_matchmaking_system/services/network_handler.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -283,10 +285,15 @@ class _LoginPageState extends State<LoginPage> {
       body: jsonEncode(body),
       headers: {"Content-type": "application/json"},
     );
+    var responseData = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      showSuccessMessage("nice!");
+      await NetworkHandler.storeToken(responseData["token"]);
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) {
+        return const DetailsPage();
+      }));
     } else {
-      showFailureMessage("wtf?");
+      showFailureMessage(responseData["msg"]);
     }
   }
 
