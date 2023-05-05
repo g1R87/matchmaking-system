@@ -6,8 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
-
-import 'addphoto.dart';
+import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({super.key});
