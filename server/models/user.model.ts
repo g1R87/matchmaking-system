@@ -58,6 +58,10 @@ const UserSchema = new mongoose.Schema({
     },
   },
   gender_interest: { type: String },
+  pfp: {
+    data: String,
+    contentType: String,
+  },
   url: { type: String },
   about: { type: String },
   matches: { type: Array<object>, default: [] },

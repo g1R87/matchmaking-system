@@ -20,6 +20,14 @@ const errorHandlerMiddleware = (
     customError.statusCode = 400;
   }
 
+  //duplicate object error
+  if (err.code && err.code == 11000) {
+    customError.msg = `Duplicate value for ${Object.keys(
+      err.keyValue
+    )} field, Chose another value`;
+    customError.statusCode = 400;
+  }
+
   return res.status(customError.statusCode).json({ msg: customError.msg });
   //   return res.status(500).json({ err });
 };

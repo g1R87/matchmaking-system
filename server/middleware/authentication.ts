@@ -20,7 +20,6 @@ const isLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
       token,
       process.env.JWT_SECRET as string
     ) as jwtPayload;
-    console.log(payload);
     res.locals.user = payload;
     next();
   } catch (error) {

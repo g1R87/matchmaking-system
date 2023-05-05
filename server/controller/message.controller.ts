@@ -19,8 +19,10 @@ export const getMsg = async (req: Request, res: Response) => {
 };
 
 export const addMsg = async (req: Request, res: Response) => {
-  const message = req.body.message;
-  console.log("Add message: ", message);
-  const msg = await Messages.create(message);
+  const message = req.body;
+  console.log(res.locals.user);
+  const query = { from_userId: res.locals.user.userID, ...message };
+  console.log(query);
+  const msg = await Messages.create(query);
   res.send(msg);
 };

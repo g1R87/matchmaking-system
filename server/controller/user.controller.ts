@@ -31,7 +31,7 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const token = user.createJWT();
-  res.status(StatusCodes.OK).json({ userId: user.user_id, token });
+  res.status(StatusCodes.OK).json({ userId: user._id, token });
 };
 
 //regiser / signup action
@@ -102,7 +102,7 @@ export const matchUser = async (req: Request, res: Response) => {
 
 //get all
 export const getAllUsers = async (req: Request, res: Response) => {
-  const users = await User.find();
+  const users = await User.find().select(["-pfp"]);
   res.status(StatusCodes.OK).send(users);
 };
 
