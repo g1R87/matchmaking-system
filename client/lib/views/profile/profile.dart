@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/services/models/user_model.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/constant.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/editprofile.dart';
@@ -147,9 +145,14 @@ class ProfilePage extends StatelessWidget {
   }
 }
 
-Future<Map?> profileFetch() async {
+Future<List<UserModel>> profileFetch() async {
   const url = "http://192.168.137.1:5300/user/all";
   final uri = Uri.parse(url);
-  final response = await http.get(uri);
-  return jsonDecode(response.body);
+  final response = await http.get(
+    uri,
+    headers: {
+      "Content-type": "application/json",
+    },
+  );
+  return userModelFromJson(response.body);
 }

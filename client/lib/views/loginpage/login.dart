@@ -1,12 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/views/birthday.dart';
-import 'package:online_matchmaking_system/views/signup.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/views/loginpage/widgets/email.dart';
+import 'package:online_matchmaking_system/views/loginpage/widgets/forget_password.dart';
+import 'package:online_matchmaking_system/views/loginpage/widgets/signup_button.dart';
+import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -50,40 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                         DecorationImage(image: AssetImage('images/renai.png'))),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 40, left: 25, right: 25),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 11,
-                          offset: Offset(0, 7))
-                    ]),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter your Emailid";
-                    } else {
-                      return null;
-                    }
-                  },
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    fillColor: Colors.grey[50],
-                    filled: true,
-                    prefixIcon: const Padding(
-                      padding: EdgeInsets.only(left: 4),
-                      child: Icon(Icons.email),
-                    ),
-                    label: const Text("Email/Phone"),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28)),
-                  ),
-                ),
-              ),
-            ),
+            Email(emailController: _emailController),
             Padding(
               padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
               child: Container(
@@ -148,22 +117,7 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  Text(
-                    "forget password??",
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.underline),
-                  ),
-                ],
-              ),
-            ),
+            const Forgetpassword(),
             const SizedBox(
               height: 30,
             ),
@@ -176,33 +130,7 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.black,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account?",
-                  style: TextStyle(fontSize: 16),
-                ),
-                const SizedBox(
-                  width: 3,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                      return const Signup();
-                    }));
-                  },
-                  child: const Text(
-                    "Sign Up",
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline),
-                  ),
-                )
-              ],
-            )
+            const Signupbutton()
           ]),
         ),
       ),
