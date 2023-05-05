@@ -10,7 +10,8 @@ interface FileWithPath extends File {
 }
 
 export const getPfp = async (req: Request, res: Response) => {
-  const data = await Img.find({});
+  const data = await User.findById(res.locals.user.userID).select("pfp -_id");
+  res.status(200).send(data);
 };
 
 export const uploadSingle = async (req: Request, res: Response) => {
