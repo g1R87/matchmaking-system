@@ -102,23 +102,23 @@ class _ShowingPageState extends State<ShowingPage> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.12,
-                width: MediaQuery.of(context).size.width,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    buttonWidget(Icons.refresh, Colors.amber),
-                    buttonWidget(Icons.cancel, Colors.red),
-                    buttonWidget(Icons.star, Colors.blue),
-                    GestureDetector(
-                        onTap: () {},
-                        child: buttonWidget(
-                            Icons.favorite_outline_outlined, Colors.green)),
-                    buttonWidget(Icons.bolt, Colors.purple),
-                  ],
-                ),
-              ),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height * 0.12,
+              //   width: MediaQuery.of(context).size.width,
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+              //     children: [
+              //       buttonWidget(Icons.refresh, Colors.amber),
+              //       buttonWidget(Icons.cancel, Colors.red),
+              //       buttonWidget(Icons.star, Colors.blue),
+              //       GestureDetector(
+              //           onTap: () {},
+              //           child: buttonWidget(
+              //               Icons.favorite_outline_outlined, Colors.green)),
+              //       buttonWidget(Icons.bolt, Colors.purple),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ));

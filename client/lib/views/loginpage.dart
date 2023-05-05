@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/pages/birthday.dart';
-import 'package:online_matchmaking_system/pages/signup.dart';
+import 'package:online_matchmaking_system/views/birthday.dart';
+import 'package:online_matchmaking_system/views/signup.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/shared_data/device_size.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -42,8 +43,8 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
               child: Container(
-                height: 80 * 4,
-                width: 120 * 4,
+                height: 75 * 3,
+                width: 120 * 3,
                 decoration: const BoxDecoration(
                     image:
                         DecorationImage(image: AssetImage('images/renai.png'))),
@@ -166,70 +167,8 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 30,
             ),
-            Row(
-              children: const [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Divider(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Text(
-                  "OR",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Divider(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.08,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("images/facebook.png"))),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("images/google.png"))),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("images/twitter.png"))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.08,
+              height: getDeviceHeight(context) * 0.08,
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),

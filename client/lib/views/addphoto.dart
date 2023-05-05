@@ -1,9 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:online_matchmaking_system/pages/show.dart';
+import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 
 class MultipleImageSelector extends StatefulWidget {
   const MultipleImageSelector({Key? key}) : super(key: key);
@@ -110,7 +109,7 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                       onPressed: () {
                         selectedImages != List.empty()
                             ? Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const ShowingPage(),
+                                builder: (_) => const MainPage(),
                               ))
                             : null;
                       },

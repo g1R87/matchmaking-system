@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/pages/loginpage.dart';
+import 'package:online_matchmaking_system/views/loginpage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -42,14 +42,13 @@ class _SignupState extends State<Signup> {
           key: _key,
           child: Column(children: [
             Padding(
-              padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
+              padding: const EdgeInsets.only(top: 10, left: 25, right: 25),
               child: Container(
-                height: 80,
-                width: 120,
+                height: 75 * 3,
+                width: 120 * 3,
                 decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: NetworkImage(
-                            "https://1000logos.net/wp-content/uploads/2023/01/Tinder-Logo-2012.png"))),
+                    image:
+                        DecorationImage(image: AssetImage('images/renai.png'))),
               ),
             ),
             Padding(
@@ -178,72 +177,7 @@ class _SignupState extends State<Signup> {
                   child: const Text("SIGN UP")),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-            ),
-            Row(
-              children: const [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Divider(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                Text(
-                  "OR",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Divider(
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.066,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("images/facebook.png"))),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("images/google.png"))),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                          image: AssetImage("images/twitter.png"))),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.066,
+              height: MediaQuery.of(context).size.height * 0.115,
             ),
             const Padding(
               padding: EdgeInsets.all(8.0),
