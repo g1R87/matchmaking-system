@@ -340,8 +340,9 @@ class _DetailsPageState extends State<DetailsPage> {
       "gender_identity": gender,
       "gender_interest": genderInterest,
       "about": about,
+      "isUpdated": true,
     };
-    final token = await NetworkHandler.getToken("token");
+    final token = await NetworkHandler.getValue("token");
     //put request
     final url = "$appurl/user";
     final uri = Uri.parse(url);

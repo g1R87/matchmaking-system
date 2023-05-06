@@ -11,7 +11,7 @@ interface FileWithPath extends File {
   path: string;
 }
 
-//get profile pic
+// get profile pic
 export const getPfp = async (req: Request, res: Response) => {
   const data = await User.findById(res.locals.user.userID).select("pfp -_id");
   res.status(200).send(data);
@@ -66,7 +66,6 @@ export const uploadSingle = async (req: Request, res: Response) => {
 
 //upload multiple photos
 export const uploadMulti = async (req: Request, res: Response) => {
-  console.log("multi");
   fs.access("./uploads", (error) => {
     if (error) {
       fs.mkdirSync("./uploads");
@@ -78,24 +77,36 @@ export const uploadMulti = async (req: Request, res: Response) => {
     }
   });
 
-  const file: any = req.file;
-  if (!file) {
+  const files: any = req.files;
+
+  if (!files) {
     throw new BadRequestError("Please chose file");
   }
-  console.log(file);
+  console.log(files.length);
+  //iterate over images and compress
+  let imgArray = await Promise.all(
+    files.map(async (file: any) => {
+      await sharp(file.path)
+        .resize(200, 200)
+        .jpeg({ quality: 90 })
+        .toFile(path.resolve(file.destination, "resized", file.filename));
+      const resizedPath = path.join("uploads", "resized", file.filename);
+      const img = fs.readFileSync(resizedPath, "base64");
+      return img;
+    })
+  );
 
-  await sharp(file.path)
-    .resize(200, 200)
-    .jpeg({ quality: 90 })
-    .toFile(path.resolve(file.destination, "resized", file.filename));
-  const resizedPath = path.join("uploads", "resized", file.filename);
-  console.log(file.path);
-  console.log(path.join(__dirname, "uploads", "resized", file.filename));
-  // fs.unlinkSync(file.path);
-  const img = fs.readFileSync(file.path, "base64");
+  // //iteration for database
+  // imgArray.map((src, index) => {
+  //   //create map to store data in collection
+  //   let imgobj = {
+  //     filename:
+  //     contentType:
+  //     image:
+  //     uploader:
+  //   }
+  // })
 
-  if (!file) {
-    throw new BadRequestError("Please chose file");
-  }
-  res.json(img);
+  console.log(imgArray);
+  res.json(files);
 };

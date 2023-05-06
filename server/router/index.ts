@@ -1,6 +1,6 @@
 import { Router } from "express";
 import isLoggedIn from "../middleware/authentication";
-import imgRouter from "./imgae.router";
+import imgRouter from "./image.router";
 import msgRouter from "./message.router";
 import userRouter from "./user.router";
 const appRouter = Router();

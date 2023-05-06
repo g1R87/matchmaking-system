@@ -1,13 +1,20 @@
 import mongoose from "mongoose";
 
+export interface ImageInput extends mongoose.Document {}
+
 const ImageSchema = new mongoose.Schema({
   filename: {
     type: String,
     required: [true, "Provide a filename"],
+    unique: [true, "Already Exists"],
   },
-  imgae: {
-    data: Buffer,
-    contentType: String,
+  contentType: {
+    type: String,
+    required: [true, "Provide content type"],
+  },
+  image: {
+    type: String,
+    required: [true, "Provide image properties"],
   },
   uploader: {
     type: mongoose.Types.ObjectId,
@@ -16,4 +23,4 @@ const ImageSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Image", ImageSchema);
+export default mongoose.model<ImageInput>("Image", ImageSchema);

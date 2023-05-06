@@ -16,6 +16,8 @@ export interface UserInput extends mongoose.Document {
   gender_interest: string;
   url: string;
   about: string;
+  isVerified: Boolean;
+  isUpdated: Boolean;
   matches: Array<object>;
   createJWT(): string;
   checkPassword(password: string): boolean;
@@ -66,6 +68,10 @@ const UserSchema = new mongoose.Schema({
   about: { type: String },
   matches: { type: Array<object>, default: [] },
   isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isUpdated: {
     type: Boolean,
     default: false,
   },

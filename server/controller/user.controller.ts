@@ -33,7 +33,12 @@ export const login = async (req: Request, res: Response) => {
 
   const token = user.createJWT();
   console.log(user);
-  res.status(StatusCodes.OK).json({ userId: user._id, token });
+  res.status(StatusCodes.OK).json({
+    userId: user._id,
+    isVerified: user.isVerified,
+    isUpdated: user.isUpdated,
+    token,
+  });
 };
 
 //regiser / signup action
@@ -71,6 +76,8 @@ export const updateUser = async (req: Request, res: Response) => {
       url: formData.url,
       about: formData.about,
       matched: formData.matches,
+      isUpdated: formData.isUpdated,
+      isVerified: formData.isVerified,
     },
   };
   const updatedUser = await User.updateOne(
@@ -119,7 +126,7 @@ export const getUsers = async (req: Request, res: Response) => {
 
 //update all
 export const updateall = async (req: Request, res: Response) => {
-  const updatedUser = await User.updateMany({}, { isVerified: false });
+  const updatedUser = await User.updateMany({}, { isUpdated: false });
   res.status(200).send(updatedUser);
   // res.send(res.locals.user);
 };
