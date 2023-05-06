@@ -6,5 +6,5 @@ const imgRouter = Router();
 imgRouter.get("/pfp", imgController.getPfp);
 imgRouter.post("/pfp", upload.single("myImage"), imgController.uploadSingle);
 
-imgRouter.post("/upload", upload.array("image", 3), imgController.uploadMulti);
+imgRouter.post("/upload", upload.single("image"), imgController.uploadMulti);
 export default imgRouter;

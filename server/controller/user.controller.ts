@@ -21,6 +21,7 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const user = await User.findOne({ email });
+
   if (!user) {
     throw new UnauthenticatedError("Invalid credentials / User doesnt exist");
   }
@@ -31,6 +32,7 @@ export const login = async (req: Request, res: Response) => {
   }
 
   const token = user.createJWT();
+  console.log(user);
   res.status(StatusCodes.OK).json({ userId: user._id, token });
 };
 
@@ -113,4 +115,11 @@ export const getUsers = async (req: Request, res: Response) => {
   const query = { gender_identity: gender };
   const users = await User.find(query);
   res.status(StatusCodes.OK).send(users);
+};
+
+//update all
+export const updateall = async (req: Request, res: Response) => {
+  const updatedUser = await User.updateMany({}, { isVerified: false });
+  res.status(200).send(updatedUser);
+  // res.send(res.locals.user);
 };

@@ -65,6 +65,10 @@ const UserSchema = new mongoose.Schema({
   url: { type: String },
   about: { type: String },
   matches: { type: Array<object>, default: [] },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 //pre middleware - hashing

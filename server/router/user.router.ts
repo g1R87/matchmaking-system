@@ -10,4 +10,8 @@ userRouter.get("/all", userController.getAllUsers);
 userRouter.get("/", userController.getUser);
 userRouter.put("/", isLoggedIn, userController.updateUser);
 userRouter.put("/match", userController.matchUser);
+
+//! temp remove later
+userRouter.get("/updateall", userController.updateall);
+
 export default userRouter;
