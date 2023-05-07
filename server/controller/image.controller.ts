@@ -78,6 +78,7 @@ export const uploadMulti = async (req: Request, res: Response) => {
   });
 
   const files: any = req.files;
+  const userId = res.locals.user.userID;
 
   if (!files) {
     throw new BadRequestError("Please chose file");
@@ -96,17 +97,23 @@ export const uploadMulti = async (req: Request, res: Response) => {
     })
   );
 
-  // //iteration for database
-  // imgArray.map((src, index) => {
-  //   //create map to store data in collection
-  //   let imgobj = {
-  //     filename:
-  //     contentType:
-  //     image:
-  //     uploader:
-  //   }
-  // })
+  //iteration for database
+  let result = imgArray.map((src, index) => {
+    //create map to store data in collection
+    let imgobj = {
+      filename: `image${index}-${userId}`,
+      contentType: "image/jpeg",
+      image: src,
+      uploader: userId,
+    };
 
-  console.log(imgArray);
-  res.json(files);
+    let imgUpload = new Img(imgobj);
+    return imgUpload.save().then(() => {
+      return { msg: `image uploaded successfully` };
+    });
+  });
+
+  Promise.all(result).then((msg) => {
+    res.send(msg);
+  });
 };
