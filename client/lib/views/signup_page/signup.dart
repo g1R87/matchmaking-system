@@ -241,9 +241,11 @@ class _SignupState extends State<Signup> {
       },
     );
     if (response.statusCode == 201) {
-      print("nice!");
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => const LoginPage(),
+      ));
     } else {
-      print("wtf?");
+      print("Not created");
     }
   }
 }

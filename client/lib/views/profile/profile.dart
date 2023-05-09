@@ -1,15 +1,32 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:online_matchmaking_system/services/models/user_model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/constant.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/editprofile.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/menu.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/profilename.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  var about = "";
+  var fname = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    profileFetch();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +37,7 @@ class ProfilePage extends StatelessWidget {
           iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.grey[50],
           elevation: 0,
-          title: const Profilename(),
+          title: Profilename(about: about, fname: fname),
           centerTitle: true,
           actions: [
             menu(context),
@@ -143,16 +160,32 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-}
 
-Future<List<UserModel>> profileFetch() async {
-  const url = "http://192.168.137.1:5300/user/all";
-  final uri = Uri.parse(url);
-  final response = await http.get(
-    uri,
-    headers: {
-      "Content-type": "application/json",
-    },
-  );
-  return userModelFromJson(response.body);
+  Future<void> profileFetch() async {
+    final appurl = dotenv.env["appurl"];
+
+    final token = await NetworkHandler.getValue("token");
+    final id = await NetworkHandler.getValue("userId");
+    //get request
+    final url = "$appurl/user?id=$id";
+    final uri = Uri.parse(url);
+    final response = await http.get(
+      uri,
+      headers: {
+        "Content-type": "application/json",
+        "authorization": "Bearer $token",
+      },
+    );
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body) as Map;
+      final userfname = responseData["first_name"];
+      final userabout = responseData["about"];
+      setState(() {
+        about = userabout;
+        fname = userfname;
+      });
+    } else {
+      print('wtf?');
+    }
+  }
 }
