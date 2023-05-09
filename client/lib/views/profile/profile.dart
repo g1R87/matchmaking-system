@@ -20,6 +20,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   var about = "";
   var fname = "";
+  var gender = '';
+  var ginterest = '';
 
   @override
   void initState() {
@@ -65,15 +67,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "Gender : ",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        "Male",
-                        style: TextStyle(
+                        gender,
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -83,15 +85,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         "Prefer gender : ",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        "Female",
-                        style: TextStyle(
+                        ginterest,
+                        style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -116,9 +118,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 Tab(
-                  icon: Icon(
-                    Icons.person_pin_outlined,
-                    color: Colors.black,
+                  child: Text(
+                    "About me",
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ],
@@ -149,8 +151,9 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         );
                       }),
-                  const Center(
-                    child: Text("No favourite photo"),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(about),
                   ),
                 ],
               ),
@@ -180,9 +183,13 @@ class _ProfilePageState extends State<ProfilePage> {
       final responseData = jsonDecode(response.body) as Map;
       final userfname = responseData["first_name"];
       final userabout = responseData["about"];
+      final userGender = responseData['gender_identity'];
+      final userInterest = responseData['gender_interest'];
       setState(() {
         about = userabout;
         fname = userfname;
+        gender = userGender;
+        ginterest = userInterest;
       });
     } else {
       print('wtf?');

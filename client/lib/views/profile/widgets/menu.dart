@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/views/profile/widgets/logout_alertbox.dart';
 
 IconButton menu(BuildContext context) {
   return IconButton(
@@ -17,13 +18,13 @@ IconButton menu(BuildContext context) {
               child: Column(
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.012,
+                    height: getDeviceHeight(context) * 0.012,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.18,
+                        width: getDeviceWidth(context) * 0.18,
                       ),
                       Container(
                         height: 5,
@@ -45,7 +46,16 @@ IconButton menu(BuildContext context) {
                   listofMenu(
                       Icons.local_activity_outlined, "Your Activity", context),
                   listofMenu(Icons.menu, "Close friends", context),
-                  listofMenu(Icons.person_add, "Discover people", context),
+                  GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const DialogBox(),
+                        ));
+                      },
+                      child: listofMenu(Icons.logout, "logout", context)),
+                  SizedBox(
+                    height: getDeviceHeight(context) * 0.02,
+                  )
                 ],
               ),
             );

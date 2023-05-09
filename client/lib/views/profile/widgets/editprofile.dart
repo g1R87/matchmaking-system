@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
 
 class Editprofile extends StatelessWidget {
   const Editprofile({
@@ -10,16 +11,21 @@ class Editprofile extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Container(
-            height: 50,
-            decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10)),
-            child: const Center(
-                child: Text(
-              "Edit Profile",
-              style: TextStyle(fontWeight: FontWeight.w500),
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const DetailsPage(),
             )),
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Center(
+                  child: Text(
+                "Edit Profile",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              )),
+            ),
           ),
         ),
         const SizedBox(
