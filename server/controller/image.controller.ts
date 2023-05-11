@@ -1,7 +1,4 @@
 import { Request, Response } from "express";
-import fs from "fs";
-import path from "path";
-import sharp from "sharp";
 import BadRequestError from "../errors/bad-request";
 import Img from "../models/image.model";
 import User from "../models/user.model";

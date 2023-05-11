@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import { hashPassword, verifyPassword } from "../utils/password";
 
+interface matchType {
+  [key: string]: number;
+}
+
 export interface UserInput extends mongoose.Document {
   user_id: string;
   first_name: string;
@@ -18,7 +22,7 @@ export interface UserInput extends mongoose.Document {
   about: string;
   isVerified: Boolean;
   isUpdated: Boolean;
-  matches: Array<object>;
+  matches: matchType;
   createJWT(): string;
   checkPassword(password: string): boolean;
 }
@@ -55,7 +59,7 @@ const UserSchema = new mongoose.Schema({
   gender_identity: {
     type: String,
     enum: {
-      values: ["man", "woman", "others"],
+      values: ["male", "female", "others"],
       message: "{VALUE} is not supported! fku",
     },
   },
@@ -66,7 +70,7 @@ const UserSchema = new mongoose.Schema({
   },
   url: { type: String },
   about: { type: String },
-  matches: { type: Array<object>, default: [] },
+  matches: { type: Object, default: {} },
   isVerified: {
     type: Boolean,
     default: false,
