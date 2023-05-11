@@ -1,30 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/services/models/user_model.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
-import 'package:online_matchmaking_system/views/profile/profile.dart';
 
-class Profilename extends StatefulWidget {
-  const Profilename({
-    super.key,
-  });
-
-  @override
-  State<Profilename> createState() => _ProfilenameState();
-}
-
-class _ProfilenameState extends State<Profilename> {
-  List<UserModel>? userdata;
-  bool isLoaded = false;
-  getprofiledata() async {
-    userdata = await profileFetch();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getprofiledata();
-  }
+class Profilename extends StatelessWidget {
+  final String about;
+  final String fname;
+  const Profilename({super.key, required this.about, required this.fname});
 
   @override
   Widget build(BuildContext context) {
@@ -58,13 +38,13 @@ class _ProfilenameState extends State<Profilename> {
                         SizedBox(
                           height: getDeviceHeight(context) * 0.01,
                         ),
-                        const Expanded(
+                        Expanded(
                           child: ListTile(
-                            leading: CircleAvatar(
+                            leading: const CircleAvatar(
                               radius: 30,
                             ),
-                            title: Text("Rohan_mustafa"),
-                            trailing: CircleAvatar(
+                            title: Text(fname),
+                            trailing: const CircleAvatar(
                               radius: 10,
                               backgroundColor: Color.fromARGB(255, 15, 244, 23),
                             ),
@@ -88,18 +68,14 @@ class _ProfilenameState extends State<Profilename> {
                     ));
               });
         },
-        child: Visibility(
-          child: ListView.builder(
-            itemCount: userdata?.length,
-            itemBuilder: (context, index) {
-              return Row(
-                children: [Text(userdata![index].id ?? "")],
-              );
-            },
-          ),
-          replacement: const Center(
-            child: CircularProgressIndicator(),
-          ),
+        child: Row(
+          children: [
+            Text(
+              fname,
+              style: const TextStyle(color: Colors.black),
+            ),
+            const Icon(Icons.keyboard_arrow_down_rounded)
+          ],
         ));
   }
 }
