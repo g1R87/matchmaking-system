@@ -23,7 +23,9 @@ export interface UserInput extends mongoose.Document {
   isVerified: Boolean;
   isUpdated: Boolean;
   matches: matchType;
+  refreshToken: string;
   createJWT(): string;
+  createRJWT(): string;
   checkPassword(password: string): boolean;
 }
 
@@ -79,6 +81,7 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  refreshToken: String,
 });
 
 //pre middleware - hashing
@@ -87,12 +90,25 @@ UserSchema.pre("save", async function () {
 });
 
 //instance methods
+
+//access token
 UserSchema.methods.createJWT = function (this: UserInput) {
   return jwt.sign(
     { userID: this._id, email: this.email },
     process.env.JWT_SECRET as string,
     {
       expiresIn: process.env.JWT_LIFETIME,
+    }
+  );
+};
+
+//refresh token
+UserSchema.methods.createRJWT = function (this: UserInput) {
+  return jwt.sign(
+    { userID: this._id, email: this.email },
+    process.env.RJWT_SECRET as string,
+    {
+      expiresIn: process.env.RJWT_LIFETIME,
     }
   );
 };

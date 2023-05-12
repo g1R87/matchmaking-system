@@ -3,8 +3,7 @@ import * as userController from "../controller/user.controller";
 import isLoggedIn from "../middleware/authentication";
 const userRouter = Router();
 
-//auth
-userRouter.post("/login", userController.login);
+//create
 userRouter.post("/signup", userController.signup);
 //operations
 userRouter.get("/gendered-users", userController.getUsers);

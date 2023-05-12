@@ -11,37 +11,7 @@ interface reqbody {
   confirmPassword: String;
 }
 
-//login action
-export const login = async (req: Request, res: Response) => {
-  console.log(req.body);
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    throw new BadRequestError("Email/Password is required");
-  }
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    throw new UnauthenticatedError("Invalid credentials / User doesnt exist");
-  }
-
-  const isPasswordCorrect = await user.checkPassword(password);
-  if (!isPasswordCorrect) {
-    throw new UnauthenticatedError("invalid credentials");
-  }
-
-  const token = user.createJWT();
-  console.log(user);
-  res.status(StatusCodes.OK).json({
-    userId: user._id,
-    isVerified: user.isVerified,
-    isUpdated: user.isUpdated,
-    token,
-  });
-};
-
-//regiser / signup action
+//regiser / signup action / Create
 export const signup = async (req: Request, res: Response) => {
   console.log(req.body);
   const { email, password, confirmPassword } = req.body;
