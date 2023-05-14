@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,6 +9,7 @@ import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/constant.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/editprofile.dart';
+import 'package:online_matchmaking_system/views/profile/widgets/logout_alertbox.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/menu.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/profilename.dart';
 
@@ -18,10 +21,12 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool isLoading = true;
   var about = "";
   var fname = "";
   var gender = '';
   var ginterest = '';
+  var image = '';
 
   @override
   void initState() {
@@ -45,120 +50,199 @@ class _ProfilePageState extends State<ProfilePage> {
             menu(context),
           ],
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: getDeviceWidth(context) * 0.05),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage("images/image2.jpg"),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: getDeviceHeight(context) * 0.015,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Gender : ",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        gender,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: getDeviceHeight(context) * 0.005,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Prefer gender : ",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        ginterest,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: getDeviceHeight(context) * 0.02,
-                  ),
-                  const Editprofile(),
-                  SizedBox(
-                    height: getDeviceHeight(context) * 0.02,
-                  ),
-                ],
-              ),
-            ),
-            const TabBar(
-              indicatorColor: Colors.black,
-              tabs: <Widget>[
-                Tab(
-                  icon: Icon(
-                    Icons.grid_on_sharp,
-                    color: Colors.black,
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    "About me",
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(
-                children: <Widget>[
-                  GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // number of columns
-                        mainAxisSpacing: 2.5, // space between rows
-                        crossAxisSpacing: 5, // space between columns
-                        childAspectRatio:
-                            1.0, // width to height ratio of grid cells
-                      ),
-                      itemCount: images.length,
-                      itemBuilder: (BuildContext ctx, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 2.5),
-                          child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(images[index]),
-                                  fit: BoxFit.cover),
-                            ),
+        body: Visibility(
+          visible: isLoading,
+          replacement: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: getDeviceWidth(context) * 0.05),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20))),
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return SizedBox(
+                                    height: 200,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height:
+                                              getDeviceHeight(context) * 0.005,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10, right: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                width: getDeviceWidth(context) *
+                                                    0.18,
+                                              ),
+                                              Container(
+                                                height: 4,
+                                                width: 35,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black54,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)),
+                                              ),
+                                              GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Icon(
+                                                      CupertinoIcons.multiply))
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                            child: listofMenu(Icons.settings,
+                                                "Settings", context)),
+                                        Expanded(
+                                            child: listofMenu(Icons.update,
+                                                "Update", context)),
+                                        Expanded(
+                                          child: GestureDetector(
+                                              onTap: () {
+                                                Navigator.of(context)
+                                                    .push(MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const DialogBox(),
+                                                ));
+                                              },
+                                              child: listofMenu(Icons.logout,
+                                                  "logout", context)),
+                                        ),
+                                        SizedBox(
+                                          height:
+                                              getDeviceHeight(context) * 0.02,
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                });
+                          },
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: MemoryImage(base64Decode(image)),
                           ),
-                        );
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(about),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: getDeviceHeight(context) * 0.015,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Gender : ",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          gender,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: getDeviceHeight(context) * 0.005,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Prefer gender : ",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          ginterest,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: getDeviceHeight(context) * 0.02,
+                    ),
+                    const Editprofile(),
+                    SizedBox(
+                      height: getDeviceHeight(context) * 0.02,
+                    ),
+                  ],
+                ),
+              ),
+              const TabBar(
+                indicatorColor: Colors.black,
+                tabs: <Widget>[
+                  Tab(
+                    icon: Icon(
+                      Icons.grid_on_sharp,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Tab(
+                    child: Text(
+                      "About me",
+                      style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              Expanded(
+                child: TabBarView(
+                  children: <Widget>[
+                    GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, // number of columns
+                          mainAxisSpacing: 2.5, // space between rows
+                          crossAxisSpacing: 5, // space between columns
+                          childAspectRatio:
+                              1.0, // width to height ratio of grid cells
+                        ),
+                        itemCount: images.length,
+                        itemBuilder: (BuildContext ctx, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 2.5),
+                            child: Container(
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(images[index]),
+                                    fit: BoxFit.cover),
+                              ),
+                            ),
+                          );
+                        }),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(about),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          child: const Center(child: CircularProgressIndicator()),
         ),
       ),
     );
@@ -185,14 +269,42 @@ class _ProfilePageState extends State<ProfilePage> {
       final userabout = responseData["about"];
       final userGender = responseData['gender_identity'];
       final userInterest = responseData['gender_interest'];
+      final userImage = responseData["pfp"]['data'];
       setState(() {
         about = userabout;
         fname = userfname;
         gender = userGender;
         ginterest = userInterest;
+        image = userImage;
+        isLoading = false;
       });
     } else {
       print('wtf?');
     }
   }
+}
+
+Widget listofMenu(IconData icon, String text, BuildContext context) {
+  return SizedBox(
+    height: 30,
+    child: Row(
+      children: [
+        SizedBox(
+          width: getDeviceWidth(context) * 0.05,
+        ),
+        Icon(
+          icon,
+          color: Colors.black54,
+          size: 27,
+        ),
+        SizedBox(
+          width: getDeviceWidth(context) * 0.05,
+        ),
+        Text(
+          text,
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
+    ),
+  );
 }

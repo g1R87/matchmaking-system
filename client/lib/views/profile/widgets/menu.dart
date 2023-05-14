@@ -7,87 +7,90 @@ IconButton menu(BuildContext context) {
   return IconButton(
     onPressed: () {
       showModalBottomSheet(
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-          isScrollControlled: true,
-          context: context,
-          builder: (BuildContext context) {
-            return SizedBox(
-              height: 350,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: getDeviceHeight(context) * 0.012,
-                  ),
-                  Row(
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) {
+          return SizedBox(
+            height: 200,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: getDeviceHeight(context) * 0.005,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10, right: 10),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
                         width: getDeviceWidth(context) * 0.18,
                       ),
                       Container(
-                        height: 5,
-                        width: 40,
+                        height: 4,
+                        width: 35,
                         decoration: BoxDecoration(
                             color: Colors.black54,
                             borderRadius: BorderRadius.circular(20)),
                       ),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
                           },
-                          icon: const Icon(CupertinoIcons.multiply)),
+                          child: const Icon(CupertinoIcons.multiply))
                     ],
                   ),
-                  listofMenu(Icons.settings, "Settings", context),
-                  listofMenu(Icons.bookmark_border, "Saved", context),
-                  listofMenu(Icons.star_border, "Favourites", context),
-                  listofMenu(
-                      Icons.local_activity_outlined, "Your Activity", context),
-                  listofMenu(Icons.menu, "Close friends", context),
-                  GestureDetector(
+                ),
+                Expanded(
+                    child: listofMenu(Icons.settings, "Settings", context)),
+                Expanded(
+                  child: listofMenu(Icons.update, "Update", context),
+                ),
+                Expanded(
+                  child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const DialogBox(),
                         ));
                       },
                       child: listofMenu(Icons.logout, "logout", context)),
-                  SizedBox(
-                    height: getDeviceHeight(context) * 0.02,
-                  )
-                ],
-              ),
-            );
-          });
+                ),
+                SizedBox(
+                  height: getDeviceHeight(context) * 0.02,
+                )
+              ],
+            ),
+          );
+        },
+      );
     },
     icon: const Icon(Icons.menu),
   );
 }
 
 Widget listofMenu(IconData icon, String text, BuildContext context) {
-  return Expanded(
-    child: SizedBox(
-      height: 30,
-      child: Row(
-        children: [
-          SizedBox(
-            width: getDeviceWidth(context) * 0.05,
-          ),
-          Icon(
-            icon,
-            color: Colors.black54,
-            size: 27,
-          ),
-          SizedBox(
-            width: getDeviceWidth(context) * 0.05,
-          ),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
+  return SizedBox(
+    height: 30,
+    child: Row(
+      children: [
+        SizedBox(
+          width: getDeviceWidth(context) * 0.05,
+        ),
+        Icon(
+          icon,
+          color: Colors.black54,
+          size: 27,
+        ),
+        SizedBox(
+          width: getDeviceWidth(context) * 0.05,
+        ),
+        Text(
+          text,
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
     ),
   );
 }
