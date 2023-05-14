@@ -13,7 +13,7 @@ interface jwtPayload {
 
 //login action
 export const login = async (req: Request, res: Response) => {
-  console.log(req.body);
+  // console.log(req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -34,7 +34,7 @@ export const login = async (req: Request, res: Response) => {
   const token = user.createJWT();
   const tokenrefresh = user.createRJWT();
   await User.findOneAndUpdate({ email }, { refreshToken: tokenrefresh });
-  console.log(user);
+  // console.log(user);
   res.cookie("jwt", tokenrefresh, {
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000,
@@ -44,21 +44,28 @@ export const login = async (req: Request, res: Response) => {
     isVerified: user.isVerified,
     isUpdated: user.isUpdated,
     token,
+    tokenrefresh,
   });
 };
 
 //refresh controller
 export const handleRefreshToken = async (req: Request, res: Response) => {
-  const cookies = req.cookies;
+  // const cookies = req.cookies;
 
-  if (!cookies?.jwt) {
-    throw new UnauthenticatedError("where kuki");
+  // if (!cookies?.jwt) {
+  //   throw new UnauthenticatedError("where kuki");
+  // }
+
+  // const refreshToken = cookies.jwt;
+
+  // console.log("the token refresh is: ", cookies.jwt);
+
+  const refreshToken = req.body.tokenrefresh;
+
+  console.log("the cookies is: ", refreshToken);
+  if (!refreshToken) {
+    throw new ForbiddenError("Forbidden");
   }
-
-  const refreshToken = cookies.jwt;
-
-  console.log(cookies.jwt);
-
   const user = await User.findOne({ refreshToken });
 
   if (!user) {
@@ -86,11 +93,12 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
   //clear local storage on client
-  const cookies = req.cookies;
-  if (!cookies?.jwt) {
+  const refreshToken = req.body.tokenrefresh;
+
+  console.log("the cookies is: ", refreshToken);
+  if (!refreshToken) {
     res.status(204).send({ msg: "No content" });
   }
-  const refreshToken = cookies.jwt;
 
   //check db and update
   const user = await User.findOneAndUpdate(
@@ -98,11 +106,11 @@ export const logout = async (req: Request, res: Response) => {
     { refreshToken: "" }
   );
   if (!user) {
-    res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+    // res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
     res.status(204).send({ msg: "no content" });
   }
 
   //delete in db  && clear cookie
-  res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
-  res.sendStatus(204);
+  // res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+  res.status(204).send("logout");
 };
