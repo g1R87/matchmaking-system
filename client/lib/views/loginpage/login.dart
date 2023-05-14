@@ -32,6 +32,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    refressSession();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -138,6 +145,41 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Future<void> refressSession() async {
+    final appurl = dotenv.env["appurl"];
+    var refresh = await NetworkHandler.getValue('refresh');
+    print(refresh);
+    final body = {
+      'tokenrefresh': refresh,
+    };
+
+    final url = "$appurl/auth/refresh";
+    final uri = Uri.parse(url);
+    final response = await http.post(
+      uri,
+      body: jsonEncode(body),
+      headers: {"Content-type": "application/json"},
+    );
+    var responseData = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      await NetworkHandler.storeValue("token", responseData["token"]);
+      await NetworkHandler.storeValue("userId", responseData["userId"]);
+      if (!responseData["isUpdated"]) {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
+          return const DetailsPage();
+        }));
+      } else {
+        Navigator.of(context)
+            .pushReplacement(MaterialPageRoute(builder: (context) {
+          return const MultipleImageSelector();
+        }));
+      }
+    } else {
+      showFailureMessage("Session has expired, Please login");
+    }
+  }
+
   Future<void> loginFunc() async {
     final appurl = dotenv.env["appurl"];
 
@@ -149,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
       "password": password,
     };
     //sending req
-    final url = "$appurl/user/login";
+    final url = "$appurl/auth/login";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,
@@ -157,9 +199,11 @@ class _LoginPageState extends State<LoginPage> {
       headers: {"Content-type": "application/json"},
     );
     var responseData = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
       await NetworkHandler.storeValue("token", responseData["token"]);
       await NetworkHandler.storeValue("userId", responseData["userId"]);
+      await NetworkHandler.storeValue("refresh", responseData["tokenrefresh"]);
       if (!responseData["isUpdated"]) {
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
