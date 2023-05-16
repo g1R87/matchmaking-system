@@ -204,6 +204,8 @@ class _LoginPageState extends State<LoginPage> {
       await NetworkHandler.storeValue("token", responseData["token"]);
       await NetworkHandler.storeValue("userId", responseData["userId"]);
       await NetworkHandler.storeValue("refresh", responseData["tokenrefresh"]);
+      await NetworkHandler.storeValue("pfp", responseData["pfp"]);
+
       if (!responseData["isUpdated"]) {
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {

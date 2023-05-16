@@ -45,6 +45,7 @@ export const login = async (req: Request, res: Response) => {
     isUpdated: user.isUpdated,
     token,
     tokenrefresh,
+    pfp: user.pfp.data,
   });
 };
 
@@ -86,6 +87,7 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
         isVerified: user.isVerified,
         isUpdated: user.isUpdated,
         token,
+        pfp: user.pfp.data,
       });
     }
   );

@@ -24,6 +24,7 @@ export interface UserInput extends mongoose.Document {
   isUpdated: Boolean;
   matches: matchType;
   refreshToken: string;
+  pfp: { data: string; contentType: string };
   createJWT(): string;
   createRJWT(): string;
   checkPassword(password: string): boolean;
