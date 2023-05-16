@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/shared_data/device_size.dart';
 
 class Email extends StatelessWidget {
   const Email({
@@ -11,7 +12,10 @@ class Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 40, left: 25, right: 25),
+      padding: EdgeInsets.only(
+          top: getDeviceHeight(context) * 0.03,
+          left: getDeviceWidth(context) * 0.07,
+          right: getDeviceWidth(context) * 0.07),
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(28),
