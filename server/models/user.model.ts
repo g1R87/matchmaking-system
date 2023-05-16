@@ -63,7 +63,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: {
       values: ["male", "female", "others"],
-      message: "{VALUE} is not supported! fku",
+      message: "{VALUE} is not supported! ",
     },
   },
   gender_interest: { type: String },

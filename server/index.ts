@@ -13,6 +13,7 @@ import appRouter from "./router";
 
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -33,7 +34,14 @@ app.use(errorHandlerMiddleware);
 
 //socket io integration
 io.on("connection", (socket) => {
-  console.log("a user is connected");
+  console.log("a user is connected", socket.id);
+  socket.on("disconnect", () => {
+    console.log("disconnected", socket.id);
+  });
+
+  socket.on("message", (data) => {
+    console.log(data);
+  });
 });
 
 const PORT = process.env.port || 5200;

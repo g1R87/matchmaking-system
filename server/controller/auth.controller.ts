@@ -63,7 +63,6 @@ export const handleRefreshToken = async (req: Request, res: Response) => {
 
   const refreshToken = req.body.tokenrefresh;
 
-  console.log("the cookies is: ", refreshToken);
   if (!refreshToken) {
     throw new ForbiddenError("Forbidden");
   }
