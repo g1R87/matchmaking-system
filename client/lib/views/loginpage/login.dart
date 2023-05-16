@@ -49,97 +49,104 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Form(
           key: _key,
-          child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
-              child: Container(
-                height: 75 * 3,
-                width: 120 * 3,
-                decoration: const BoxDecoration(
-                    image:
-                        DecorationImage(image: AssetImage('images/renai.png'))),
-              ),
-            ),
-            Email(emailController: _emailController),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 11,
-                          offset: Offset(0, 7))
-                    ]),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter your Password";
-                    } else {
-                      return null;
-                    }
-                  },
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                      fillColor: Colors.grey[50],
-                      filled: true,
-                      prefixIcon: const Padding(
-                        padding: EdgeInsets.only(left: 4),
-                        child: Icon(Icons.password),
-                      ),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                passwordVisible = !passwordVisible;
-                              });
-                            },
-                            icon: Icon(passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off)),
-                      ),
-                      label: const Text("Password"),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(28))),
-                  obscureText: passwordVisible,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: getDeviceWidth(context) * 0.07,
+                      right: getDeviceWidth(context) * 0.07),
+                  child: Container(
+                    height: getDeviceHeight(context) * 0.3,
+                    width: getDeviceWidth(context) * 0.4,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('images/renai.png'))),
+                  ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 45,
-            ),
-            SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.86,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff2B2D42),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28))),
-                onPressed: loginFunc,
-                child: const Text("LOG IN"),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            const Forgetpassword(),
-            const SizedBox(
-              height: 30,
-            ),
-            SizedBox(
-              height: getDeviceHeight(context) * 0.08,
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Divider(
-                color: Colors.black,
-              ),
-            ),
-            const Signupbutton()
-          ]),
+                Email(emailController: _emailController),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: 25,
+                      left: getDeviceWidth(context) * 0.07,
+                      right: getDeviceWidth(context) * 0.07),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(28),
+                        boxShadow: const [
+                          BoxShadow(
+                              color: Colors.black38,
+                              blurRadius: 11,
+                              offset: Offset(0, 7))
+                        ]),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Enter your Password";
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                          fillColor: Colors.grey[50],
+                          filled: true,
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.only(left: 4),
+                            child: Icon(Icons.password),
+                          ),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    passwordVisible = !passwordVisible;
+                                  });
+                                },
+                                icon: Icon(passwordVisible
+                                    ? Icons.visibility
+                                    : Icons.visibility_off)),
+                          ),
+                          label: const Text("Password"),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(28))),
+                      obscureText: passwordVisible,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: getDeviceHeight(context) * 0.05,
+                ),
+                SizedBox(
+                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.86,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff2B2D42),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28))),
+                    onPressed: loginFunc,
+                    child: const Text("LOG IN"),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                const Forgetpassword(),
+                const SizedBox(
+                  height: 30,
+                ),
+                SizedBox(
+                  height: getDeviceHeight(context) * 0.08,
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Divider(
+                    color: Colors.black,
+                  ),
+                ),
+                const Signupbutton()
+              ]),
         ),
       ),
     );

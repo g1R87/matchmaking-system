@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/views/loginpage/login.dart';
 
 class Signup extends StatefulWidget {
@@ -40,179 +41,193 @@ class _SignupState extends State<Signup> {
         scrollDirection: Axis.vertical,
         child: Form(
           key: _key,
-          child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 10, left: 25, right: 25),
-              child: Container(
-                height: 75 * 3,
-                width: 120 * 3,
-                decoration: const BoxDecoration(
-                    image:
-                        DecorationImage(image: AssetImage('images/renai.png'))),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 11,
-                          offset: Offset(0, 7))
-                    ]),
-                child: TextFormField(
-                  controller: _userController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter your Password";
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                      fillColor: Colors.grey[50],
-                      filled: true,
-                      prefixIcon: const Icon(Icons.email),
-                      label: const Text("Email/Phone"),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(28))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                    left: getDeviceWidth(context) * 0.07,
+                    right: getDeviceWidth(context) * 0.07),
+                child: Container(
+                  height: getDeviceHeight(context) * 0.32,
+                  width: getDeviceWidth(context) * 0.5,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('images/renai.png'))),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 11,
-                          offset: Offset(0, 7))
-                    ]),
-                child: TextFormField(
-                  controller: _passwordContoller,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter your Password";
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
-                    fillColor: Colors.grey[50],
-                    filled: true,
-                    prefixIcon: const Icon(Icons.password),
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            passwordVisible = !passwordVisible;
-                          });
-                        },
-                        icon: Icon(passwordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off)),
-                    label: const Text("Create password"),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(28)),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: getDeviceWidth(context) * 0.07,
+                    right: getDeviceWidth(context) * 0.07),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 11,
+                            offset: Offset(0, 7))
+                      ]),
+                  child: TextFormField(
+                    controller: _userController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Enter your Password";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.grey[50],
+                        filled: true,
+                        prefixIcon: const Icon(Icons.email),
+                        label: const Text("Email/Phone"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28))),
                   ),
-                  obscureText: passwordVisible,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30, left: 25, right: 25),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.black38,
-                          blurRadius: 11,
-                          offset: Offset(0, 7))
-                    ]),
-                child: TextFormField(
-                  controller: _repasswordController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Enter your Password";
-                    } else {
-                      return null;
-                    }
-                  },
-                  decoration: InputDecoration(
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 30,
+                    left: getDeviceWidth(context) * 0.07,
+                    right: getDeviceWidth(context) * 0.07),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 11,
+                            offset: Offset(0, 7))
+                      ]),
+                  child: TextFormField(
+                    controller: _passwordContoller,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Enter your Password";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
                       fillColor: Colors.grey[50],
                       filled: true,
                       prefixIcon: const Icon(Icons.password),
                       suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
-                              repasswordVisible = !repasswordVisible;
+                              passwordVisible = !passwordVisible;
                             });
                           },
-                          icon: Icon(repasswordVisible
+                          icon: Icon(passwordVisible
                               ? Icons.visibility
                               : Icons.visibility_off)),
-                      label: const Text("Re-enter password"),
+                      label: const Text("Create password"),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(28))),
-                  obscureText: repasswordVisible,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.04,
-            ),
-            SizedBox(
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.85,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(28)),
-                      backgroundColor: const Color(0xff2B2D42)),
-                  onPressed: signupFunc,
-                  child: const Text("SIGN UP")),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.115,
-            ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Divider(
-                color: Colors.black,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Already have an account?",
-                  style: TextStyle(fontSize: 16),
-                ),
-                const SizedBox(
-                  width: 3,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-                      return const LoginPage();
-                    }));
-                  },
-                  child: const Text(
-                    "Log In",
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline),
+                    ),
+                    obscureText: passwordVisible,
                   ),
-                )
-              ],
-            )
-          ]),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: 30,
+                    left: getDeviceWidth(context) * 0.07,
+                    right: getDeviceWidth(context) * 0.07),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.black38,
+                            blurRadius: 11,
+                            offset: Offset(0, 7))
+                      ]),
+                  child: TextFormField(
+                    controller: _repasswordController,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Enter your Password";
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                        fillColor: Colors.grey[50],
+                        filled: true,
+                        prefixIcon: const Icon(Icons.password),
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                repasswordVisible = !repasswordVisible;
+                              });
+                            },
+                            icon: Icon(repasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off)),
+                        label: const Text("Re-enter password"),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(28))),
+                    obscureText: repasswordVisible,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.04,
+              ),
+              SizedBox(
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.85,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(28)),
+                        backgroundColor: const Color(0xff2B2D42)),
+                    onPressed: signupFunc,
+                    child: const Text("SIGN UP")),
+              ),
+              SizedBox(
+                height: getDeviceHeight(context) * 0.08,
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Already have an account?",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(
+                    width: 3,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (_) {
+                        return const LoginPage();
+                      }));
+                    },
+                    child: const Text(
+                      "Log In",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
