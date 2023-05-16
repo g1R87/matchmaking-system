@@ -1,15 +1,20 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
+  final Map? detail;
+  const DetailsPage({
+    super.key,
+    this.detail,
+  });
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -19,49 +24,23 @@ class _DetailsPageState extends State<DetailsPage> {
   TextEditingController dateinput = TextEditingController();
   TextEditingController fnamecontroller = TextEditingController();
   TextEditingController aboutmecontroller = TextEditingController();
-  ScrollController scrollViewColtroller = ScrollController();
+  bool isLoading = false;
+  bool isEdit = false;
 
   //text editing controller for text field
 
   @override
   void initState() {
     dateinput.text = ""; //set the initial value of text field
-    scrollViewColtroller = ScrollController();
-    scrollViewColtroller.addListener(_scrollListener);
+
     super.initState();
+    final detail = widget.detail;
+    if (detail != null) {
+      isEdit = true;
+    }
   }
 
   String message = '';
-  bool _direction = false;
-
-  _scrollListener() {
-    if (scrollViewColtroller.offset >=
-            scrollViewColtroller.position.maxScrollExtent &&
-        !scrollViewColtroller.position.outOfRange) {
-      setState(() {
-        message = "reach the bottom";
-        _direction = true;
-      });
-    }
-    if (scrollViewColtroller.offset <=
-            scrollViewColtroller.position.minScrollExtent &&
-        !scrollViewColtroller.position.outOfRange) {
-      setState(() {
-        message = "reach the top";
-        _direction = false;
-      });
-    }
-  }
-
-  _moveUp() {
-    scrollViewColtroller.animateTo(scrollViewColtroller.offset - 50,
-        curve: Curves.linear, duration: const Duration(milliseconds: 500));
-  }
-
-  _moveDown() {
-    scrollViewColtroller.animateTo(scrollViewColtroller.offset + 50,
-        curve: Curves.linear, duration: const Duration(milliseconds: 500));
-  }
 
   String? gender;
   String? genderInterest;
@@ -69,72 +48,39 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void dispose() {
     super.dispose();
-    scrollViewColtroller.dispose();
   }
+
+  XFile? imageFile;
+  final ImagePicker picker = ImagePicker();
+
+  NetworkHandler networkHandler = NetworkHandler();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Visibility(
-            visible: _direction,
-            maintainSize: false,
-            child: FloatingActionButton(
-              onPressed: () {
-                _moveUp();
-              },
-              child: const RotatedBox(
-                  quarterTurns: 1, child: Icon(Icons.chevron_left)),
-            ),
-          ),
-          Visibility(
-            maintainSize: false,
-            visible: !_direction,
-            child: FloatingActionButton(
-              onPressed: () {
-                _moveDown();
-              },
-              child: const RotatedBox(
-                  quarterTurns: 3, child: Icon(Icons.chevron_left)),
-            ),
-          )
-        ],
-      ),
       body: SafeArea(
-        child: NotificationListener<ScrollUpdateNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (scrollViewColtroller.position.userScrollDirection ==
-                ScrollDirection.reverse) {
-              print('User is going down');
-              setState(() {
-                message = 'going down';
-                _direction = true;
-              });
-            } else {
-              if (scrollViewColtroller.position.userScrollDirection ==
-                  ScrollDirection.forward) {
-                print('User is going up');
-                setState(() {
-                  message = 'going up';
-                  _direction = false;
-                });
-              }
-            }
-            return true;
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 12),
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: Scrollbar(
+                thumbVisibility: true,
+                trackVisibility: true,
+                thickness: 10,
                 child: ListView(
-                  controller: scrollViewColtroller,
-                  // crossAxisAlignment: CrossAxisAlignment.start,
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextField(
+                    imageProfile(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Name can't be empty";
+                        }
+                        return null;
+                      },
                       controller: fnamecontroller,
                       decoration: const InputDecoration(
                         hintText: "First name",
@@ -153,7 +99,13 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     SizedBox(
                       child: Center(
-                          child: TextField(
+                          child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "DOB can't be empty";
+                          }
+                          return null;
+                        },
                         controller:
                             dateinput, //editing controller of this TextField
                         decoration: const InputDecoration(
@@ -283,7 +235,13 @@ class _DetailsPageState extends State<DetailsPage> {
                       height: 50,
                     ),
                     Center(
-                      child: TextField(
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please write something about yourself";
+                          }
+                          return null;
+                        },
                         controller: aboutmecontroller,
                         decoration: const InputDecoration(
                           hintText: "Write something about yourself",
@@ -306,11 +264,14 @@ class _DetailsPageState extends State<DetailsPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(35))),
                             onPressed: updateFunc,
-                            child: const Text(
-                              "Continue",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
-                            )),
+                            child: isLoading
+                                ? const CircularProgressIndicator()
+                                : const Text(
+                                    "Continue",
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500),
+                                  )),
                       ),
                     ),
                   ],
@@ -323,7 +284,88 @@ class _DetailsPageState extends State<DetailsPage> {
     );
   }
 
+  Widget imageProfile() {
+    return Center(
+      child: Stack(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 50,
+            backgroundImage: imageFile == null
+                ? const AssetImage("images/google.png") as ImageProvider
+                : FileImage(File(imageFile!.path)),
+          ),
+          Positioned(
+              bottom: 5,
+              right: 5,
+              child: InkWell(
+                onTap: () {
+                  showModalBottomSheet(
+                      context: context, builder: ((builder) => bottomSheet()));
+                },
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.teal,
+                  size: 29,
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: [
+          const Text(
+            "Chose Pictures",
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  chosePhoto(ImageSource.camera);
+                },
+                child: const Icon(Icons.camera, size: 40),
+              ),
+              TextButton(
+                onPressed: () {
+                  chosePhoto(ImageSource.gallery);
+                },
+                child: const Icon(Icons.image, size: 40),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void chosePhoto(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    setState(() {
+      imageFile = pickedFile;
+    });
+  }
+
   Future<void> updateFunc() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final appurl = dotenv.env["appurl"];
     //get form data
     final bday = dateinput.text.split("-");
@@ -332,40 +374,66 @@ class _DetailsPageState extends State<DetailsPage> {
     final dobMonth = int.parse(bday[1]);
     final dobDay = int.parse(bday[2]);
     final about = aboutmecontroller.text;
-    final body = {
-      "first_name": fname,
-      "dob_day": dobDay,
-      "dob_month": dobMonth,
-      "dob_year": dobYear,
-      "gender_identity": gender,
-      "gender_interest": genderInterest,
-      "about": about,
-      "isUpdated": true,
-    };
-    final token = await NetworkHandler.getValue("token");
-    //put request
-    final url = "$appurl/user";
-    final uri = Uri.parse(url);
-    final response = await http.put(
-      uri,
-      body: jsonEncode(body),
-      headers: {
-        "Content-type": "application/json",
-        "authorization": "Bearer $token",
-      },
-    );
-    var responseData = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      showSuccessMessage("All set!");
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) {
-            return const MultipleImageSelector();
-          },
-        ),
-      );
+    if ((isEdit == false && gender == null) ||
+        (isEdit == false && genderInterest == null)) {
+      showFailureMessage("Please select your gender/Interest");
     } else {
-      showFailureMessage(responseData["msg"]);
+      final body = {
+        "first_name": fname,
+        "dob_day": dobDay,
+        "dob_month": dobMonth,
+        "dob_year": dobYear,
+        "gender_identity": gender,
+        "gender_interest": genderInterest,
+        "about": about,
+        "isUpdated": true,
+      };
+      final token = await NetworkHandler.getValue("token");
+      //put request
+      final url = "$appurl/user";
+      final uri = Uri.parse(url);
+      final response = await http.put(
+        uri,
+        body: jsonEncode(body),
+        headers: {
+          "Content-type": "application/json",
+          "authorization": "Bearer $token",
+        },
+      );
+      var responseData = jsonDecode(response.body);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (imageFile != null) {
+          final imageResponse = await networkHandler.updatePfp(imageFile!.path);
+          if (imageResponse.statusCode == 200) {
+            setState(() {
+              isLoading = false;
+            });
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return const MultipleImageSelector();
+                },
+              ),
+            );
+          } else {
+            showFailureMessage("Please try again");
+          }
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+        }
+        showSuccessMessage("All set!");
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return const MultipleImageSelector();
+            },
+          ),
+        );
+      } else {
+        showFailureMessage(responseData["msg"]);
+      }
     }
   }
 
