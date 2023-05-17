@@ -100,7 +100,7 @@ class _ChatPageState extends State<ChatPage> {
 
   void setUpSocketListener() {
     socket.on('message-received', (data) {
-      print(data);
+      print("data is: $data");
     });
   }
 }
