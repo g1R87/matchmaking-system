@@ -24,6 +24,7 @@ class _ChatPageState extends State<ChatPage> {
             .disableAutoConnect()
             .build());
     socket.connect();
+    setUpSocketListener();
     super.initState();
   }
 
@@ -95,6 +96,12 @@ class _ChatPageState extends State<ChatPage> {
     };
 
     socket.emit('message', messageJson);
+  }
+
+  void setUpSocketListener() {
+    socket.on('message-received', (data) {
+      print(data);
+    });
   }
 }
 

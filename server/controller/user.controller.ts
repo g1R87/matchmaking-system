@@ -90,18 +90,18 @@ export const matchUser = async (req: Request, res: Response) => {
 
 //get all
 export const getAllUsers = async (req: Request, res: Response) => {
-  // const users = await User.find({}).select(["-pfp"]);
-  const users = await User.find({
-    _id: {
-      $in: [
-        "63e4f6abb9393e67e9418bc6",
-        "643651e04b010392dc68cda4",
-        "63e4f6abb9393e67e9418bc6",
-        "643651e04b010392dc68cda4",
-        "64368fc6d51b4ed48b04a587",
-      ],
-    },
-  }).select(["-pfp"]);
+  const users = await User.find({}).select(["-pfp"]);
+  // const users = await User.find({
+  //   _id: {
+  //     $in: [
+  //       "63e4f6abb9393e67e9418bc6",
+  //       "643651e04b010392dc68cda4",
+  //       "63e4f6abb9393e67e9418bc6",
+  //       "643651e04b010392dc68cda4",
+  //       "64368fc6d51b4ed48b04a587",
+  //     ],
+  //   },
+  // }).select(["-pfp"]);
   res.status(StatusCodes.OK).send(users);
 };
 

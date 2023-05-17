@@ -54,6 +54,7 @@ class _DialogBoxState extends State<DialogBox> {
       headers: {"Content-type": "application/json"},
     );
     if (response.statusCode == 204) {
+      await NetworkHandler.deleteAll();
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => const LoginPage(),
       ));

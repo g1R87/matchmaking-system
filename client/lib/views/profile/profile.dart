@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -139,7 +138,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                           child: CircleAvatar(
                             radius: 50,
-                            backgroundImage: MemoryImage(base64Decode(image)),
+                            backgroundImage: image.isEmpty
+                                ? const AssetImage("images/pfp_default.jpg")
+                                    as ImageProvider
+                                : MemoryImage(base64Decode(image)),
                           ),
                         )
                       ],
@@ -250,9 +252,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> profileFetch() async {
     final appurl = dotenv.env["appurl"];
+    print(await NetworkHandler.getValue("pfp"));
 
     final token = await NetworkHandler.getValue("token");
     final id = await NetworkHandler.getValue("userId");
+    final userImage = await NetworkHandler.getValue("pfp") as String;
     //get request
     final url = "$appurl/user?id=$id";
     final uri = Uri.parse(url);
@@ -269,7 +273,6 @@ class _ProfilePageState extends State<ProfilePage> {
       final userabout = responseData["about"];
       final userGender = responseData['gender_identity'];
       final userInterest = responseData['gender_interest'];
-      final userImage = responseData["pfp"]['data'];
       setState(() {
         about = userabout;
         fname = userfname;
@@ -282,6 +285,34 @@ class _ProfilePageState extends State<ProfilePage> {
       print('wtf?');
     }
   }
+
+  // Future<void> fetchPfp() async {
+  //   final appurl = dotenv.env["appurl"];
+
+  //   final token = await NetworkHandler.getValue("token");
+  //   final id = await NetworkHandler.getValue("userId");
+  //   //get request
+  //   final url = "$appurl/image/pfp";
+  //   final uri = Uri.parse(url);
+  //   final response = await http.get(
+  //     uri,
+  //     headers: {
+  //       "authorization": "Bearer $token",
+  //     },
+  //   );
+  //   if (response.statusCode == 200) {
+  //     final responseData = jsonDecode(response.body) as Map;
+  //     await NetworkHandler.storeValue("pfp", responseData["data"]??"");
+  //     final userImage = NetworkHandler.getValue("pfp") as String;
+
+  //     setState(() {
+  //       image = userImage;
+  //       isLoading = false;
+  //     });
+  //   } else {
+  //     print('wtf?');
+  //   }
+  // }
 }
 
 Widget listofMenu(IconData icon, String text, BuildContext context) {

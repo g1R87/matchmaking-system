@@ -22,6 +22,15 @@ class NetworkHandler {
     return await storage.read(key: key);
   }
 
+  static Future<void> deleteOne(String key) async {
+    return await storage.delete(key: key);
+  }
+
+  //clear all after logout
+  static Future<void> deleteAll() async {
+    return await storage.deleteAll();
+  }
+
   Future<http.StreamedResponse> updatePfp(String filepath) async {
     final url = "$appurl/image/pfp";
     final uri = Uri.parse(url);
@@ -33,6 +42,16 @@ class NetworkHandler {
       "authorization": "Bearer $token",
     });
     var response = request.send();
+    return response;
+  }
+
+  Future<http.Response> getData(String route) async {
+    final url = "$appurl$route";
+    final uri = Uri.parse(url);
+    final token = await getValue("token");
+    var response = await http.get(uri, headers: {
+      "authorization": "Bearer $token",
+    });
     return response;
   }
 }

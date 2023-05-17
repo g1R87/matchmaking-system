@@ -208,10 +208,11 @@ class _LoginPageState extends State<LoginPage> {
     var responseData = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      await NetworkHandler.deleteOne("pfp");
       await NetworkHandler.storeValue("token", responseData["token"]);
       await NetworkHandler.storeValue("userId", responseData["userId"]);
       await NetworkHandler.storeValue("refresh", responseData["tokenrefresh"]);
-      await NetworkHandler.storeValue("pfp", responseData["pfp"]);
+      await NetworkHandler.storeValue("pfp", responseData["pfp"] ?? "");
 
       if (!responseData["isUpdated"]) {
         Navigator.of(context)
