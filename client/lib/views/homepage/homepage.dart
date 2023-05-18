@@ -128,18 +128,22 @@ class _ShowingPageState extends State<ShowingPage> {
         for (int i = 0; i < users.length; i++) {
           decodedImage.add(base64Decode(users[i]["pfp"]["data"]));
 
-          _swipeItem.add(SwipeItem(
-            content: Content(text: users[i]["first_name"]),
-            likeAction: () {
-              actions(context, users[i], "Liked");
-            },
-            nopeAction: () {
-              actions(context, users[i], 'Rejected');
-            },
-            superlikeAction: () {
-              actions(context, users[i], "SuperLiked");
-            },
-          ));
+          _swipeItem.add(
+            SwipeItem(
+              content: Content(text: users[i]["first_name"]),
+              likeAction: () {
+                print("like");
+                actions(context, users[i], "Liked");
+              },
+              nopeAction: () {
+                print("dislike");
+                actions(context, users[i], 'Rejected');
+              },
+              superlikeAction: () {
+                actions(context, users[i], "SuperLiked");
+              },
+            ),
+          );
         }
         print(decodedImage.length);
 
