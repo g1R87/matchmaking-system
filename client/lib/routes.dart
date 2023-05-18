@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
+import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
+import 'package:online_matchmaking_system/views/homepage/homepage.dart';
 import 'package:online_matchmaking_system/views/loginpage/login.dart';
 import 'package:online_matchmaking_system/views/signup_page/signup.dart';
 import 'package:online_matchmaking_system/views/splashscreen/splashscreen.dart';
@@ -29,6 +31,14 @@ class Routes {
       case RoutesName.signup:
         return MaterialPageRoute(
           builder: (context) => const Signup(),
+        );
+      case RoutesName.homepage:
+        return MaterialPageRoute(
+          builder: (context) => const ShowingPage(),
+        );
+      case RoutesName.bottonNavBar:
+        return MaterialPageRoute(
+          builder: (context) => const MainPage(),
         );
       default:
         return MaterialPageRoute(

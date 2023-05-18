@@ -4,7 +4,6 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/routes.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
-import 'package:online_matchmaking_system/views/splashscreen/splashscreen.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
