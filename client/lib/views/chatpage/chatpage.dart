@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/shared_data/device_size.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -40,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
                   itemCount: 10,
                   itemBuilder: (context, index) {
                     return const MessageItem(
-                      sendByMe: true,
+                      sendByMe: false,
                     );
                   }),
             ),
@@ -65,7 +66,10 @@ class _ChatPageState extends State<ChatPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     suffixIcon: Container(
-                      margin: const EdgeInsets.only(right: 10),
+                      margin: EdgeInsets.only(
+                          top: getDeviceWidth(context) * 0.005,
+                          bottom: getDeviceWidth(context) * 0.005,
+                          right: getDeviceHeight(context) * 0.003),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.black26,
@@ -105,6 +109,10 @@ class MessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color blue = const Color(0xff0199FE);
+    Color black = const Color(0xff191919);
+    Color lightBlack = const Color(0xff3E4042);
+    Color white = Colors.white;
     return Align(
       alignment: sendByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
