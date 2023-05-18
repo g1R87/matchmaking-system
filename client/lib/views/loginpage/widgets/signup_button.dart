@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/signup_page/signup.dart';
 
 class Signupbutton extends StatelessWidget {
@@ -20,9 +21,10 @@ class Signupbutton extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-              return const Signup();
-            }));
+            Navigator.pushNamed(context, RoutesName.signup);
+            // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            //   return const Signup();
+            // }));
           },
           child: const Text(
             "Sign Up",

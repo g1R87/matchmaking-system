@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/routes.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/splashscreen/splashscreen.dart';
 
 Future<void> main() async {
@@ -19,7 +21,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      initialRoute: RoutesName.splash,
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }
