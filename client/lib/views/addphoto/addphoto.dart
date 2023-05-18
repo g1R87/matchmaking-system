@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 
 class MultipleImageSelector extends StatefulWidget {
@@ -108,9 +109,7 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                               borderRadius: BorderRadius.circular(35))),
                       onPressed: () {
                         selectedImages != List.empty()
-                            ? Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const MainPage(),
-                              ))
+                            ? Navigator.pushNamed(context, RoutesName.homepage)
                             : null;
                       },
                       child: const Text(

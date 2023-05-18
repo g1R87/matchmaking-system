@@ -3,6 +3,7 @@ import 'package:online_matchmaking_system/services/network_handler.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/loginpage/login.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,9 +56,7 @@ class _DialogBoxState extends State<DialogBox> {
     );
     if (response.statusCode == 204) {
       await NetworkHandler.deleteAll();
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => const LoginPage(),
-      ));
+      Navigator.pushNamed(context, RoutesName.login);
     }
   }
 }

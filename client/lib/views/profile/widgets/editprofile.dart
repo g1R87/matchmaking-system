@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 
 class Editprofile extends StatelessWidget {
   const Editprofile({
@@ -12,9 +12,7 @@ class Editprofile extends StatelessWidget {
       children: [
         Expanded(
           child: GestureDetector(
-            onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const DetailsPage(),
-            )),
+            onTap: () => Navigator.pushNamed(context, RoutesName.detail),
             child: Container(
               height: 50,
               decoration: BoxDecoration(
