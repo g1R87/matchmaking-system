@@ -157,6 +157,7 @@ export const voteUserDown = async (req: Request, res: Response) => {
 
 //recommendation algorithm
 export const fetchUser = async (req: Request, res: Response) => {
+  console.log("Algorithm!");
   const _id = res.locals.user.userID;
   const user: any = await User.findById(_id);
   const interest = user.gender_interest;
@@ -188,12 +189,12 @@ export const fetchUser = async (req: Request, res: Response) => {
 
   const mostLikely: any = await User.find({
     _id: { $in: doublePrimearray },
-  }).select("-pfp-password");
+  }).select("-password -isVerified -isUpdated -__v -refreshToken -matches");
 
   const leastLikely: any = await User.find({
     _id: { $nin: doublePrimearray },
     gender_identity: interest,
-  }).select("-pfp-password");
+  }).select("-password -isVerified -isUpdated -__v -refreshToken -matches");
 
   const fetchedUsers = mostLikely.concat(leastLikely);
 
