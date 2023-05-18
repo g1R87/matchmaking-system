@@ -5,6 +5,8 @@ import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
+import '../../utils/constant.dart';
+
 class ShowingPage extends StatefulWidget {
   const ShowingPage({super.key});
 
@@ -18,11 +20,11 @@ class _ShowingPageState extends State<ShowingPage> {
   bool isLoading = true;
   NetworkHandler networkHandler = NetworkHandler();
   List<dynamic> users = [];
+  List<dynamic> decodedImage = [];
 
   @override
   void initState() {
     fetchUsers();
-    print(users.length);
 
     _matchEngine = MatchEngine(swipeItems: _swipeItem);
 
@@ -66,8 +68,10 @@ class _ShowingPageState extends State<ShowingPage> {
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: MemoryImage(base64Decode(
-                                      users[index]["pfp"]["data"])),
+                                  image: decodedImage[index] == null
+                                      ? AssetImage(images[1]) as ImageProvider
+                                      : MemoryImage(decodedImage[index]),
+                                  // image: AssetImage(images[index]),
                                   fit: BoxFit.cover),
                               color: Colors.red,
                               borderRadius: BorderRadius.circular(10)),
@@ -121,8 +125,9 @@ class _ShowingPageState extends State<ShowingPage> {
     if (response.statusCode == 200) {
       setState(() {
         users = fetchedUsers;
-        print(users.length);
         for (int i = 0; i < users.length; i++) {
+          decodedImage.add(base64Decode(users[i]["pfp"]["data"]));
+
           _swipeItem.add(SwipeItem(
             content: Content(text: users[i]["first_name"]),
             likeAction: () {
@@ -136,6 +141,8 @@ class _ShowingPageState extends State<ShowingPage> {
             },
           ));
         }
+        print(decodedImage.length);
+
         isLoading = false;
       });
     } else {
