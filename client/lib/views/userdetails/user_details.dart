@@ -291,7 +291,7 @@ class _DetailsPageState extends State<DetailsPage> {
           CircleAvatar(
             radius: 50,
             backgroundImage: imageFile == null
-                ? const AssetImage("images/google.png") as ImageProvider
+                ? const AssetImage("images/pfp_default.jpg") as ImageProvider
                 : FileImage(File(imageFile!.path)),
           ),
           Positioned(
@@ -355,7 +355,11 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   void chosePhoto(ImageSource source) async {
-    final pickedFile = await picker.pickImage(source: source);
+    final pickedFile = await picker.pickImage(
+      source: source,
+      maxHeight: 200,
+      maxWidth: 200,
+    );
     setState(() {
       imageFile = pickedFile;
     });
@@ -408,6 +412,11 @@ class _DetailsPageState extends State<DetailsPage> {
             setState(() {
               isLoading = false;
             });
+            final pfpResponse = await networkHandler.getData("/image/pfp");
+            final pfpData = jsonDecode(pfpResponse.body);
+            if (pfpResponse.statusCode == 200) {
+              await NetworkHandler.storeValue("pfp", pfpData["data"] ?? "");
+            }
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) {

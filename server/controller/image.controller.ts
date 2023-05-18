@@ -6,8 +6,10 @@ import { compressImage } from "../utils/image-compress";
 
 // get profile pic
 export const getPfp = async (req: Request, res: Response) => {
-  const data = await User.findById(res.locals.user.userID).select("pfp -_id");
-  res.status(200).send(data);
+  const pfpString = await User.findById(res.locals.user.userID).select(
+    "pfp -_id"
+  );
+  res.status(200).send({ data: pfpString?.pfp.data });
 };
 
 //store profile pic
