@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/logout_alertbox.dart';
 
+import '../../../utils/routesname.dart';
+
 IconButton menu(BuildContext context) {
   return IconButton(
     onPressed: () {
@@ -14,7 +16,7 @@ IconButton menu(BuildContext context) {
         context: context,
         builder: (BuildContext context) {
           return SizedBox(
-            height: 200,
+            height: 240,
             child: Column(
               children: [
                 SizedBox(
@@ -45,6 +47,13 @@ IconButton menu(BuildContext context) {
                 ),
                 Expanded(
                     child: listofMenu(Icons.settings, "Settings", context)),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, RoutesName.detail);
+                  },
+                  child: Expanded(
+                      child: listofMenu(Icons.edit, "Edit profile", context)),
+                ),
                 Expanded(
                   child: listofMenu(Icons.update, "Update", context),
                 ),
