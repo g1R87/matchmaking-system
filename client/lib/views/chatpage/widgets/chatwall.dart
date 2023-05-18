@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
+import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
+import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatWall extends StatefulWidget {
   const ChatWall({super.key, required this.chatModel});
@@ -12,6 +16,26 @@ class ChatWall extends StatefulWidget {
 
 class _ChatWallState extends State<ChatWall> {
   TextEditingController msgInputController = TextEditingController();
+  final appurl = dotenv.env["appurl"];
+
+  late IO.Socket socket;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    connect();
+    super.initState();
+  }
+
+  void connect() {
+    socket = IO.io(
+        appurl,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .disableAutoConnect()
+            .build());
+    socket.connect();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +77,36 @@ class _ChatWallState extends State<ChatWall> {
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: [
-            ListView(),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 150,
+              child: ListView(
+                shrinkWrap: true,
+                children: const [
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                  SendMessageCard(),
+                  ReplyCard(),
+                ],
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Row(
@@ -67,6 +120,12 @@ class _ChatWallState extends State<ChatWall> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25)),
                       child: TextFormField(
+                        onTap: () {
+                          setState(() {});
+                        },
+                        scrollPadding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).viewInsets.bottom),
+                        autofocus: true,
                         controller: msgInputController,
                         keyboardType: TextInputType.multiline,
                         textAlignVertical: TextAlignVertical.center,
@@ -92,6 +151,7 @@ class _ChatWallState extends State<ChatWall> {
                       radius: 20,
                       child: IconButton(
                         onPressed: () {
+                          sendMessage(msgInputController.text);
                           msgInputController.text = "";
                         },
                         icon: const Icon(
@@ -109,5 +169,14 @@ class _ChatWallState extends State<ChatWall> {
         ),
       ),
     );
+  }
+
+  void sendMessage(String text) {
+    var messageJson = {
+      "message": text,
+      "sender": socket.id,
+    };
+
+    socket.emit('message', messageJson);
   }
 }
