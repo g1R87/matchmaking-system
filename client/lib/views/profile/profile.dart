@@ -26,7 +26,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     profileFetch();
   }
@@ -56,49 +55,96 @@ class _ProfilePageState extends State<ProfilePage> {
                   padding: EdgeInsets.symmetric(
                       horizontal: getDeviceWidth(context) * 0.05),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [ProfilePic(image: image)],
                       ),
                       SizedBox(
+                        height: getDeviceHeight(context) * 0.1,
+                      ),
+                      Row(
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          const Text(
+                            "Name : ",
+                            style: TextStyle(
+                                letterSpacing: 1.5,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'PTSans'),
+                          ),
+                          Text(
+                            fname,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'PTSans',
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
                         height: getDeviceHeight(context) * 0.015,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
                             "Gender : ",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                letterSpacing: 1.5,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'PTSans'),
                           ),
                           Text(
                             gender,
                             style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                              fontSize: 16,
+                              fontFamily: 'PTSans',
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(
-                        height: getDeviceHeight(context) * 0.005,
+                        height: getDeviceHeight(context) * 0.015,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "Prefer gender : ",
+                        children: const [
+                          Text(
+                            "Age : ",
                             style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                                letterSpacing: 1.5,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'PTSans'),
                           ),
                           Text(
-                            ginterest,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                            "23",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: 'PTSans',
+                            ),
                           ),
                         ],
                       ),
                       SizedBox(
-                        height: getDeviceHeight(context) * 0.02,
+                        height: getDeviceHeight(context) * 0.015,
+                      ),
+                      const Text(
+                        "About me: ",
+                        style: TextStyle(
+                            letterSpacing: 1.5,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'PTSans'),
+                      ),
+                      Text(
+                        about,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'PTSans',
+                        ),
                       ),
                       SizedBox(
                         height: getDeviceHeight(context) * 0.02,
@@ -106,82 +152,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                 ),
-
-                Center(
-                  child: Container(
-                    height: getDeviceHeight(context) * 0.55,
-                    width: getDeviceWidth(context) * 0.95,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                            image: image.isEmpty
-                                ? const AssetImage("images/pfp_default.jpg")
-                                    as ImageProvider
-                                : MemoryImage(base64Decode(image)),
-                            fit: BoxFit.cover)),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Center(
-                  child: SizedBox(
-                    height: 50,
-                    width: getDeviceWidth(context) * 0.95,
-                    child: Text(about),
-                  ),
-                ),
-
-                // const TabBar(
-                //   indicatorColor: Colors.black,
-                //   tabs: <Widget>[
-                //     Tab(
-                //       icon: Icon(
-                //         Icons.grid_on_sharp,
-                //         color: Colors.black,
-                //       ),
-                //     ),
-                //     Tab(
-                //       child: Text(
-                //         "About me",
-                //         style: TextStyle(color: Colors.black),
-                //       ),
-                //     ),
-                //   ],
-                // ),
-                // Expanded(
-                //   child: TabBarView(
-                //     children: <Widget>[
-                //       GridView.builder(
-                //           gridDelegate:
-                //               const SliverGridDelegateWithFixedCrossAxisCount(
-                //             crossAxisCount: 3, // number of columns
-                //             mainAxisSpacing: 2.5, // space between rows
-                //             crossAxisSpacing: 5, // space between columns
-                //             childAspectRatio:
-                //                 1.0, // width to height ratio of grid cells
-                //           ),
-                //           itemCount: images.length,
-                //           itemBuilder: (BuildContext ctx, index) {
-                //             return Padding(
-                //               padding: const EdgeInsets.only(top: 2.5),
-                //               child: Container(
-                //                 alignment: Alignment.center,
-                //                 decoration: BoxDecoration(
-                //                   image: DecorationImage(
-                //                       image: AssetImage(images[index]),
-                //                       fit: BoxFit.cover),
-                //                 ),
-                //               ),
-                //             );
-                //           }),
-                //       Padding(
-                //         padding: const EdgeInsets.all(8.0),
-                //         child: Text(about),
-                //       ),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
             child: const Center(child: CircularProgressIndicator()),

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/views/profile/widgets/profilephoto.dart';
 
 import '../profile.dart';
 import 'logout_alertbox.dart';
@@ -28,7 +29,7 @@ class ProfilePic extends StatelessWidget {
             context: context,
             builder: (BuildContext context) {
               return SizedBox(
-                height: 200,
+                height: 240,
                 child: Column(
                   children: [
                     SizedBox(
@@ -56,6 +57,16 @@ class ProfilePic extends StatelessWidget {
                               child: const Icon(CupertinoIcons.multiply))
                         ],
                       ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ProfilePhoto(),
+                        ));
+                      },
+                      child: Expanded(
+                          child: listofMenu(CupertinoIcons.viewfinder,
+                              "View Profile Photo", context)),
                     ),
                     Expanded(
                         child: listofMenu(Icons.settings, "Settings", context)),
