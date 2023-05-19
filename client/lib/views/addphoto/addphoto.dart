@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
-import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 
 class MultipleImageSelector extends StatefulWidget {
   const MultipleImageSelector({Key? key}) : super(key: key);
