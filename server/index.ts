@@ -48,8 +48,8 @@ io.on("connection", (socket) => {
     console.log(msg);
     socket.broadcast.emit("message-received", msg);
     const targetId = msg.targetId;
-    if (clients[msg.sourceId]) {
-      clients[msg.sourceId].emit("message", { message: "i am bot" });
+    if (clients[msg.targetId]) {
+      clients[msg.targetId].emit("message", msg);
     }
   });
 
