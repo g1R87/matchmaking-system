@@ -75,7 +75,7 @@ IconButton menu(BuildContext context) {
         },
       );
     },
-    icon: const Icon(Icons.menu),
+    icon: const Icon(CupertinoIcons.bars),
   );
 }
 

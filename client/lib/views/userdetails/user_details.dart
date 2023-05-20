@@ -26,6 +26,7 @@ class _DetailsPageState extends State<DetailsPage> {
   TextEditingController aboutmecontroller = TextEditingController();
   bool isLoading = false;
   bool isEdit = false;
+  String age = '0';
 
   //text editing controller for text field
 
@@ -44,6 +45,23 @@ class _DetailsPageState extends State<DetailsPage> {
 
   String? gender;
   String? genderInterest;
+
+  String calculateAge(DateTime birthDate) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    int month1 = currentDate.month;
+    int month2 = birthDate.month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = birthDate.day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age.toString();
+  }
 
   @override
   void dispose() {
@@ -99,48 +117,61 @@ class _DetailsPageState extends State<DetailsPage> {
                     ),
                     SizedBox(
                       child: Center(
-                          child: TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "DOB can't be empty";
-                          }
-                          return null;
-                        },
-                        controller:
-                            dateinput, //editing controller of this TextField
-                        decoration: const InputDecoration(
-                            icon:
-                                Icon(Icons.calendar_today), //icon of text field
-                            hintText: "DD/MM/YYYY" //label text of field
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "DOB can't be empty";
+                                }
+                                return null;
+                              },
+                              controller:
+                                  dateinput, //editing controller of this TextField
+                              decoration: const InputDecoration(
+                                  icon: Icon(Icons
+                                      .calendar_today), //icon of text field
+                                  hintText: "DD/MM/YYYY" //label text of field
+                                  ),
+                              readOnly:
+                                  true, //set it true, so that user will not able to edit text
+                              onTap: () async {
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(
+                                        1950), //DateTime.now() - not to allow to choose before today.
+                                    lastDate: DateTime(2101));
+
+                                if (pickedDate != null) {
+                                  setState(() {
+                                    age = calculateAge(pickedDate);
+                                  });
+                                }
+
+                                if (pickedDate != null) {
+                                  print(
+                                      pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                  String formattedDate =
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(pickedDate);
+                                  print(
+                                      formattedDate); //formatted date output using intl package =>  2021-03-16
+                                  //you can implement different kind of Date Format here according to your requirement
+
+                                  setState(() {
+                                    dateinput.text =
+                                        formattedDate; //set output date to TextField value.
+                                  });
+                                } else {
+                                  print("Date is not selected");
+                                }
+                              },
                             ),
-                        readOnly:
-                            true, //set it true, so that user will not able to edit text
-                        onTap: () async {
-                          DateTime? pickedDate = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(
-                                  1950), //DateTime.now() - not to allow to choose before today.
-                              lastDate: DateTime(2101));
-
-                          if (pickedDate != null) {
-                            print(
-                                pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                            String formattedDate =
-                                DateFormat('yyyy-MM-dd').format(pickedDate);
-                            print(
-                                formattedDate); //formatted date output using intl package =>  2021-03-16
-                            //you can implement different kind of Date Format here according to your requirement
-
-                            setState(() {
-                              dateinput.text =
-                                  formattedDate; //set output date to TextField value.
-                            });
-                          } else {
-                            print("Date is not selected");
-                          }
-                        },
-                      )),
+                            Text('You are $age years old!')
+                          ],
+                        ),
+                      ),
                     ),
                     const SizedBox(
                       height: 5,
