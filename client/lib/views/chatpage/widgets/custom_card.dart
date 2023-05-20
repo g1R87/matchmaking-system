@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/chatwall.dart';
@@ -6,8 +6,9 @@ import 'package:online_matchmaking_system/views/chatpage/widgets/chatwall.dart';
 import '../../../model/chatmodel.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key, required this.chatModel});
+  const CustomCard({super.key, required this.chatModel, required this.id});
   final ChatModel chatModel;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class CustomCard extends StatelessWidget {
             MaterialPageRoute(
                 builder: (context) => ChatWall(
                       chatModel: chatModel,
+                      id: id,
                     )));
       },
       child: Column(
@@ -27,7 +29,7 @@ class CustomCard extends StatelessWidget {
               radius: 35,
               backgroundImage: (chatModel.pfp == null || chatModel.pfp!.isEmpty)
                   ? const AssetImage("images/pfp_default.jpg") as ImageProvider
-                  : MemoryImage(base64Decode(chatModel.pfp as String)),
+                  : MemoryImage(chatModel.pfp as Uint8List),
             ),
             title: Text(
               chatModel.name as String,

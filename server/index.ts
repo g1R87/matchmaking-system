@@ -1,10 +1,12 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { Socket } from "dgram";
 import "dotenv/config";
 import express from "express";
 import "express-async-errors";
 import http from "http";
 import mongoose from "mongoose";
+import { join } from "path";
 import { Server } from "socket.io";
 import connectDB from "./db/connect";
 import errorHandlerMiddleware from "./middleware/error-handler";
@@ -25,12 +27,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("public"));
 app.use("/", appRouter);
+app.use("/image", express.static(join(__dirname, "Uploads")));
 const host = "192.168.1.109";
 // app.use("/", (req, res) => {
 //   res.send("helo");
 // });
 app.use(notFound);
 app.use(errorHandlerMiddleware);
+
+var clients: any = {};
 
 //socket io integration
 io.on("connection", (socket) => {
@@ -39,9 +44,18 @@ io.on("connection", (socket) => {
     console.log("disconnected", socket.id);
   });
 
-  socket.on("message", (data) => {
-    console.log(data);
-    socket.broadcast.emit("message-received", data);
+  socket.on("message", (msg) => {
+    console.log(msg);
+    socket.broadcast.emit("message-received", msg);
+    const targetId = msg.targetId;
+    if (clients[msg.sourceId]) {
+      clients[msg.sourceId].emit("message", { message: "i am bot" });
+    }
+  });
+
+  socket.on("signin", (id) => {
+    clients[id] = socket;
+    console.log("the list are ", Object.keys(clients));
   });
 });
 

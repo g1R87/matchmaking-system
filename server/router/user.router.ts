@@ -16,6 +16,8 @@ userRouter.post("/voteup", isLoggedIn, userController.voteUserUp);
 userRouter.post("/votedown", isLoggedIn, userController.voteUserDown);
 //fetching algorithm endpoint
 userRouter.get("/fetchuser", isLoggedIn, userController.fetchUser);
+//fetching chat endpoint
+userRouter.get("/fetchchat", isLoggedIn, userController.fetchChat);
 
 //! temp remove later
 userRouter.get("/updateall", userController.updateall);

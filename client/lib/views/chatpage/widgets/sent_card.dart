@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class SendMessageCard extends StatelessWidget {
-  const SendMessageCard({super.key});
+class SentMessageCard extends StatelessWidget {
+  const SentMessageCard({super.key, required this.message, required this.time});
+  final String message;
+  final String time;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +20,12 @@ class SendMessageCard extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: Stack(
             children: [
-              const Padding(
-                padding:
-                    EdgeInsets.only(left: 10, right: 40, top: 5, bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, right: 40, top: 5, bottom: 20),
                 child: Text(
-                  "asdfasd",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  message,
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
               Positioned(
@@ -32,7 +34,7 @@ class SendMessageCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      "time",
+                      time,
                       style: TextStyle(
                         color: Colors.grey[300],
                         fontSize: 13,

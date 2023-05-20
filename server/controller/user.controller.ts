@@ -187,12 +187,14 @@ export const fetchUser = async (req: Request, res: Response) => {
     });
   });
 
+  const doublePrimearray2 = doublePrimearray.concat([_id]);
+
   const mostLikely: any = await User.find({
     _id: { $in: doublePrimearray },
   }).select("-password -isVerified -isUpdated -__v -refreshToken -matches");
 
   const leastLikely: any = await User.find({
-    _id: { $nin: doublePrimearray },
+    _id: { $nin: doublePrimearray2 },
     gender_identity: interest,
   }).select("-password -isVerified -isUpdated -__v -refreshToken -matches");
 
@@ -219,4 +221,18 @@ export const fetchUser = async (req: Request, res: Response) => {
   // });
 
   res.send(fetchedUsers);
+};
+
+//fetch chat list
+export const fetchChat = async (req: Request, res: Response) => {
+  const _id = res.locals.user.userID;
+  const user: any = await User.findById(_id);
+  const likedUserIds = Object.keys(user.matches).filter(
+    (id) => user.matches[id] > 0
+  );
+  const likedUsers: any = await User.find({
+    _id: { $in: likedUserIds },
+  });
+
+  res.send(likedUsers);
 };

@@ -408,6 +408,7 @@ class _DetailsPageState extends State<DetailsPage> {
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (imageFile != null) {
           final imageResponse = await networkHandler.updatePfp(imageFile!.path);
+
           if (imageResponse.statusCode == 200) {
             setState(() {
               isLoading = false;

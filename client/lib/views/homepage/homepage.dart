@@ -123,32 +123,36 @@ class _ShowingPageState extends State<ShowingPage> {
     final response = await networkHandler.getData("/user/fetchuser");
     final fetchedUsers = await jsonDecode(response.body);
     if (response.statusCode == 200) {
-      setState(() {
-        users = fetchedUsers;
-        for (int i = 0; i < users.length; i++) {
-          decodedImage.add(base64Decode(users[i]["pfp"]["data"]));
+      if (mounted) {
+        setState(() {
+          users = fetchedUsers;
+          for (int i = 0; i < users.length; i++) {
+            decodedImage.add(users[i]["pfp"] != null
+                ? base64Decode(users[i]["pfp"]["data"])
+                : null);
 
-          _swipeItem.add(
-            SwipeItem(
-              content: Content(text: users[i]["first_name"]),
-              likeAction: () {
-                print("like");
-                actions(context, users[i], "Liked");
-              },
-              nopeAction: () {
-                print("dislike");
-                actions(context, users[i], 'Rejected');
-              },
-              superlikeAction: () {
-                actions(context, users[i], "SuperLiked");
-              },
-            ),
-          );
-        }
-        print(decodedImage.length);
+            _swipeItem.add(
+              SwipeItem(
+                content: Content(text: users[i]["first_name"]),
+                likeAction: () {
+                  print("like");
+                  actions(context, users[i], "Liked");
+                },
+                nopeAction: () {
+                  print("dislike");
+                  actions(context, users[i], 'Rejected');
+                },
+                superlikeAction: () {
+                  actions(context, users[i], "SuperLiked");
+                },
+              ),
+            );
+          }
+          print(decodedImage.length);
 
-        isLoading = false;
-      });
+          isLoading = false;
+        });
+      }
     } else {
       print("retry");
     }
