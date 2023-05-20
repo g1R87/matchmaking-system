@@ -3,7 +3,8 @@ import { StatusCodes } from "http-status-codes";
 import BadRequestError from "../errors/bad-request";
 import UnauthenticatedError from "../errors/unauthenticated";
 
-import User from "../models/user.model";
+import NotFoundError from "../errors/not-found";
+import User, { UserInput } from "../models/user.model";
 
 interface reqbody {
   email: String;
@@ -116,30 +117,51 @@ export const getUsers = async (req: Request, res: Response) => {
 
 //update all
 export const updateall = async (req: Request, res: Response) => {
-  const updatedUser = await User.updateMany({}, { matches: {} });
+  const updatedUser = await User.updateMany(
+    {},
+    { chatList: [], coord: [27.7172, 85.324] }
+  );
   res.status(200).send(updatedUser);
   // res.send(res.locals.user);
 };
 
 //vote user
 export const voteUserUp = async (req: Request, res: Response) => {
-  console.log("voteup");
   const id = req.query.id as string;
+  const ownId = res.locals.user.userID;
   if (!id) {
     throw new BadRequestError("Please provide id");
   }
-  const user: any = await User.findById({ _id: res.locals.user.userID });
-  user.matches[id] = user.matches[id] ? user.matches[id] + 1 : 1;
-  const updatedMatch = user.matches;
-  const updateduser = await User.updateOne(
-    { _id: res.locals.user.userID },
-    { matches: updatedMatch }
-  );
-
-  res.status(200).send(updateduser);
+  const user: UserInput | null = await User.findById({
+    _id: ownId,
+  });
+  if (user) {
+    user.matches[id] = user.matches[id] ? user.matches[id] + 1 : 1;
+    const updatedMatch = user.matches;
+    const updateduser = await User.updateOne(
+      { _id: ownId },
+      { matches: updatedMatch }
+    );
+    const ohterUser: UserInput | null = await User.findById({
+      _id: id,
+    });
+    if (ohterUser) {
+      if (
+        ohterUser.pending.includes(ownId) ||
+        ohterUser.chatList.includes(ownId)
+      ) {
+        res.status(200).send(updateduser);
+      } else {
+        const updatedPending = ohterUser.pending.concat([ownId]);
+        await User.updateOne({ _id: id }, { pending: updatedPending });
+        res.status(200).send(updateduser);
+      }
+    }
+    throw new NotFoundError("No users found");
+  }
+  throw new NotFoundError("No users found");
 };
 export const voteUserDown = async (req: Request, res: Response) => {
-  console.log("votedown");
   const id = req.query.id as string;
   if (!id) {
     throw new BadRequestError("Please provide id");
@@ -226,13 +248,51 @@ export const fetchUser = async (req: Request, res: Response) => {
 //fetch chat list
 export const fetchChat = async (req: Request, res: Response) => {
   const _id = res.locals.user.userID;
-  const user: any = await User.findById(_id);
-  const likedUserIds = Object.keys(user.matches).filter(
-    (id) => user.matches[id] > 0
-  );
-  const likedUsers: any = await User.find({
-    _id: { $in: likedUserIds },
-  });
+  const user: UserInput | null = await User.findById(_id);
+  if (user) {
+    const chatList = user.chatList;
+    const chatListUsers = await User.find({ _id: { $in: chatList } });
+    res.send(chatListUsers);
+  }
+};
 
-  res.send(likedUsers);
+//fetch pending
+export const fetchPending = async (req: Request, res: Response) => {
+  const _id = res.locals.user.userID;
+  const user: UserInput | null = await User.findById(_id);
+  if (user) {
+    const pendingList = user.pending;
+    const pendingUsers = await User.find({ _id: { $in: pendingList } });
+    res.send(pendingUsers);
+  }
+  throw new NotFoundError("Not found");
+};
+
+//accept req
+export const updateChatlist = async (req: Request, res: Response) => {
+  const ownId = res.locals.user.userID;
+  const { reqId } = req.body;
+
+  if (!reqId) {
+    throw new BadRequestError("Request id required");
+  }
+
+  const ownUser: UserInput | null = await User.findById(ownId);
+  const reqUser: UserInput | null = await User.findById(reqId);
+  if (ownUser && reqUser) {
+    console.log(ownUser.pending);
+    const pendingList = ownUser.pending;
+    const index = pendingList.indexOf(reqId);
+    if (index > -1) {
+      pendingList.splice(index, 1);
+    }
+    const updatedChatlist1 = ownUser.chatList.concat([reqId]);
+    await User.updateOne(
+      { _id: ownId },
+      { chatList: updatedChatlist1, pending: pendingList }
+    );
+    const updatedChatlist2 = reqUser.chatList.concat([ownId]);
+    await User.updateOne({ _id: reqId }, { chatList: updatedChatlist2 });
+    res.status(200).send({ msg: "Success" });
+  }
 };

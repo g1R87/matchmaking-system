@@ -18,6 +18,10 @@ userRouter.post("/votedown", isLoggedIn, userController.voteUserDown);
 userRouter.get("/fetchuser", isLoggedIn, userController.fetchUser);
 //fetching chat endpoint
 userRouter.get("/fetchchat", isLoggedIn, userController.fetchChat);
+//fetching notification/pending
+userRouter.get("/fetchpending", isLoggedIn, userController.fetchPending);
+//accept request
+userRouter.post("/acceptreq", isLoggedIn, userController.updateChatlist);
 
 //! temp remove later
 userRouter.get("/updateall", userController.updateall);

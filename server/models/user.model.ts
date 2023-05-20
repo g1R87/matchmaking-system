@@ -23,8 +23,12 @@ export interface UserInput extends mongoose.Document {
   isVerified: Boolean;
   isUpdated: Boolean;
   matches: matchType;
+  chatList: string[];
+  pending: string[];
+  coords: number[];
   refreshToken: string;
   pfp: { data: string; contentType: string };
+
   createJWT(): string;
   createRJWT(): string;
   checkPassword(password: string): boolean;
@@ -81,6 +85,18 @@ const UserSchema = new mongoose.Schema({
   isUpdated: {
     type: Boolean,
     default: false,
+  },
+  chatList: {
+    type: Array,
+    default: [],
+  },
+  pending: {
+    type: Array,
+    default: [],
+  },
+  coord: {
+    type: Array,
+    default: [27.7172, 85.324],
   },
   refreshToken: String,
 });

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/notification/notification.dart';
+import 'package:online_matchmaking_system/views/notification/notification.dart';
 import 'package:online_matchmaking_system/views/homepage/homepage.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 

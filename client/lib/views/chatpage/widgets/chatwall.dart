@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
@@ -64,6 +65,10 @@ class _ChatWallState extends State<ChatWall> {
       children: [
         Scaffold(
           appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.grey[50],
+              statusBarBrightness: Brightness.dark,
+            ),
             leading: InkWell(
               onTap: () {
                 Navigator.of(context, rootNavigator: true).pop();
@@ -121,8 +126,8 @@ class _ChatWallState extends State<ChatWall> {
 
                         if (messages[reverseIndex].type == "source") {
                           return SentMessageCard(
-                            message: messages[reverseIndex].message as String,
                             time: messages[reverseIndex].time as String,
+                            message: messages[reverseIndex].message as String,
                           );
                         } else {
                           print("reply card triggered!!!");
@@ -153,7 +158,6 @@ class _ChatWallState extends State<ChatWall> {
                                 vertical:
                                     MediaQuery.of(context).viewInsets.bottom),
                             controller: msgInputController,
-                            keyboardType: TextInputType.multiline,
                             textAlignVertical: TextAlignVertical.center,
                             decoration: InputDecoration(
                               border: InputBorder.none,

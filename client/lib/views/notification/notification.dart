@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:online_matchmaking_system/views/chatpage/widgets/chatlist.dart';
+import 'package:online_matchmaking_system/views/notification/widgets/RequestList.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<NotificationPage> createState() => _NotificationPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _NotificationPageState extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,12 +21,12 @@ class _ChatPageState extends State<ChatPage> {
         backgroundColor: Colors.grey[50],
         elevation: 0,
         title: const Text(
-          "Inbox",
+          "Requests",
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
       ),
-      body: const ChatList(),
+      body: const RequestList(),
     );
   }
 }

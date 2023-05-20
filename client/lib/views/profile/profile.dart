@@ -23,11 +23,29 @@ class _ProfilePageState extends State<ProfilePage> {
   var gender = '';
   var ginterest = '';
   var image = '';
+  String age = '';
 
   @override
   void initState() {
     super.initState();
     profileFetch();
+  }
+
+  String calculateAge(int year, int month, int day) {
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - year;
+    int month1 = currentDate.month;
+    int month2 = month;
+    if (month2 > month1) {
+      age--;
+    } else if (month1 == month2) {
+      int day1 = currentDate.day;
+      int day2 = day;
+      if (day2 > day1) {
+        age--;
+      }
+    }
+    return age.toString();
   }
 
   @override
@@ -110,8 +128,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: getDeviceHeight(context) * 0.015,
                       ),
                       Row(
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             "Age : ",
                             style: TextStyle(
                                 letterSpacing: 1.5,
@@ -120,8 +138,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontFamily: 'PTSans'),
                           ),
                           Text(
-                            "23",
-                            style: TextStyle(
+                            age.isEmpty ? "na" : age,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontFamily: 'PTSans',
                             ),
@@ -184,12 +202,18 @@ class _ProfilePageState extends State<ProfilePage> {
       final userabout = responseData["about"];
       final userGender = responseData['gender_identity'];
       final userInterest = responseData['gender_interest'];
+
+      final year = responseData['dob_year'];
+      final month = responseData['dob_month'];
+      final day = responseData['dob_day'];
+      print("$year $month $day");
       setState(() {
         about = userabout;
         fname = userfname;
         gender = userGender;
         ginterest = userInterest;
         image = userImage;
+        age = calculateAge(year, month, day);
         isLoading = false;
       });
     } else {
