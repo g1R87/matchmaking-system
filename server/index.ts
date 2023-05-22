@@ -26,12 +26,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("public"));
-app.use("/", appRouter);
 app.use("/image", express.static(join(__dirname, "Uploads")));
+app.use("/", appRouter);
 const host = "192.168.1.109";
-// app.use("/", (req, res) => {
-//   res.send("helo");
-// });
+
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 

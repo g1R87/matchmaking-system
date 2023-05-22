@@ -60,7 +60,7 @@ class _ProfilePageState extends State<ProfilePage> {
           title: Profilename(about: about, fname: fname),
           centerTitle: true,
           actions: [
-            menu(context),
+            menu(context, name: fname, aboutme: about),
           ],
         ),
         body: SingleChildScrollView(

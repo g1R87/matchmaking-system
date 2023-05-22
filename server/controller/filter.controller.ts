@@ -95,7 +95,6 @@ export const filterByDistance = async (req: Request, res: Response) => {
 
       if (distance <= 15) newArr.push(filteredUsersList);
     }
-
     res.status(200).send(newArr);
   }
 };

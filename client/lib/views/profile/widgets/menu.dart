@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/logout_alertbox.dart';
+import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
 
-import '../../../utils/routesname.dart';
-
-IconButton menu(BuildContext context) {
+IconButton menu(BuildContext context, {String name = "", String aboutme = ""}) {
   return IconButton(
     onPressed: () {
       showModalBottomSheet(
@@ -49,7 +48,14 @@ IconButton menu(BuildContext context) {
                     child: listofMenu(Icons.settings, "Settings", context)),
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, RoutesName.detail);
+                    // Navigator.pushNamed(context, RoutesName.detail,
+                    //     arguments: {"fname": name, "aboutme": aboutme});
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (context) {
+                      return DetailsPage(
+                        detail: {"fname": name, "aboutme": aboutme},
+                      );
+                    }));
                   },
                   child: Expanded(
                       child: listofMenu(Icons.edit, "Edit profile", context)),

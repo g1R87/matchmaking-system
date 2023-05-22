@@ -13,12 +13,16 @@ type FileType = {
   size: number;
 };
 
-export const compressImage = async (file: FileType) => {
+export const compressImage = async (file: FileType, filename: string) => {
   //   const filename = `${file.filename.split(".")[0]}.jpeg`;
   await sharp(file.path)
     .resize(200, 200)
     .jpeg({ quality: 90, force: true, mozjpeg: true })
-    .toFile(path.resolve(file.destination, "resized", file.filename));
-  const resizedPath = path.join("uploads", "resized", file.filename);
-  return fs.readFileSync(resizedPath, "base64");
+    .toFile(path.resolve(file.destination, "resized", filename));
+  const resizedPath = path.join("uploads", "resized", filename);
+  return {
+    filename: filename,
+    filedata: fs.readFileSync(resizedPath, "base64"),
+  };
+  // return fs.readFileSync(resizedPath, "base64");
 };

@@ -47,6 +47,7 @@ dependencies:
   socket_io_client: ^2.0.2
   geolocator: ^9.0.2
   geocoding: ^2.1.0
+  fluttertoast: ^8.2.1
 
 dev_dependencies:
   flutter_test:

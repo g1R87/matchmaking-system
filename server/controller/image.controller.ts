@@ -14,19 +14,21 @@ export const getPfp = async (req: Request, res: Response) => {
 
 //store profile pic
 export const uploadSingle = async (req: Request, res: Response) => {
+  const _id = res.locals.user.userID;
   const file: any = req.file;
   if (!file) {
     throw new BadRequestError("Please chose files");
   }
   console.log(file);
 
-  const img = await compressImage(file);
+  const img = await compressImage(file, `myImage-${_id}`);
 
   // store in database
   const updatedDocument = {
     $set: {
+      url: img.filename,
       pfp: {
-        data: img,
+        data: img.filedata,
         contentType: file.mimetype,
       },
     },
@@ -53,7 +55,7 @@ export const uploadMulti = async (req: Request, res: Response) => {
   //iterate over images and compress
   let imgArray = await Promise.all(
     files.map(async (file: any) => {
-      const img = await compressImage(file);
+      const img = await compressImage(file, `image-${userId}`);
       return img;
     })
   );

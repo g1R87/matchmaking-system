@@ -18,7 +18,9 @@ export interface UserInput extends mongoose.Document {
   show_gender: boolean;
   gender_identity: string;
   gender_interest: string;
-  url: string;
+  url1: string;
+  url2: string;
+  url3: string;
   about: string;
   isVerified: Boolean;
   isUpdated: Boolean;
@@ -75,7 +77,9 @@ const UserSchema = new mongoose.Schema({
     data: String,
     contentType: String,
   },
-  url: { type: String },
+  url1: { type: String },
+  url2: { type: String },
+  url3: { type: String },
   about: { type: String },
   matches: { type: Object, default: {} },
   isVerified: {

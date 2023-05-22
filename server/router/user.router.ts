@@ -29,6 +29,8 @@ userRouter.get("/fetchchat", isLoggedIn, matchController.fetchChat);
 userRouter.get("/fetchpending", isLoggedIn, matchController.fetchPending);
 //accept request
 userRouter.post("/acceptreq", isLoggedIn, matchController.updateChatlist);
+//reject request
+userRouter.post("/rejectreq", isLoggedIn, matchController.updateMatches);
 
 //! temp remove later
 userRouter.get("/updateall", userController.updateall);

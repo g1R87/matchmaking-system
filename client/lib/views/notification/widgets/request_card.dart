@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
+import 'package:online_matchmaking_system/views/notification/notification.dart';
 
 class RequestCard extends StatelessWidget {
   const RequestCard({super.key, required this.reqModel, required this.id});
@@ -104,12 +105,19 @@ class RequestCard extends StatelessWidget {
               print("confirm");
               if (action == "accept") {
                 //make accept req api call
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (context) {
+                  return const NotificationPage();
+                }));
                 print("Accepted");
                 Navigator.pop(context);
               } else {
                 //make reject req api call
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (context) {
+                  return const NotificationPage();
+                }));
                 print("Rejected");
-                Navigator.pop(context);
               }
             },
             child: const Text("Confirm")),

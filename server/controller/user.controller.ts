@@ -38,22 +38,22 @@ export const updateUser = async (req: Request, res: Response) => {
   // console.log(res.locals.user);
 
   //use cookies in actual application for userID
-  console.log(formData);
+  console.log("this month is ", formData.dob_month);
   const opts = { runValidators: true };
   const updatedDocument = {
     $set: {
-      first_name: formData.first_name,
-      dob_day: formData.dob_day,
-      dob_month: formData.dob_month,
-      dob_year: formData.dob_year,
+      first_name: formData.first_name ?? undefined,
+      dob_day: formData.dob_day ?? undefined,
+      dob_month: formData.dob_month ?? undefined,
+      dob_year: formData.dob_year ?? undefined,
       show_gender: formData.show_gender == "1" ? true : false,
-      gender_identity: formData.gender_identity,
-      gender_interest: formData.gender_interest,
-      url: formData.url,
-      about: formData.about,
-      matched: formData.matches,
-      isUpdated: formData.isUpdated,
-      isVerified: formData.isVerified,
+      gender_identity: formData.gender_identity ?? undefined,
+      gender_interest: formData.gender_interest ?? undefined,
+      url: formData.url ?? undefined,
+      about: formData.about ?? undefined,
+      matched: formData.matches ?? undefined,
+      isUpdated: formData.isUpdated ?? undefined,
+      isVerified: formData.isVerified ?? undefined,
     },
   };
   const updatedUser = await User.updateOne(
