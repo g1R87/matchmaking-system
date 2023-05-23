@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static("public"));
-app.use("/image", express.static(join(__dirname, "Uploads")));
+app.use("/image", express.static(join(__dirname, "Uploads", "Resized")));
 app.use("/", appRouter);
 const host = "192.168.1.109";
 

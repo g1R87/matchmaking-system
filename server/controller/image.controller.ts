@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import BadRequestError from "../errors/bad-request";
-import Img from "../models/image.model";
 import User from "../models/user.model";
-import { compressImage } from "../utils/image-compress";
+import { compressImage, processImage } from "../utils/image-compress";
 
 // get profile pic
 export const getPfp = async (req: Request, res: Response) => {
@@ -13,20 +12,20 @@ export const getPfp = async (req: Request, res: Response) => {
 };
 
 //store profile pic
-export const uploadSingle = async (req: Request, res: Response) => {
+export const uploadPfp = async (req: Request, res: Response) => {
   const _id = res.locals.user.userID;
   const file: any = req.file;
   if (!file) {
     throw new BadRequestError("Please chose files");
   }
-  console.log(file);
+  console.log(file.length);
 
   const img = await compressImage(file, `myImage-${_id}`);
 
   // store in database
   const updatedDocument = {
     $set: {
-      url: img.filename,
+      url1: img.filename,
       pfp: {
         data: img.filedata,
         contentType: file.mimetype,
@@ -43,6 +42,56 @@ export const uploadSingle = async (req: Request, res: Response) => {
   // res.send(img);
 };
 
+//upload single image
+export const uploadSingle = async (req: Request, res: Response) => {
+  const _id = res.locals.user.userID;
+
+  const { index } = req.body;
+  if (!index || index != 1 || index != 0) {
+    throw new BadRequestError("Please provide valid index 0/1");
+  }
+
+  const file: any = req.file;
+  if (!file) {
+    throw new BadRequestError("Please chose files");
+  }
+
+  if (index == 0) {
+    const link = await processImage(file, `image0-${_id}`);
+
+    // store in database
+    const updatedDocument = {
+      $set: {
+        url2: link,
+      },
+    };
+
+    const updatedUser = await User.updateOne(
+      { _id: res.locals.user.userID },
+      updatedDocument
+    );
+
+    res.status(200).send(updatedUser);
+  }
+  const link = await processImage(file, `image1-${_id}`);
+
+  // store in database
+  const updatedDocument = {
+    $set: {
+      url3: link,
+    },
+  };
+
+  const updatedUser = await User.updateOne(
+    { _id: res.locals.user.userID },
+    updatedDocument
+  );
+
+  res.status(200).send(updatedUser);
+
+  // res.send(img);
+};
+
 //upload multiple photos
 export const uploadMulti = async (req: Request, res: Response) => {
   const files: any = req.files;
@@ -54,29 +103,23 @@ export const uploadMulti = async (req: Request, res: Response) => {
   console.log(files.length);
   //iterate over images and compress
   let imgArray = await Promise.all(
-    files.map(async (file: any) => {
-      const img = await compressImage(file, `image-${userId}`);
+    files.map(async (file: any, i: number) => {
+      const img = await processImage(file, `image${i}-${userId}`);
       return img;
     })
   );
 
-  //iteration for database
-  let result = imgArray.map((src, index) => {
-    //create map to store data in collection
-    let imgobj = {
-      filename: `image${index}-${userId}`,
-      contentType: "image/jpeg",
-      image: src,
-      uploader: userId,
-    };
+  const updatedDocument = {
+    $set: {
+      url2: imgArray[0],
+      url3: imgArray[1],
+    },
+  };
 
-    let imgUpload = new Img(imgobj);
-    return imgUpload.save().then(() => {
-      return { msg: `image uploaded successfully` };
-    });
-  });
+  const updatedUser = await User.updateOne(
+    { _id: res.locals.user.userID },
+    updatedDocument
+  );
 
-  Promise.all(result).then((msg) => {
-    res.send(msg);
-  });
+  res.status(200).send(updatedUser);
 };

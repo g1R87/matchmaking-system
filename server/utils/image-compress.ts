@@ -26,3 +26,10 @@ export const compressImage = async (file: FileType, filename: string) => {
   };
   // return fs.readFileSync(resizedPath, "base64");
 };
+
+export const processImage = async (file: FileType, filename: string) => {
+  await sharp(file.path).toFile(
+    path.resolve(file.destination, "resized", filename)
+  );
+  return filename;
+};

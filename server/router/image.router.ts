@@ -4,7 +4,13 @@ import { upload } from "../middleware/multer";
 const imgRouter = Router();
 
 imgRouter.get("/pfp", imgController.getPfp);
-imgRouter.post("/pfp", upload.single("myImage"), imgController.uploadSingle);
+imgRouter.post("/pfp", upload.single("myImage"), imgController.uploadPfp);
+imgRouter.post(
+  "/uploadall",
+  upload.array("image", 2),
+  imgController.uploadMulti
+);
+imgRouter.post("/upload", upload.single("image"), imgController.uploadSingle);
 
-imgRouter.post("/upload", upload.array("image", 3), imgController.uploadMulti);
+// imgRouter.post("/upload", upload.array("image", 3), imgController.uploadMulti);
 export default imgRouter;
