@@ -58,20 +58,26 @@ class ProfilePic extends StatelessWidget {
                         ],
                       ),
                     ),
-                    GestureDetector(
+                    Expanded(
+                        child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const ProfilePhoto(),
                         ));
                       },
-                      child: Expanded(
-                          child: listofMenu(CupertinoIcons.viewfinder,
-                              "View Profile Photo", context)),
-                    ),
+                      child: listofMenu(CupertinoIcons.viewfinder,
+                          "View Profile Photo", context),
+                    )),
                     Expanded(
-                        child: listofMenu(Icons.settings, "Settings", context)),
+                        child: GestureDetector(
+                            onTap: () {},
+                            child: listofMenu(
+                                Icons.settings, "Settings", context))),
                     Expanded(
-                        child: listofMenu(Icons.update, "Update", context)),
+                        child: GestureDetector(
+                            onTap: () {},
+                            child:
+                                listofMenu(Icons.update, "Update", context))),
                     Expanded(
                       child: GestureDetector(
                           onTap: () {

@@ -1,10 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 
 class Profilename extends StatelessWidget {
   final String about;
   final String fname;
-  const Profilename({super.key, required this.about, required this.fname});
+  final String image;
+  const Profilename(
+      {super.key,
+      required this.about,
+      required this.fname,
+      required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +47,11 @@ class Profilename extends StatelessWidget {
                         ),
                         Expanded(
                           child: ListTile(
-                            leading: const CircleAvatar(
+                            leading: CircleAvatar(
+                              backgroundImage: image.isEmpty
+                                  ? const AssetImage("images/pfp_default.jpg")
+                                      as ImageProvider
+                                  : MemoryImage(base64Decode(image)),
                               radius: 30,
                             ),
                             title: Text(fname),

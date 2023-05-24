@@ -83,254 +83,276 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Scrollbar(
-                thumbVisibility: true,
-                trackVisibility: true,
-                thickness: 10,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Form(
-                        key: _globalkey,
-                        child: ListView(
-                          children: [
-                            imageProfile(),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            TextFormField(
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Name can't be empty";
-                                }
-                                return null;
-                              },
-                              controller: fnamecontroller,
-                              decoration: const InputDecoration(
-                                hintText: "First name",
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            const Text(
-                              "My Birthday",
-                              style: TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              child: Center(
-                                child: Column(
-                                  children: [
-                                    TextFormField(
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "DOB can't be empty";
-                                        }
-                                        return null;
-                                      },
-                                      controller:
-                                          dateinput, //editing controller of this TextField
-                                      decoration: const InputDecoration(
-                                          icon: Icon(Icons
-                                              .calendar_today), //icon of text field
-                                          hintText:
-                                              "DD/MM/YYYY" //label text of field
-                                          ),
-                                      readOnly:
-                                          true, //set it true, so that user will not able to edit text
-                                      onTap: () async {
-                                        DateTime? pickedDate =
-                                            await showDatePicker(
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                                firstDate: DateTime(
-                                                    1950), //DateTime.now() - not to allow to choose before today.
-                                                lastDate: DateTime(2101));
-
-                                        if (pickedDate != null) {
-                                          setState(() {
-                                            age = calculateAge(pickedDate);
-                                            byear = pickedDate.year;
-                                            bmonth = pickedDate.month;
-                                            bday = pickedDate.day;
-                                          });
-                                        }
-
-                                        if (pickedDate != null) {
-                                          print(
-                                              pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
-                                          String formattedDate =
-                                              DateFormat('yyyy-MM-dd')
-                                                  .format(pickedDate);
-                                          print(
-                                              formattedDate); //formatted date output using intl package =>  2021-03-16
-                                          //you can implement different kind of Date Format here according to your requirement
-
-                                          setState(() {
-                                            dateinput.text =
-                                                formattedDate; //set output date to TextField value.
-                                          });
-                                        } else {
-                                          print("Date is not selected");
-                                        }
-                                      },
-                                    ),
-                                    Text('You are $age years old!')
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            const Text("Your age will be public"),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            //gender
-                            const Text(
-                              "Gender",
-                              style: TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            RadioListTile(
-                              title: const Text("Male"),
-                              value: "male",
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value.toString();
-                                });
-                              },
-                            ),
-                            RadioListTile(
-                              title: const Text("Female"),
-                              value: "female",
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value.toString();
-                                });
-                              },
-                            ),
-
-                            RadioListTile(
-                              title: const Text("Other"),
-                              value: "other",
-                              groupValue: gender,
-                              onChanged: (value) {
-                                setState(() {
-                                  gender = value.toString();
-                                });
-                              },
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            //gender interest
-                            const Text(
-                              "Interest",
-                              style: TextStyle(
-                                  fontSize: 28, fontWeight: FontWeight.w600),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            RadioListTile(
-                              title: const Text("Male"),
-                              value: "male",
-                              groupValue: genderInterest,
-                              onChanged: (value) {
-                                setState(() {
-                                  genderInterest = value.toString();
-                                });
-                              },
-                            ),
-                            RadioListTile(
-                              title: const Text("Female"),
-                              value: "female",
-                              groupValue: genderInterest,
-                              onChanged: (value) {
-                                setState(() {
-                                  genderInterest = value.toString();
-                                });
-                              },
-                            ),
-                            RadioListTile(
-                              title: const Text("Other"),
-                              value: "other",
-                              groupValue: genderInterest,
-                              onChanged: (value) {
-                                setState(() {
-                                  genderInterest = value.toString();
-                                });
-                              },
-                            ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            Center(
-                              child: TextFormField(
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "Please write something about yourself";
-                                  }
-                                  return null;
-                                },
-                                controller: aboutmecontroller,
-                                decoration: const InputDecoration(
-                                  hintText: "Write something about yourself",
-                                ),
-                                keyboardType: TextInputType.multiline,
-                                minLines: 3,
-                                maxLines: 6,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 12,
-                            ),
-                            Center(
-                              child: SizedBox(
-                                height: 45,
-                                width: 280,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            const Color(0xff2B2C43),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(35))),
-                                    onPressed: updateFunc,
-                                    child: isLoading
-                                        ? const CircularProgressIndicator()
-                                        : const Text(
-                                            "Continue",
-                                            style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w500),
-                                          )),
-                              ),
-                            ),
-                          ],
+      appBar: AppBar(
+        title: const Text("Your details"),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 145, 147, 247),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30))),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Center(
+          child: Scrollbar(
+            thumbVisibility: true,
+            trackVisibility: true,
+            thickness: 10,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Form(
+                    key: _globalkey,
+                    child: ListView(
+                      children: [
+                        const SizedBox(
+                          height: 10,
                         ),
-                      ),
+                        imageProfile(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Name can't be empty";
+                            }
+                            return null;
+                          },
+                          controller: fnamecontroller,
+                          decoration: InputDecoration(
+                            label: const Text("User id"),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        const Text(
+                          "My Birthday",
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        SizedBox(
+                          child: Center(
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "DOB can't be empty";
+                                    }
+                                    return null;
+                                  },
+                                  controller:
+                                      dateinput, //editing controller of this TextField
+                                  decoration: InputDecoration(
+                                    prefixIcon:
+                                        const Icon(Icons.calendar_today),
+                                    label: const Text("DD/MM/YYYY"),
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    //icon of text field
+
+                                    //label text of field
+                                  ),
+                                  readOnly:
+                                      true, //set it true, so that user will not able to edit text
+                                  onTap: () async {
+                                    DateTime? pickedDate = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime(
+                                            1950), //DateTime.now() - not to allow to choose before today.
+                                        lastDate: DateTime(2101));
+
+                                    if (pickedDate != null) {
+                                      setState(() {
+                                        age = calculateAge(pickedDate);
+                                        byear = pickedDate.year;
+                                        bmonth = pickedDate.month;
+                                        bday = pickedDate.day;
+                                      });
+                                    }
+
+                                    if (pickedDate != null) {
+                                      print(
+                                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                      String formattedDate =
+                                          DateFormat('yyyy-MM-dd')
+                                              .format(pickedDate);
+                                      print(
+                                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                                      //you can implement different kind of Date Format here according to your requirement
+
+                                      setState(() {
+                                        dateinput.text =
+                                            formattedDate; //set output date to TextField value.
+                                      });
+                                    } else {
+                                      print("Date is not selected");
+                                    }
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        const Text("Your age will be public"),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        //gender
+                        const Text(
+                          "Gender",
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Card(
+                          color: const Color.fromARGB(255, 246, 248, 248),
+                          child: Column(children: [
+                            RadioListTile(
+                              title: const Text("Male"),
+                              value: "male",
+                              groupValue: gender,
+                              onChanged: (value) {
+                                setState(() {
+                                  gender = value.toString();
+                                });
+                              },
+                            ),
+                            RadioListTile(
+                              title: const Text("Female"),
+                              value: "female",
+                              groupValue: gender,
+                              onChanged: (value) {
+                                setState(() {
+                                  gender = value.toString();
+                                });
+                              },
+                            ),
+                            RadioListTile(
+                              title: const Text("Other"),
+                              value: "other",
+                              groupValue: gender,
+                              onChanged: (value) {
+                                setState(() {
+                                  gender = value.toString();
+                                });
+                              },
+                            ),
+                          ]),
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        //gender interest
+                        const Text(
+                          "Interest",
+                          style: TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Card(
+                          color: const Color.fromARGB(255, 246, 248, 248),
+                          child: Column(children: [
+                            RadioListTile(
+                              title: const Text("Male"),
+                              value: "male",
+                              groupValue: genderInterest,
+                              onChanged: (value) {
+                                setState(() {
+                                  genderInterest = value.toString();
+                                });
+                              },
+                            ),
+                            RadioListTile(
+                              title: const Text("Female"),
+                              value: "female",
+                              groupValue: genderInterest,
+                              onChanged: (value) {
+                                setState(() {
+                                  genderInterest = value.toString();
+                                });
+                              },
+                            ),
+                            RadioListTile(
+                              title: const Text("Other"),
+                              value: "other",
+                              groupValue: genderInterest,
+                              onChanged: (value) {
+                                setState(() {
+                                  genderInterest = value.toString();
+                                });
+                              },
+                            ),
+                          ]),
+                        ),
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        Center(
+                          child: TextFormField(
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please write something about yourself";
+                              }
+                              return null;
+                            },
+                            controller: aboutmecontroller,
+                            decoration: InputDecoration(
+                                hintText: "Write something about yourself",
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            keyboardType: TextInputType.multiline,
+                            minLines: 3,
+                            maxLines: 6,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                        Center(
+                          child: SizedBox(
+                            height: 45,
+                            width: 280,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xff2B2C43),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(35))),
+                                onPressed: updateFunc,
+                                child: isLoading
+                                    ? const CircularProgressIndicator()
+                                    : const Text(
+                                        "Continue",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      )),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),

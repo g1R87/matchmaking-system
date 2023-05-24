@@ -45,23 +45,26 @@ IconButton menu(BuildContext context, {String name = "", String aboutme = ""}) {
                   ),
                 ),
                 Expanded(
-                    child: listofMenu(Icons.settings, "Settings", context)),
-                GestureDetector(
-                  onTap: () {
-                    // Navigator.pushNamed(context, RoutesName.detail,
-                    //     arguments: {"fname": name, "aboutme": aboutme});
-                    Navigator.of(context)
-                        .pushReplacement(MaterialPageRoute(builder: (context) {
-                      return DetailsPage(
-                        detail: {"fname": name, "aboutme": aboutme},
-                      );
-                    }));
-                  },
-                  child: Expanded(
-                      child: listofMenu(Icons.edit, "Edit profile", context)),
-                ),
+                    child: GestureDetector(
+                        onTap: () {},
+                        child:
+                            listofMenu(Icons.settings, "Settings", context))),
                 Expanded(
-                  child: listofMenu(Icons.update, "Update", context),
+                    child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return DetailsPage(
+                              detail: {"fname": name, "aboutme": aboutme},
+                            );
+                          }));
+                        },
+                        child:
+                            listofMenu(Icons.edit, "Edit profile", context))),
+                Expanded(
+                  child: GestureDetector(
+                      onTap: () {},
+                      child: listofMenu(Icons.update, "Update", context)),
                 ),
                 Expanded(
                   child: GestureDetector(

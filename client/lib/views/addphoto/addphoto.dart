@@ -18,16 +18,24 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          title: Text("Add Photos"),
+          centerTitle: true,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30))),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Add Photos",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
-              const SizedBox(
-                height: 7,
-              ),
+              // const Text("Add Photos",
+              //     style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500)),
+              // const SizedBox(
+              //   height: 7,
+              // ),
               Text(
                 "Atleast two photos to continue",
                 style: TextStyle(color: Colors.black.withOpacity(0.7)),
@@ -115,7 +123,9 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                       child: const Text(
                         "Continue",
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
                       )),
                 ),
               ),

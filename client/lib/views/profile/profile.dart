@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
           iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.grey[50],
           elevation: 0,
-          title: Profilename(about: about, fname: fname),
+          title: Profilename(about: about, fname: fname, image: image),
           centerTitle: true,
           actions: [
             menu(context, name: fname, aboutme: about),
