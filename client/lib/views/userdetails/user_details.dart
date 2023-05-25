@@ -86,7 +86,7 @@ class _DetailsPageState extends State<DetailsPage> {
       appBar: AppBar(
         title: const Text("Your details"),
         centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 145, 147, 247),
+        backgroundColor: const Color.fromARGB(255, 150, 235, 152),
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
