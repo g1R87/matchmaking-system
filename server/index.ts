@@ -61,15 +61,14 @@ io.on("connection", (socket) => {
 
   socket.on("signin", async (data) => {
     console.log(data);
-    clients[data.sourceId] = socket;
+    const sid = data.sourceId;
+    const tid = data.targetId;
+    clients[sid] = socket;
     const oldmsg = await Msg.find({
-      from_userId: data.sourceId,
-      to_userId: data.targetId,
+      from_userId: { $in: [sid, tid] },
+      to_userId: { $in: [sid, tid] },
     });
-    clients[data.sourceId].emit("history", oldmsg);
-    if (clients[data.targetId]) {
-      clients[data.targetId].emit("history", oldmsg);
-    }
+    clients[sid].emit("history", oldmsg);
 
     console.log("the list are ", Object.keys(clients));
   });

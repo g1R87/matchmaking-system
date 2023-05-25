@@ -54,7 +54,13 @@ class _ChatWallState extends State<ChatWall> {
 
     socket.onConnect((data) {
       socket.on("history", (data) {
-        print(data);
+        for (var msg in data) {
+          if (msg["from_userId"] == id) {
+            setMessage("source", msg["message"]);
+          } else {
+            setMessage("received", msg["message"]);
+          }
+        }
       });
 
       socket.on(("message"), (msg) {
@@ -225,12 +231,6 @@ class _ChatWallState extends State<ChatWall> {
     if (mounted) {
       setState(() {
         messages.add(messageModel);
-        if (type == 'received') {
-          print("After receive: length = ${messages.length}");
-        }
-        if (type == 'source') {
-          print("After Source: length = ${messages.length}");
-        }
       });
     }
   }
