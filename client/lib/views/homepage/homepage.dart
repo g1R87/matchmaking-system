@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/views/friendprofile.dart/fprofile.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 import '../../utils/constant.dart';
@@ -79,12 +80,21 @@ class _ShowingPageState extends State<ShowingPage> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                users[index]["first_name"],
-                                style: const TextStyle(
-                                    fontSize: 32,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) {
+                                      return const FProfilePage();
+                                    },
+                                  ));
+                                },
+                                child: Text(
+                                  users[index]["first_name"],
+                                  style: const TextStyle(
+                                      fontSize: 32,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ],
                           ),
