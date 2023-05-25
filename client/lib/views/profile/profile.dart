@@ -82,86 +82,123 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         height: getDeviceHeight(context) * 0.1,
                       ),
-                      Row(
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          const Text(
-                            "Name : ",
-                            style: TextStyle(
-                                letterSpacing: 1.5,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'PTSans'),
-                          ),
-                          Text(
-                            fname,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'PTSans',
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        height: 50,
+                        width: getDeviceWidth(context),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 160, 159, 159),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            const Text(
+                              "Name : ",
+                              style: TextStyle(
+                                  letterSpacing: 1.5,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'PTSans'),
                             ),
-                          ),
-                        ],
+                            Text(
+                              fname,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PTSans',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: getDeviceHeight(context) * 0.015,
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Gender : ",
-                            style: TextStyle(
-                                letterSpacing: 1.5,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'PTSans'),
-                          ),
-                          Text(
-                            gender,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'PTSans',
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        height: 50,
+                        width: getDeviceWidth(context),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 160, 159, 159),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Gender : ",
+                              style: TextStyle(
+                                  letterSpacing: 1.5,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'PTSans'),
                             ),
-                          ),
-                        ],
+                            Text(
+                              gender,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PTSans',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: getDeviceHeight(context) * 0.015,
                       ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Age : ",
-                            style: TextStyle(
-                                letterSpacing: 1.5,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'PTSans'),
-                          ),
-                          Text(
-                            age.isEmpty ? "na" : age,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontFamily: 'PTSans',
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        height: 50,
+                        width: getDeviceWidth(context),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 160, 159, 159),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          children: [
+                            const Text(
+                              "Age : ",
+                              style: TextStyle(
+                                  letterSpacing: 1.5,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'PTSans'),
                             ),
-                          ),
-                        ],
+                            Text(
+                              age.isEmpty ? "na" : age,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PTSans',
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: getDeviceHeight(context) * 0.015,
                       ),
-                      const Text(
-                        "About me: ",
-                        style: TextStyle(
-                            letterSpacing: 1.5,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'PTSans'),
-                      ),
-                      Text(
-                        about,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'PTSans',
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        height: 120,
+                        width: getDeviceWidth(context),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 160, 159, 159),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "About me: ",
+                              style: TextStyle(
+                                  letterSpacing: 1.5,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'PTSans'),
+                            ),
+                            Text(
+                              about,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontFamily: 'PTSans',
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(

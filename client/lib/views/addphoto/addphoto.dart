@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 
 class MultipleImageSelector extends StatefulWidget {
   const MultipleImageSelector({Key? key}) : super(key: key);
@@ -119,10 +120,7 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(35))),
                       onPressed: () {
-                        // selectedImages != List.empty()
-                        //     ? Navigator.pushNamed(
-                        //         context, RoutesName.bottonNavBar)
-                        //     : null;
+                        Navigator.pushNamed(context, RoutesName.bottonNavBar);
                       },
                       child: const Text(
                         "Continue",
