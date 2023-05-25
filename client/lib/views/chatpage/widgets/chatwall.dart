@@ -49,9 +49,14 @@ class _ChatWallState extends State<ChatWall> {
             .build());
     socket.connect();
     final id = await NetworkHandler.getValue("userId");
-    socket.emit("signin", id);
+    socket.emit(
+        "signin", {"sourceId": widget.id, "targetId": widget.chatModel.id});
 
     socket.onConnect((data) {
+      socket.on("history", (data) {
+        print(data);
+      });
+
       socket.on(("message"), (msg) {
         // print(msg["message"]);
         setMessageReceiver(msg["message"]);

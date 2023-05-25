@@ -45,9 +45,9 @@ export const uploadPfp = async (req: Request, res: Response) => {
 //upload single image
 export const uploadSingle = async (req: Request, res: Response) => {
   const _id = res.locals.user.userID;
-
-  const { index } = req.body;
-  if (!index || index != 1 || index != 0) {
+  const index = +req.params.in;
+  // const { index } = req.body;
+  if (!index || (index != 1 && index != 0)) {
     throw new BadRequestError("Please provide valid index 0/1");
   }
 

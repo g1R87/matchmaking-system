@@ -11,8 +11,8 @@ import { Server } from "socket.io";
 import connectDB from "./db/connect";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import notFound from "./middleware/not-found";
+import Msg from "./models/message.model";
 import appRouter from "./router";
-
 const app = express();
 const server = http.createServer(app);
 
@@ -44,15 +44,33 @@ io.on("connection", (socket) => {
 
   socket.on("message", (msg) => {
     console.log(msg);
-    socket.broadcast.emit("message-received", msg);
     const targetId = msg.targetId;
-    if (clients[msg.targetId]) {
-      clients[msg.targetId].emit("message", msg);
-    }
+
+    const message = new Msg({
+      from_userId: msg.sourceId,
+      to_userId: msg.targetId,
+      message: msg.message,
+    });
+    message.save().then(() => {
+      if (clients[msg.targetId]) {
+        clients[msg.targetId].emit("message", msg);
+      }
+    });
+    socket.broadcast.emit("message-received", msg);
   });
 
-  socket.on("signin", (id) => {
-    clients[id] = socket;
+  socket.on("signin", async (data) => {
+    console.log(data);
+    clients[data.sourceId] = socket;
+    const oldmsg = await Msg.find({
+      from_userId: data.sourceId,
+      to_userId: data.targetId,
+    });
+    clients[data.sourceId].emit("history", oldmsg);
+    if (clients[data.targetId]) {
+      clients[data.targetId].emit("history", oldmsg);
+    }
+
     console.log("the list are ", Object.keys(clients));
   });
 });

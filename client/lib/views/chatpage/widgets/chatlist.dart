@@ -30,11 +30,17 @@ class _ChatListState extends State<ChatList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: chats.length,
-        itemBuilder: (context, index) => CustomCard(
-          chatModel: chats[index],
-          id: id,
+      body: Visibility(
+        visible: isLoading,
+        replacement: ListView.builder(
+          itemCount: chats.length,
+          itemBuilder: (context, index) => CustomCard(
+            chatModel: chats[index],
+            id: id,
+          ),
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
@@ -45,6 +51,9 @@ class _ChatListState extends State<ChatList> {
     final userId = await NetworkHandler.getValue("userId");
     final fetchedUsers = await jsonDecode(response.body);
     if (response.statusCode == 200) {
+      if (!mounted) {
+        return;
+      }
       setState(() {
         id = userId as String;
         for (int i = 0; i < fetchedUsers.length; i++) {

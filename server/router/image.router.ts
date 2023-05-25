@@ -10,7 +10,11 @@ imgRouter.post(
   upload.array("image", 2),
   imgController.uploadMulti
 );
-imgRouter.post("/upload", upload.single("image"), imgController.uploadSingle);
+imgRouter.post(
+  "/upload/:in",
+  upload.single("image"),
+  imgController.uploadSingle
+);
 
 // imgRouter.post("/upload", upload.array("image", 3), imgController.uploadMulti);
 export default imgRouter;

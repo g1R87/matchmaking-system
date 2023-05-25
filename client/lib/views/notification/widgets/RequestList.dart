@@ -20,7 +20,6 @@ class _RequestListState extends State<RequestList> {
   List<dynamic> decodedImage = [];
   @override
   void initState() {
-    // TODO: implement initState
     fetchPending();
     super.initState();
   }
@@ -28,11 +27,17 @@ class _RequestListState extends State<RequestList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: reqs.length,
-        itemBuilder: (context, index) => RequestCard(
-          reqModel: reqs[index],
-          id: id,
+      body: Visibility(
+        visible: isLoading,
+        replacement: ListView.builder(
+          itemCount: reqs.length,
+          itemBuilder: (context, index) => RequestCard(
+            reqModel: reqs[index],
+            id: id,
+          ),
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
@@ -43,6 +48,9 @@ class _RequestListState extends State<RequestList> {
     final userId = await NetworkHandler.getValue("userId");
     final fetchedUsers = await jsonDecode(response.body);
     if (response.statusCode == 200) {
+      if (!mounted) {
+        return;
+      }
       setState(() {
         id = userId as String;
         for (int i = 0; i < fetchedUsers.length; i++) {
