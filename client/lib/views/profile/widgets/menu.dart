@@ -40,7 +40,7 @@ IconButton menu(BuildContext context, {String name = "", String aboutme = ""}) {
                           onTap: () {
                             Navigator.pop(context);
                           },
-                          child: const Icon(CupertinoIcons.multiply))
+                          child: const Icon(CupertinoIcons.multiply_circle))
                     ],
                   ),
                 ),

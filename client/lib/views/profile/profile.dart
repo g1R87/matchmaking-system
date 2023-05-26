@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -10,7 +9,8 @@ import 'package:online_matchmaking_system/views/profile/widgets/profilename.dart
 import 'package:online_matchmaking_system/views/profile/widgets/profilepic.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final Map? detail;
+  const ProfilePage({super.key, this.detail});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -27,8 +27,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    final detail = widget.detail;
     super.initState();
-    profileFetch();
+    if (detail != null) {
+    } else {
+      profileFetch();
+    }
   }
 
   String calculateAge(int year, int month, int day) {
@@ -87,10 +91,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 50,
                         width: getDeviceWidth(context),
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 160, 159, 159),
+                            color: const Color.fromARGB(255, 214, 212, 212),
                             borderRadius: BorderRadius.circular(20)),
                         child: Row(
-                          textBaseline: TextBaseline.alphabetic,
                           children: [
                             const Text(
                               "Name : ",
@@ -118,7 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 50,
                         width: getDeviceWidth(context),
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 160, 159, 159),
+                            color: const Color.fromARGB(255, 214, 212, 212),
                             borderRadius: BorderRadius.circular(20)),
                         child: Row(
                           children: [
@@ -148,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 50,
                         width: getDeviceWidth(context),
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 160, 159, 159),
+                            color: const Color.fromARGB(255, 214, 212, 212),
                             borderRadius: BorderRadius.circular(20)),
                         child: Row(
                           children: [
@@ -178,7 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         height: 120,
                         width: getDeviceWidth(context),
                         decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 160, 159, 159),
+                            color: const Color.fromARGB(255, 214, 212, 212),
                             borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
