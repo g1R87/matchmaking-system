@@ -121,10 +121,6 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                               borderRadius: BorderRadius.circular(35))),
                       onPressed: () {
                         Navigator.pushNamed(context, RoutesName.bottonNavBar);
-                        // selectedImages != List.empty()
-                        //     ? Navigator.pushNamed(
-                        //         context, RoutesName.bottonNavBar)
-                        //     : null;
                       },
                       child: const Text(
                         "Continue",
