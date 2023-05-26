@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
-import 'package:online_matchmaking_system/views/friendprofile.dart/fprofile.dart';
+import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 import '../../utils/constant.dart';
@@ -18,6 +18,7 @@ class ShowingPage extends StatefulWidget {
 class _ShowingPageState extends State<ShowingPage> {
   final List<SwipeItem> _swipeItem = <SwipeItem>[];
   MatchEngine? _matchEngine;
+
   bool isLoading = true;
   NetworkHandler networkHandler = NetworkHandler();
   List<dynamic> users = [];
@@ -84,7 +85,20 @@ class _ShowingPageState extends State<ShowingPage> {
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) {
-                                      return const FProfilePage();
+                                      return ProfilePage(
+                                        detail: {
+                                          "fname": users[index]["first_name"],
+                                          "about": users[index]["about"],
+                                          "gender": users[index]
+                                              ["gender_identity"],
+                                          "ginterest": users[index]
+                                              ["gender_interest"],
+                                          "image": users[index]["pfp"]["data"],
+                                          "year": users[index]["dob_year"],
+                                          "month": users[index]["dob_month"],
+                                          "day": users[index]["dob_day"],
+                                        },
+                                      );
                                     },
                                   ));
                                 },

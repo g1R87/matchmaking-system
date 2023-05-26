@@ -10,13 +10,16 @@ import 'package:online_matchmaking_system/views/profile/widgets/profilename.dart
 import 'package:online_matchmaking_system/views/profile/widgets/profilepic.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final Map? detail;
+
+  const ProfilePage({super.key, this.detail});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool isOther = false;
   bool isLoading = true;
   var about = "";
   var fname = "";
@@ -27,8 +30,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    final detail = widget.detail;
+    if (detail != null) {
+      isOther = true;
+      about = detail["about"];
+      fname = detail["fname"];
+      gender = detail["gender"];
+      ginterest = detail["ginterest"];
+      image = detail['image'];
+      age = calculateAge(detail["year"], detail["month"], detail["day"]);
+      isLoading = false;
+    } else {
+      profileFetch();
+    }
     super.initState();
-    profileFetch();
   }
 
   String calculateAge(int year, int month, int day) {
