@@ -5,6 +5,7 @@ import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:swipe_cards/swipe_cards.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../utils/constant.dart';
 
@@ -18,11 +19,14 @@ class ShowingPage extends StatefulWidget {
 class _ShowingPageState extends State<ShowingPage> {
   final List<SwipeItem> _swipeItem = <SwipeItem>[];
   MatchEngine? _matchEngine;
+  final appurl = dotenv.env["appurl"];
 
   bool isLoading = true;
   NetworkHandler networkHandler = NetworkHandler();
   List<dynamic> users = [];
   List<dynamic> decodedImage = [];
+  List<dynamic> netImage = [];
+  List<dynamic> loadedImage = [];
 
   @override
   void initState() {
@@ -70,9 +74,8 @@ class _ShowingPageState extends State<ShowingPage> {
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: decodedImage[index] == null
-                                      ? AssetImage(images[1]) as ImageProvider
-                                      : MemoryImage(decodedImage[index]),
+                                  image: loadedImage[index] ??
+                                      AssetImage(images[1]),
                                   // image: AssetImage(images[index]),
                                   fit: BoxFit.cover),
                               color: Colors.red,
@@ -154,6 +157,10 @@ class _ShowingPageState extends State<ShowingPage> {
             decodedImage.add(users[i]["pfp"] != null
                 ? base64Decode(users[i]["pfp"]["data"])
                 : null);
+            netImage.add(users[i]["url1"]);
+            loadedImage.add(users[i]['url1'] != null
+                ? NetworkImage("$appurl/image/${users[i]['url1']}")
+                : null);
 
             _swipeItem.add(
               SwipeItem(
@@ -173,7 +180,6 @@ class _ShowingPageState extends State<ShowingPage> {
               ),
             );
           }
-          print(decodedImage.length);
 
           isLoading = false;
         });
@@ -192,10 +198,13 @@ Widget buttonWidget(IconData icon, Color color) {
         border: Border.all(width: 0.3),
         color: Colors.white.withOpacity(0.9),
         shape: BoxShape.circle),
-    child: Icon(
-      icon,
-      color: color,
-      size: 30,
+    child: InkWell(
+      onTap: () {},
+      child: Icon(
+        icon,
+        color: color,
+        size: 30,
+      ),
     ),
   );
 }

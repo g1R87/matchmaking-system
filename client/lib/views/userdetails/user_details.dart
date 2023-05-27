@@ -433,8 +433,6 @@ class _DetailsPageState extends State<DetailsPage> {
   void chosePhoto(ImageSource source) async {
     final pickedFile = await picker.pickImage(
       source: source,
-      maxHeight: 200,
-      maxWidth: 200,
     );
     setState(() {
       imageFile = pickedFile;

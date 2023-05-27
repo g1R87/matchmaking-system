@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/views/notification/notification.dart';
+import 'package:online_matchmaking_system/views/chatpage/searchpage.dart';
 import 'package:online_matchmaking_system/views/homepage/homepage.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 
@@ -19,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _widgetOptions = [
     const ShowingPage(),
     const ChatPage(),
-    const NotificationPage(),
+    const SearchPage(),
     const ProfilePage(),
   ];
 
@@ -55,10 +55,10 @@ class _MainPageState extends State<MainPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              CupertinoIcons.bell,
+              CupertinoIcons.search,
               color: Colors.black,
             ),
-            label: 'Notifications',
+            label: 'Search',
             backgroundColor: Colors.white,
           ),
           BottomNavigationBarItem(

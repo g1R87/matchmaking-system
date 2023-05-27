@@ -20,7 +20,8 @@ export const uploadPfp = async (req: Request, res: Response) => {
   }
   console.log(file.length);
 
-  const img = await compressImage(file, `myImage-${_id}`);
+  const img = await compressImage(file, `myImage-${_id}.jpg`);
+  await processImage(file, `myImage-${_id}.jpg`);
 
   // store in database
   const updatedDocument = {
@@ -57,7 +58,7 @@ export const uploadSingle = async (req: Request, res: Response) => {
   }
 
   if (index == 0) {
-    const link = await processImage(file, `image0-${_id}`);
+    const link = await processImage(file, `image0-${_id}.jpg`);
 
     // store in database
     const updatedDocument = {
@@ -73,7 +74,7 @@ export const uploadSingle = async (req: Request, res: Response) => {
 
     res.status(200).send(updatedUser);
   }
-  const link = await processImage(file, `image1-${_id}`);
+  const link = await processImage(file, `image1-${_id}.jpg`);
 
   // store in database
   const updatedDocument = {
@@ -104,7 +105,7 @@ export const uploadMulti = async (req: Request, res: Response) => {
   //iterate over images and compress
   let imgArray = await Promise.all(
     files.map(async (file: any, i: number) => {
-      const img = await processImage(file, `image${i}-${userId}`);
+      const img = await processImage(file, `image${i}-${userId}.jpg`);
       return img;
     })
   );
