@@ -93,7 +93,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [ProfilePic(image: image)],
                       ),
                       SizedBox(
-                        height: getDeviceHeight(context) * 0.1,
+                        height: getDeviceHeight(context) * 0.07,
                       ),
                       Container(
                         padding: const EdgeInsets.all(12),
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       Container(
                         padding: const EdgeInsets.all(12),
-                        height: 120,
+                        height: 140,
                         width: getDeviceWidth(context),
                         decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 214, 212, 212),
@@ -209,6 +209,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                 fontSize: 16,
                                 fontFamily: 'PTSans',
                               ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: getDeviceHeight(context) * 0.02,
+                      ),
+                      SizedBox(
+                        height: 300,
+                        width: getDeviceWidth(context),
+                        child: PageView(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage("images/image1.jpg"),
+                                      fit: BoxFit.cover)),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage("images/image2.jpg"),
+                                      fit: BoxFit.cover)),
                             ),
                           ],
                         ),
