@@ -54,11 +54,12 @@ class _ChatWallState extends State<ChatWall> {
 
     socket.onConnect((data) {
       socket.on("history", (data) {
+        print(data);
         for (var msg in data) {
           if (msg["from_userId"] == id) {
-            setMessage("source", msg["message"]);
+            setMessage("source", msg["message"], msg["createdAt"]);
           } else {
-            setMessage("received", msg["message"]);
+            setMessage("received", msg["message"], msg["createdAt"]);
           }
         }
       });
@@ -141,7 +142,6 @@ class _ChatWallState extends State<ChatWall> {
                             message: messages[reverseIndex].message as String,
                           );
                         } else {
-                          print("reply card triggered!!!");
                           return ReplyCard(
                             message: messages[reverseIndex].message as String,
                             time: messages[reverseIndex].time as String,
@@ -162,9 +162,7 @@ class _ChatWallState extends State<ChatWall> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25)),
                           child: TextFormField(
-                            onTap: () {
-                              print(" Widget is mounted: $mounted");
-                            },
+                            onTap: () {},
                             scrollPadding: EdgeInsets.symmetric(
                                 vertical:
                                     MediaQuery.of(context).viewInsets.bottom),
@@ -215,18 +213,14 @@ class _ChatWallState extends State<ChatWall> {
     );
   }
 
-  void setMessage(String type, String message) {
-    if (type == 'received') {
-      print("Received: message is set!!");
-    }
-    if (type == 'source') {
-      print("Source: message is set!!");
-    }
+  void setMessage(String type, String message, [var time]) {
     MessageModel messageModel = MessageModel(
-        type: type,
-        message: message,
-        time: DateTime.now().toString().substring(10, 16));
-    print(messageModel.message);
+      type: type,
+      message: message,
+      time: time == null
+          ? DateTime.now().toString().substring(11, 16)
+          : time.toString().substring(11, 16),
+    );
 
     if (mounted) {
       setState(() {
@@ -236,12 +230,10 @@ class _ChatWallState extends State<ChatWall> {
   }
 
   void setMessageReceiver(String message) {
-    print("Received: message is set!!");
     MessageModel messageModel = MessageModel(
         type: "received",
         message: message,
-        time: DateTime.now().toString().substring(10, 16));
-    print(messageModel.message);
+        time: DateTime.now().toString().substring(11, 16));
     if (mounted) {
       setState(() {
         messages.add(messageModel);
