@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:online_matchmaking_system/views/chatpage/widgets/searchchat.dart';
+import 'package:online_matchmaking_system/views/chatpage/widgets/searchwall.dart';
+import 'package:online_matchmaking_system/services/network_handler.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -11,6 +12,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchboxController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,12 +36,6 @@ class _SearchPageState extends State<SearchPage> {
             ),
             Center(
               child: TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please write something about yourself";
-                  }
-                  return null;
-                },
                 controller: searchboxController,
                 decoration: InputDecoration(
                     hintText: "What do you wanna talk about?",
@@ -61,12 +57,7 @@ class _SearchPageState extends State<SearchPage> {
                         backgroundColor: const Color(0xff2B2C43),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(35))),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) {
-                        return const SearchWall();
-                      }));
-                    },
+                    onPressed: searchFunc,
                     child: const Text(
                       "Find",
                       style: TextStyle(
@@ -78,5 +69,18 @@ class _SearchPageState extends State<SearchPage> {
             )
           ],
         ));
+  }
+
+  void searchFunc() async {
+    final userId = await NetworkHandler.getValue("userId");
+
+    final interests = searchboxController.text.toLowerCase();
+    final iList = interests.split(" ");
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+      return SearchWall(
+        id: userId as String,
+        interest: iList,
+      );
+    }));
   }
 }

@@ -51,26 +51,6 @@ export const fetchUser = async (req: Request, res: Response) => {
 
   const fetchedUsers = mostLikely.concat(leastLikely);
 
-  // const all: any = await User.find({});
-  // const fetchedUsers = all.filter((u: any) => {
-  //   if (!u.matches) {
-  //     return false;
-  //   } else {
-  //     const found = likedUsersPrime.reduce((acc: any, cur: any) => {
-  //       if (acc) {
-  //         return true;
-  //       } else {
-  //         if (u.matches[cur] && u.matches[cur] > 0) {
-  //           return true;
-  //         } else {
-  //           return false;
-  //         }
-  //       }
-  //     }, false);
-  //     return found;
-  //   }
-  // });
-
   res.send(fetchedUsers);
 };
 

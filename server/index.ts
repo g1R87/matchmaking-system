@@ -12,7 +12,9 @@ import connectDB from "./db/connect";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import notFound from "./middleware/not-found";
 import Msg from "./models/message.model";
+import User from "./models/user.model";
 import appRouter from "./router";
+import { findId } from "./utils/find-id";
 const app = express();
 const server = http.createServer(app);
 
@@ -30,11 +32,10 @@ app.use("/image", express.static(join(__dirname, "Uploads", "Resized")));
 app.use("/", appRouter);
 const host = "192.168.1.109";
 
-app.use(notFound);
-app.use(errorHandlerMiddleware);
-
 var clients: any = {};
+var interest: any = {};
 
+//*=============================socket section========================================================
 //socket io integration
 io.on("connection", (socket) => {
   console.log("a user is connected", socket.id);
@@ -42,6 +43,7 @@ io.on("connection", (socket) => {
     console.log("disconnected", socket.id);
   });
 
+  //normal chat
   socket.on("message", (msg) => {
     console.log(msg);
     const targetId = msg.targetId;
@@ -72,8 +74,43 @@ io.on("connection", (socket) => {
 
     console.log("the list are ", Object.keys(clients));
   });
-});
 
+  //random chat
+  socket.on("login", (data) => {
+    const sid = data.sourceId;
+    const iList = data.list;
+    clients[sid] = socket;
+    interest[sid] = iList;
+    console.log("interest list updated: ", interest);
+    console.log("the list are ", Object.keys(clients));
+  });
+
+  socket.on("search", async (data) => {
+    console.log(data);
+    const sid = data.sourceId;
+    const iList = data.list;
+    const match = findId(sid, interest);
+    if (match.id == "") {
+      clients[sid].emit("notfound", { msg: "Not Found" });
+    } else {
+      const user = await User.findById(match.id);
+      clients[sid].emit("found", user);
+    }
+  });
+
+  socket.on("chat", (msg) => {
+    console.log(msg);
+
+    if (clients[msg.targetId]) {
+      clients[msg.targetId].emit("chat", msg);
+    }
+    socket.broadcast.emit("message-received", msg);
+  });
+});
+//*==================socket section======================================================================
+
+app.use(notFound);
+app.use(errorHandlerMiddleware);
 const PORT = process.env.port || 5200;
 
 const start = async () => {

@@ -225,14 +225,16 @@ class _ProfilePageState extends State<ProfilePage> {
                               padding: const EdgeInsets.all(8),
                               decoration: const BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage("images/image1.jpg"),
+                                      image: NetworkImage(
+                                          "https://scontent.fktm17-1.fna.fbcdn.net/v/t1.15752-9/345023834_724158982727906_461501518587806568_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=ae9488&_nc_ohc=eOIBVp1CyQkAX-m_Uka&_nc_ht=scontent.fktm17-1.fna&oh=03_AdRZgHT0WKPFMjXCNFglApEwsyMnmRPel_Z_BpHUVqd82A&oe=64997B49"),
                                       fit: BoxFit.cover)),
                             ),
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: const BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage("images/image2.jpg"),
+                                      image: NetworkImage(
+                                          "https://scontent.fktm17-1.fna.fbcdn.net/v/t1.15752-9/316344636_1266504097461875_7008255925953881520_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=ae9488&_nc_ohc=SuSVVhYSV4gAX-GOrwE&_nc_ht=scontent.fktm17-1.fna&oh=03_AdQQ2HP1f2Cd0D-lxc-mSHDX-xL0ZD7aFdtAXyqSXVXdYg&oe=64998AFD"),
                                       fit: BoxFit.cover)),
                             ),
                           ],

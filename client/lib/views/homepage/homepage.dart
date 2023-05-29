@@ -123,23 +123,6 @@ class _ShowingPageState extends State<ShowingPage> {
                 child: const Center(child: CircularProgressIndicator()),
               ),
             ),
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.12,
-            //   width: MediaQuery.of(context).size.width,
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //     children: [
-            //       buttonWidget(Icons.refresh, Colors.amber),
-            //       buttonWidget(Icons.cancel, Colors.red),
-            //       buttonWidget(Icons.star, Colors.blue),
-            //       GestureDetector(
-            //           onTap: () {},
-            //           child: buttonWidget(
-            //               Icons.favorite_outline_outlined, Colors.green)),
-            //       buttonWidget(Icons.bolt, Colors.purple),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -213,10 +196,11 @@ Widget imageWidget(String image) {
   return Container(
     height: 50,
     width: 50,
-    decoration: BoxDecoration(
+    decoration: const BoxDecoration(
       shape: BoxShape.circle,
       image: DecorationImage(
-        image: AssetImage(image),
+        image: NetworkImage(
+            "https://scontent.fktm17-1.fna.fbcdn.net/v/t1.15752-9/345023834_724158982727906_461501518587806568_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=ae9488&_nc_ohc=eOIBVp1CyQkAX-m_Uka&_nc_ht=scontent.fktm17-1.fna&oh=03_AdRZgHT0WKPFMjXCNFglApEwsyMnmRPel_Z_BpHUVqd82A&oe=64997B49"),
         fit: BoxFit.cover,
       ),
     ),

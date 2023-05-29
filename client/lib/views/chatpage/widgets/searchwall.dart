@@ -2,14 +2,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/views/chatpage/searchpage.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
-// import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:online_matchmaking_system/model/chatmodel.dart';
+
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../model/messagemodel.dart';
 
 class SearchWall extends StatefulWidget {
-  const SearchWall({super.key});
+  final List? interest;
+  final String id;
+  const SearchWall({super.key, required this.interest, required this.id});
 
   @override
   State<SearchWall> createState() => _SearchWallState();
@@ -18,109 +23,122 @@ class SearchWall extends StatefulWidget {
 class _SearchWallState extends State<SearchWall> {
   TextEditingController msgInputController = TextEditingController();
   final appurl = dotenv.env["appurl"];
-  bool isLoading = false;
+  bool isLoading = true;
+  bool notFound = false;
 
-  // late IO.Socket socket;
+  late IO.Socket socket;
   List<MessageModel> messages = [];
+  late ChatModel chatModel = ChatModel(
+    name: "",
+    id: "",
+  );
+
+  String tid = '';
 
   @override
   void initState() {
-    // connect();
+    connect();
     super.initState();
   }
 
   @override
   void dispose() {
-    print('disposed');
     msgInputController.dispose();
-    // socket.disconnect();
+    socket.disconnect();
+    chatModel;
+    widget.interest;
     super.dispose();
   }
 
-  // void connect() async {
-  //   socket = IO.io(
-  //       appurl,
-  //       IO.OptionBuilder()
-  //           .setTransports(['websocket'])
-  //           .disableAutoConnect()
-  //           .build());
-  //   socket.connect();
-  //   final id = await NetworkHandler.getValue("userId");
-  //   socket.emit(
-  //       "signin", {"sourceId": widget.id, "targetId": widget.chatModel.id});
+  void connect() {
+    socket = IO.io(
+        appurl,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .disableAutoConnect()
+            .build());
+    socket.connect();
+    socket.emit("login", {"sourceId": widget.id, "list": widget.interest});
+    socket.emit("search", {"sourceId": widget.id, "list": widget.interest});
 
-  //   socket.onConnect((data) {
-  //     socket.on("history", (data) {
-  //       print(data);
-  //       for (var msg in data) {
-  //         if (msg["from_userId"] == id) {
-  //           setMessage("source", msg["message"], msg["createdAt"]);
-  //         } else {
-  //           setMessage("received", msg["message"], msg["createdAt"]);
-  //         }
-  //       }
-  //     });
-
-  //     socket.on(("message"), (msg) {
-  //       // print(msg["message"]);
-  //       setMessageReceiver(msg["message"]);
-  //     });
-  //   });
-  // }
+    socket.onConnect((data) {
+      socket.on("notfound", (data) {
+        if (!mounted) return;
+        setState(() {
+          notFound = true;
+        });
+      });
+      socket.on("found", (user) {
+        if (!mounted) return;
+        setState(() {
+          chatModel.id = user["_id"];
+          chatModel.name = user["first_name"];
+          isLoading = false;
+        });
+      });
+      socket.on(("chat"), (msg) {
+        // print(msg["message"]);
+        setMessageReceiver(msg["message"]);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: isLoading,
-      replacement: Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Colors.grey[50],
-                statusBarBrightness: Brightness.dark,
-              ),
-              leading: InkWell(
-                onTap: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-                child: const Icon(Icons.arrow_back_ios_outlined),
-              ),
-              iconTheme: const IconThemeData(color: Colors.black),
-              backgroundColor: Colors.grey[50],
-              elevation: 0,
-              title: const Text(
-                "Chris",
-                style: TextStyle(color: Colors.black),
-              ),
-              actions: [
-                PopupMenuButton(
-                  onSelected: (value) {
-                    if (value == 'delete') {
-                    } else {
-                      if (value == 'tdb') {}
-                    }
-                  },
-                  itemBuilder: (context) {
-                    return [
-                      const PopupMenuItem(
-                        value: 'delete',
-                        child: Text("Delete"),
-                      ),
-                      const PopupMenuItem(
-                        value: 'tdb',
-                        child: Text("TBD"),
-                      ),
-                    ];
-                  },
-                ),
-              ],
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.grey[50],
+              statusBarBrightness: Brightness.dark,
             ),
-            body: Container(
-              color: Colors.grey[200],
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Stack(
+            leading: InkWell(
+              onTap: () {
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (context) {
+                  return const SearchPage();
+                }));
+              },
+              child: const Icon(Icons.arrow_back_ios_outlined),
+            ),
+            iconTheme: const IconThemeData(color: Colors.black),
+            backgroundColor: Colors.grey[50],
+            elevation: 0,
+            title: Text(
+              chatModel.name as String,
+              style: const TextStyle(color: Colors.black),
+            ),
+            actions: [
+              PopupMenuButton(
+                onSelected: (value) {
+                  if (value == 'delete') {
+                  } else {
+                    if (value == 'tdb') {}
+                  }
+                },
+                itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text("Delete"),
+                    ),
+                    const PopupMenuItem(
+                      value: 'tdb',
+                      child: Text("TBD"),
+                    ),
+                  ];
+                },
+              ),
+            ],
+          ),
+          body: Container(
+            color: Colors.grey[200],
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Visibility(
+              visible: isLoading,
+              replacement: Stack(
                 children: [
                   SizedBox(
                     height: MediaQuery.of(context).size.height - 150,
@@ -189,9 +207,9 @@ class _SearchWallState extends State<SearchWall> {
                             radius: 20,
                             child: IconButton(
                               onPressed: () {
-                                // sendMessage(msgInputController.text,
-                                //     widget.chatModel.id as String);
-                                // msgInputController.clear();
+                                sendMessage(msgInputController.text,
+                                    chatModel.id as String);
+                                msgInputController.clear();
                               },
                               icon: const Icon(
                                 CupertinoIcons.paperplane_fill,
@@ -206,11 +224,28 @@ class _SearchWallState extends State<SearchWall> {
                   )
                 ],
               ),
+              child: Center(
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff2B2C43),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(35))),
+                    onPressed: () {
+                      socket.emit("search",
+                          {"sourceId": widget.id, "list": widget.interest});
+                    },
+                    child: const Text(
+                      "Find",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
+                    )),
+              ),
             ),
           ),
-        ],
-      ),
-      child: const Center(child: CircularProgressIndicator()),
+        ),
+      ],
     );
   }
 
@@ -243,14 +278,14 @@ class _SearchWallState extends State<SearchWall> {
     }
   }
 
-  // void sendMessage(String message, String targetId) {
-  //   setMessage("source", message);
-  //   var messageJson = {
-  //     "message": message,
-  //     "sourceId": widget.id,
-  //     "targetId": targetId
-  //   };
+  void sendMessage(String message, String targetId) {
+    setMessage("source", message);
+    var messageJson = {
+      "message": message,
+      "sourceId": widget.id,
+      "targetId": targetId
+    };
 
-  //   socket.emit('message', messageJson);
-  // }
+    socket.emit('chat', messageJson);
+  }
 }

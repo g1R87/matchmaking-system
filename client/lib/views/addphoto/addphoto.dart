@@ -120,7 +120,8 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(35))),
                       onPressed: () {
-                        Navigator.pushNamed(context, RoutesName.bottonNavBar);
+                        Navigator.pushReplacementNamed(
+                            context, RoutesName.bottonNavBar);
                       },
                       child: const Text(
                         "Continue",
