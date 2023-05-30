@@ -8,6 +8,7 @@ import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:http/http.dart' as http;
+import 'package:online_matchmaking_system/views/profile/profile.dart';
 
 class DetailsPage extends StatefulWidget {
   final Map? detail;
@@ -490,7 +491,8 @@ class _DetailsPageState extends State<DetailsPage> {
       var responseData = jsonDecode(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (imageFile != null) {
-          final imageResponse = await networkHandler.updatePfp(imageFile!.path);
+          final imageResponse = await networkHandler.uploadImage(
+              "/image/pfp", imageFile!.path, "myImage");
 
           if (imageResponse.statusCode == 200) {
             setState(() {
@@ -501,13 +503,24 @@ class _DetailsPageState extends State<DetailsPage> {
             if (pfpResponse.statusCode == 200) {
               await NetworkHandler.storeValue("pfp", pfpData["data"] ?? "");
             }
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) {
-                  return const MultipleImageSelector();
-                },
-              ),
-            );
+            if (!mounted) return;
+            if (isEdit) {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const ProfilePage();
+                  },
+                ),
+              );
+            } else {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const MultipleImageSelector();
+                  },
+                ),
+              );
+            }
           } else {
             showFailureMessage("Please try again");
           }

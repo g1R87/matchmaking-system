@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/menu.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/profilename.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/profilepic.dart';
@@ -25,12 +26,14 @@ class _ProfilePageState extends State<ProfilePage> {
   var ginterest = '';
   var image = "";
   String age = '';
+  String imgLink2 = "";
+  String imgLink3 = "";
+  final appurl = Api.appurl;
 
   @override
   void initState() {
     final detail = widget.detail;
     if (detail != null) {
-      print(detail["month"]);
       isOther = true;
       about = detail["about"];
       fname = detail["fname"];
@@ -71,10 +74,18 @@ class _ProfilePageState extends State<ProfilePage> {
           iconTheme: const IconThemeData(color: Colors.black),
           backgroundColor: Colors.grey[50],
           elevation: 0,
-          title: Profilename(about: about, fname: fname, image: image),
+          title: isOther
+              ? Text(fname)
+              : Profilename(about: about, fname: fname, image: image),
           centerTitle: true,
           actions: [
-            menu(context, name: fname, aboutme: about),
+            isOther
+                ? Container()
+                : menu(context,
+                    name: fname,
+                    aboutme: about,
+                    url2: imgLink2,
+                    url3: imgLink3),
           ],
         ),
         body: SingleChildScrollView(
@@ -224,18 +235,26 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Container(
                               padding: const EdgeInsets.all(8),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: NetworkImage(
-                                          "https://scontent.fktm17-1.fna.fbcdn.net/v/t1.15752-9/345023834_724158982727906_461501518587806568_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=ae9488&_nc_ohc=eOIBVp1CyQkAX-m_Uka&_nc_ht=scontent.fktm17-1.fna&oh=03_AdRZgHT0WKPFMjXCNFglApEwsyMnmRPel_Z_BpHUVqd82A&oe=64997B49"),
+                                      image: imgLink2.isEmpty
+                                          ? const AssetImage(
+                                                  "images/pfp_default.jpg")
+                                              as ImageProvider
+                                          : NetworkImage(
+                                              "$appurl/image/$imgLink2"),
                                       fit: BoxFit.cover)),
                             ),
                             Container(
                               padding: const EdgeInsets.all(8),
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: NetworkImage(
-                                          "https://scontent.fktm17-1.fna.fbcdn.net/v/t1.15752-9/316344636_1266504097461875_7008255925953881520_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=ae9488&_nc_ohc=SuSVVhYSV4gAX-GOrwE&_nc_ht=scontent.fktm17-1.fna&oh=03_AdQQ2HP1f2Cd0D-lxc-mSHDX-xL0ZD7aFdtAXyqSXVXdYg&oe=64998AFD"),
+                                      image: imgLink3.isEmpty
+                                          ? const AssetImage(
+                                                  "images/pfp_default.jpg")
+                                              as ImageProvider
+                                          : NetworkImage(
+                                              "$appurl/image/$imgLink3"),
                                       fit: BoxFit.cover)),
                             ),
                           ],
@@ -258,7 +277,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> profileFetch() async {
     final appurl = dotenv.env["appurl"];
-    print(await NetworkHandler.getValue("pfp"));
 
     final token = await NetworkHandler.getValue("token");
     final id = await NetworkHandler.getValue("userId");
@@ -279,7 +297,8 @@ class _ProfilePageState extends State<ProfilePage> {
       final userabout = responseData["about"];
       final userGender = responseData['gender_identity'];
       final userInterest = responseData['gender_interest'];
-
+      final url2 = responseData["url2"];
+      final url3 = responseData["url3"];
       final year = responseData['dob_year'];
       final month = responseData['dob_month'];
       final day = responseData['dob_day'];
@@ -290,6 +309,8 @@ class _ProfilePageState extends State<ProfilePage> {
         gender = userGender;
         ginterest = userInterest;
         image = userImage;
+        imgLink2 = url2 ?? "";
+        imgLink3 = url3 ?? "";
         age = calculateAge(year, month, day);
         isLoading = false;
       });

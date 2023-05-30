@@ -1,11 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:online_matchmaking_system/functions/toastfunction.dart';
+import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class MultipleImageSelector extends StatefulWidget {
-  const MultipleImageSelector({Key? key}) : super(key: key);
+  final Map? detail;
+
+  const MultipleImageSelector({super.key, this.detail});
 
   @override
   State<MultipleImageSelector> createState() => _MultipleImageSelectorState();
@@ -14,10 +20,26 @@ class MultipleImageSelector extends StatefulWidget {
 class _MultipleImageSelectorState extends State<MultipleImageSelector> {
   // List<File> selectedImages = [];
   // final picker = ImagePicker();
-  XFile? imageFile;
-  final ImagePicker picker = ImagePicker();
-  XFile? imagefile;
-  final ImagePicker pickerr = ImagePicker();
+  final appurl = Api.appurl;
+  XFile? imageFile1;
+  final ImagePicker picker1 = ImagePicker();
+  XFile? imageFile2;
+  final ImagePicker picker2 = ImagePicker();
+  NetworkHandler networkHandler = NetworkHandler();
+  bool isEdit = false;
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    final detail = widget.detail;
+    if (detail != null) {
+      isEdit = true;
+
+      getImageXFileByUrl(detail);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -119,17 +141,16 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                           backgroundColor: const Color(0xff2B2C43),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(35))),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                            context, RoutesName.bottonNavBar);
-                      },
-                      child: const Text(
-                        "Continue",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      )),
+                      onPressed: updateFunc,
+                      child: isLoading
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              "Continue",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white),
+                            )),
                 ),
               ),
               SizedBox(
@@ -154,10 +175,10 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                 width: 90,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: imageFile == null
+                      image: imageFile1 == null
                           ? const AssetImage("images/pfp_default.jpg")
                               as ImageProvider
-                          : FileImage(File(imageFile!.path)),
+                          : FileImage(File(imageFile1!.path)),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -189,10 +210,10 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
                 width: 90,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: imagefile == null
+                      image: imageFile2 == null
                           ? const AssetImage("images/pfp_default.jpg")
                               as ImageProvider
-                          : FileImage(File(imagefile!.path)),
+                          : FileImage(File(imageFile2!.path)),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -314,24 +335,20 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
   }
 
   void chosePhoto(ImageSource source) async {
-    final pickedFile = await picker.pickImage(
+    final pickedFile = await picker1.pickImage(
       source: source,
-      maxHeight: 200,
-      maxWidth: 200,
     );
     setState(() {
-      imageFile = pickedFile;
+      imageFile1 = pickedFile;
     });
   }
 
   void chosePhotoo(ImageSource source) async {
-    final pickedfile = await picker.pickImage(
+    final pickedfile = await picker2.pickImage(
       source: source,
-      maxHeight: 200,
-      maxWidth: 200,
     );
     setState(() {
-      imagefile = pickedfile;
+      imageFile2 = pickedfile;
     });
   }
 
@@ -353,4 +370,49 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
   //     },
   //   );
   // }
+
+  void getImageXFileByUrl(Map detail) async {
+    final String img1 = detail["url2"];
+    final String img2 = detail["url3"];
+    if (img1.isNotEmpty) {
+      var file1 =
+          await DefaultCacheManager().getSingleFile("$appurl/image/$img1");
+      setState(() {
+        imageFile1 = XFile(file1.path);
+      });
+    }
+    if (img2.isNotEmpty) {
+      var file2 =
+          await DefaultCacheManager().getSingleFile("$appurl/image/$img2");
+      setState(() {
+        imageFile2 = XFile(file2.path);
+      });
+    }
+  }
+
+  Future<void> updateFunc() async {
+    setState(() {
+      isLoading = true;
+    });
+    if (imageFile1 == null || imageFile2 == null) {
+      showToast("please upload image", "reject");
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      final imageResponse1 = await networkHandler.uploadImage(
+          "/image/upload/0", imageFile1!.path, "image");
+      final imageResponse2 = await networkHandler.uploadImage(
+          "/image/upload/1", imageFile2!.path, "image");
+      if (imageResponse1.statusCode == 200 &&
+          imageResponse2.statusCode == 200) {
+        setState(() {
+          isLoading = false;
+        });
+
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+      }
+    }
+  }
 }

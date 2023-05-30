@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:online_matchmaking_system/views/loginpage/widgets/email.dart';
 import 'package:online_matchmaking_system/views/loginpage/widgets/forget_password.dart';
@@ -193,15 +194,14 @@ class _LoginPageState extends State<LoginPage> {
       await NetworkHandler.storeValue("token", responseData["token"]);
       await NetworkHandler.storeValue("userId", responseData["userId"]);
       if (!responseData["isUpdated"]) {
+        if (!mounted) return;
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
           return const DetailsPage();
         }));
       } else {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) {
-          return const MultipleImageSelector();
-        }));
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
       }
     } else {
       showFailureMessage("Session has expired, Please login");

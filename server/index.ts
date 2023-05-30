@@ -31,6 +31,8 @@ app.use(express.static("public"));
 app.use("/image", express.static(join(__dirname, "Uploads", "Resized")));
 app.use("/", appRouter);
 const host = "192.168.1.109";
+app.use(notFound);
+app.use(errorHandlerMiddleware);
 
 var clients: any = {};
 var interest: any = {};
@@ -109,8 +111,6 @@ io.on("connection", (socket) => {
 });
 //*==================socket section======================================================================
 
-app.use(notFound);
-app.use(errorHandlerMiddleware);
 const PORT = process.env.port || 5200;
 
 const start = async () => {

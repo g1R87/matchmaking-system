@@ -33,12 +33,13 @@ class NetworkHandler {
     return await storage.deleteAll();
   }
 
-  Future<http.StreamedResponse> updatePfp(String filepath) async {
-    final url = "$appurl/image/pfp";
+  Future<http.StreamedResponse> uploadImage(
+      String route, String filepath, String key) async {
+    final url = "$appurl$route";
     final uri = Uri.parse(url);
     final token = await getValue("token");
     var request = http.MultipartRequest('POST', uri);
-    request.files.add(await http.MultipartFile.fromPath("myImage", filepath));
+    request.files.add(await http.MultipartFile.fromPath(key, filepath));
     request.headers.addAll({
       "Content-Type": "multipart/form-data",
       "authorization": "Bearer $token",
@@ -68,7 +69,6 @@ class NetworkHandler {
   }
 
   Future<http.Response> handleReq(String route, String id) async {
-    print("the id is $id");
     final reqBody = {
       "reqI": id,
     };

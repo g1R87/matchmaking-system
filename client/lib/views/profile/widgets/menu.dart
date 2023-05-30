@@ -1,10 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/logout_alertbox.dart';
 import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
 
-IconButton menu(BuildContext context, {String name = "", String aboutme = ""}) {
+IconButton menu(BuildContext context,
+    {String name = "",
+    String aboutme = "",
+    String url2 = "",
+    String url3 = ""}) {
   return IconButton(
     onPressed: () {
       showModalBottomSheet(
@@ -63,8 +68,22 @@ IconButton menu(BuildContext context, {String name = "", String aboutme = ""}) {
                             listofMenu(Icons.edit, "Edit profile", context))),
                 Expanded(
                   child: GestureDetector(
-                      onTap: () {},
-                      child: listofMenu(Icons.update, "Update", context)),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return MultipleImageSelector(
+                                detail: {
+                                  "url2": url2,
+                                  "url3": url3,
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child:
+                          listofMenu(Icons.update, "Update Photos", context)),
                 ),
                 Expanded(
                   child: GestureDetector(
