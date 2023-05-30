@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/views/profile/profile.dart';
@@ -446,7 +447,7 @@ class _DetailsPageState extends State<DetailsPage> {
     });
 
     print("$byear $bmonth $bday is the thingg");
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
     //get form data
     final fname = fnamecontroller.text;
     final datefiled = dateinput.text;
@@ -478,7 +479,7 @@ class _DetailsPageState extends State<DetailsPage> {
 
       final token = await NetworkHandler.getValue("token");
       //put request
-      final url = "$appurl/user";
+      const url = "$appurl/user";
       final uri = Uri.parse(url);
       final response = await http.put(
         uri,

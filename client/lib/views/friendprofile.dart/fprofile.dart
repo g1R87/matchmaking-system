@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/menu.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/profilename.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/profilepic.dart';
@@ -217,7 +218,7 @@ class _FProfilePageState extends State<FProfilePage> {
   }
 
   Future<void> profileFetch() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
     print(await NetworkHandler.getValue("pfp"));
 
     final token = await NetworkHandler.getValue("token");

@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 
 class NetworkHandler {
   //todo: add other http requests here later
 
-  final appurl = dotenv.env["appurl"];
+  final appurl = Api.appurl;
 
   //local storage
   static const storage = FlutterSecureStorage();

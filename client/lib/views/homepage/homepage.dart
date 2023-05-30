@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/notification/notification.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:swipe_cards/swipe_cards.dart';
@@ -21,7 +22,7 @@ class ShowingPage extends StatefulWidget {
 class _ShowingPageState extends State<ShowingPage> {
   final List<SwipeItem> _swipeItem = <SwipeItem>[];
   MatchEngine? _matchEngine;
-  final appurl = dotenv.env["appurl"];
+  final appurl = Api.appurl;
 
   bool isLoading = true;
   NetworkHandler networkHandler = NetworkHandler();

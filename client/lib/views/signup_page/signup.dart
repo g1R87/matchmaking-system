@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/loginpage/login.dart';
 
 import '../loginpage/widgets/loginbutton.dart';
@@ -226,7 +227,7 @@ class _SignupState extends State<Signup> {
   }
 
   Future<void> signupFunc() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
 
     //gettting data from form
     final email = _userController.text;

@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:online_matchmaking_system/views/loginpage/widgets/email.dart';
@@ -175,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> refressSession() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
     var refresh = await NetworkHandler.getValue('refresh');
     print(refresh);
     final body = {
@@ -209,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> loginFunc() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
 
     //gettting data from form
     final email = _emailController.text;

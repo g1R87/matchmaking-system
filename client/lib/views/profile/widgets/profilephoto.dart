@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import '../../../services/network_handler.dart';
 import '../../../shared_data/device_size.dart';
 
@@ -85,7 +85,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
   }
 
   Future<void> profileFetch() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
     print(await NetworkHandler.getValue("pfp"));
 
     final token = await NetworkHandler.getValue("token");

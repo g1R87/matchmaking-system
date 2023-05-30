@@ -276,7 +276,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> profileFetch() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
 
     final token = await NetworkHandler.getValue("token");
     final id = await NetworkHandler.getValue("userId");

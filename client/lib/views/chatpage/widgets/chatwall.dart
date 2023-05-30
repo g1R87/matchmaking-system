@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -21,7 +22,7 @@ class ChatWall extends StatefulWidget {
 
 class _ChatWallState extends State<ChatWall> {
   TextEditingController msgInputController = TextEditingController();
-  final appurl = dotenv.env["appurl"];
+  final appurl = Api.appurl;
 
   late IO.Socket socket;
   List<MessageModel> messages = [];

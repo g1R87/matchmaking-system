@@ -3,6 +3,7 @@ import 'package:online_matchmaking_system/services/network_handler.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:online_matchmaking_system/views/loginpage/login.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +40,7 @@ class _DialogBoxState extends State<DialogBox> {
   }
 
   Future<void> logoutFunc() async {
-    final appurl = dotenv.env["appurl"];
+    const appurl = Api.appurl;
 
     var refresh = await NetworkHandler.getValue('refresh');
     print(refresh);
@@ -47,7 +48,7 @@ class _DialogBoxState extends State<DialogBox> {
       'tokenrefresh': refresh,
     };
 
-    final url = "$appurl/auth/logout";
+    const url = "$appurl/auth/logout";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,
