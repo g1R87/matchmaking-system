@@ -2,34 +2,55 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
+import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/views/notification/notification.dart';
+import 'package:online_matchmaking_system/views/profile/profile.dart';
 
-class RequestCard extends StatelessWidget {
+class RequestCard extends StatefulWidget {
   const RequestCard({super.key, required this.reqModel, required this.id});
   final RequestModel reqModel;
   final String id;
 
   @override
+  State<RequestCard> createState() => _RequestCardState();
+}
+
+class _RequestCardState extends State<RequestCard> {
+  NetworkHandler networkHandler = NetworkHandler();
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => ));
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ProfilePage(
+            detail: {
+              "fname": widget.reqModel.name,
+              "about": widget.reqModel.about,
+              "gender": widget.reqModel.gender,
+              "ginterest": widget.reqModel.ginterest,
+              "image": widget.reqModel.image,
+              "year": widget.reqModel.year,
+              "month": widget.reqModel.month,
+              "day": widget.reqModel.day
+            },
+          );
+        }));
       },
       child: Column(
         children: [
           ListTile(
             leading: CircleAvatar(
               radius: 35,
-              backgroundImage: (reqModel.pfp == null || reqModel.pfp!.isEmpty)
+              backgroundImage: (widget.reqModel.pfp == null ||
+                      widget.reqModel.pfp!.isEmpty)
                   ? const AssetImage("images/pfp_default.jpg") as ImageProvider
-                  : MemoryImage(reqModel.pfp as Uint8List),
+                  : MemoryImage(widget.reqModel.pfp as Uint8List),
             ),
             title: Text(
-              reqModel.name as String,
+              widget.reqModel.name as String,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -104,20 +125,22 @@ class RequestCard extends StatelessWidget {
             onPressed: () {
               print("confirm");
               if (action == "accept") {
-                //make accept req api call
+                //make accept req api
+                handleChatRequest(action);
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
                   return const NotificationPage();
                 }));
-                print("Accepted");
+                showToast("Chat accepted", "accept");
                 Navigator.pop(context);
               } else {
+                handleChatRequest(action);
                 //make reject req api call
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
                   return const NotificationPage();
                 }));
-                print("Rejected");
+                showToast("Chat rejected", "reject");
               }
             },
             child: const Text("Confirm")),
@@ -129,5 +152,18 @@ class RequestCard extends StatelessWidget {
         builder: (BuildContext context) {
           return alert;
         });
+  }
+
+  void handleChatRequest(String type) async {
+    if (type == "accept") {
+      final response = await networkHandler.handleReq(
+          "/user/acceptreq", widget.reqModel.id as String);
+      if (response.statusCode == 200) {
+        print("go to chats");
+      }
+    } else {
+      await networkHandler.handleReq(
+          "/user/rejectreq", widget.reqModel.id as String);
+    }
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/views/notification/notification.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -37,6 +39,15 @@ class _ShowingPageState extends State<ShowingPage> {
     super.initState();
   }
 
+  // @override
+  // void didChangeDependencies() {
+  //   for (var item in loadedImage) {
+  //     precacheImage(item.image, context);
+  //     print("1");
+  //   }
+  //   super.didChangeDependencies();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +63,15 @@ class _ShowingPageState extends State<ShowingPage> {
                 children: [
                   imageWidget("images/image1.jpg"),
                   buttonWidget(Icons.star, Colors.amber),
-                  buttonWidget(Icons.notifications, Colors.grey.shade400)
+                  InkWell(
+                      onTap: () {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) {
+                          return const NotificationPage();
+                        }));
+                      },
+                      child: buttonWidget(
+                          Icons.notifications, Colors.grey.shade400))
                 ],
               ),
             ),
@@ -74,8 +93,11 @@ class _ShowingPageState extends State<ShowingPage> {
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: loadedImage[index] ??
-                                      AssetImage(images[1]),
+                                  image: netImage[index] == null
+                                      ? AssetImage(images[1]) as ImageProvider
+                                      : CachedNetworkImageProvider(
+                                          "$appurl/image/${netImage[index]}",
+                                        ),
                                   // image: AssetImage(images[index]),
                                   fit: BoxFit.cover),
                               color: Colors.red,
@@ -96,7 +118,7 @@ class _ShowingPageState extends State<ShowingPage> {
                                               ["gender_identity"],
                                           "ginterest": users[index]
                                               ["gender_interest"],
-                                          "image": users[index]["pfp"]["data"],
+                                          "image": users[index]["pfp"]?["data"],
                                           "year": users[index]["dob_year"],
                                           "month": users[index]["dob_month"],
                                           "day": users[index]["dob_day"],
@@ -150,11 +172,19 @@ class _ShowingPageState extends State<ShowingPage> {
                 content: Content(text: users[i]["first_name"]),
                 likeAction: () {
                   print("like");
-                  actions(context, users[i], "Liked");
+
+                  //!  temporarily commented
+                  // voteFunc(users[i]["_id"], "voteup");
+
+                  actions(context, users[i]["first_name"], "Liked");
                 },
                 nopeAction: () {
                   print("dislike");
-                  actions(context, users[i], 'Rejected');
+
+                  //!  temporarily commented
+                  // voteFunc(users[i]["_id"], "votedown");
+
+                  actions(context, users[i]["first_name"], 'Rejected');
                 },
                 superlikeAction: () {
                   print('superlike');
@@ -171,6 +201,16 @@ class _ShowingPageState extends State<ShowingPage> {
       print("retry");
     }
   }
+
+  void voteFunc(String id, String type) async {
+    if (type == "voteup") {
+      final response = await networkHandler.vote("/user/voteup?id=$id");
+      response.statusCode == 200 ? print("success") : print("fail");
+    } else {
+      final response = await networkHandler.vote("/user/votedown?id=$id");
+      response.statusCode == 200 ? print("success") : print("fail");
+    }
+  }
 }
 
 Widget buttonWidget(IconData icon, Color color) {
@@ -181,13 +221,10 @@ Widget buttonWidget(IconData icon, Color color) {
         border: Border.all(width: 0.3),
         color: Colors.white.withOpacity(0.9),
         shape: BoxShape.circle),
-    child: InkWell(
-      onTap: () {},
-      child: Icon(
-        icon,
-        color: color,
-        size: 30,
-      ),
+    child: Icon(
+      icon,
+      color: color,
+      size: 30,
     ),
   );
 }

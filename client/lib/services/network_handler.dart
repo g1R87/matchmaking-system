@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -51,6 +53,31 @@ class NetworkHandler {
     final token = await getValue("token");
     var response = await http.get(uri, headers: {
       "authorization": "Bearer $token",
+    });
+    return response;
+  }
+
+  Future<http.Response> vote(String route) async {
+    final url = "$appurl$route";
+    final uri = Uri.parse(url);
+    final token = await getValue("token");
+    var response = await http.post(uri, headers: {
+      "authorization": "Bearer $token",
+    });
+    return response;
+  }
+
+  Future<http.Response> handleReq(String route, String id) async {
+    print("the id is $id");
+    final reqBody = {
+      "reqI": id,
+    };
+    final url = "$appurl$route";
+    final uri = Uri.parse(url);
+    final token = await getValue("token");
+    final response = await http.post(uri, body: jsonEncode(reqBody), headers: {
+      "authorization": "Bearer $token",
+      "Content-type": "application/json",
     });
     return response;
   }

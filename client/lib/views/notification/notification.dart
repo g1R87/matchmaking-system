@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:online_matchmaking_system/views/notification/widgets/RequestList.dart';
 
+import '../../utils/routesname.dart';
+
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
 
@@ -14,6 +16,12 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: InkWell(
+          onTap: () {
+            Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+          },
+          child: const Icon(Icons.arrow_back_ios_outlined),
+        ),
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.grey[50],
           statusBarBrightness: Brightness.dark,

@@ -92,6 +92,7 @@ export const fetchPending = async (req: Request, res: Response) => {
 //accept req
 export const updateChatlist = async (req: Request, res: Response) => {
   const ownId = res.locals.user.userID;
+  console.log(req.body);
   const { reqId } = req.body;
 
   if (!reqId) {

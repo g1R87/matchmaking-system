@@ -20,6 +20,7 @@ class _RequestListState extends State<RequestList> {
   List<dynamic> decodedImage = [];
   @override
   void initState() {
+    print("notf page");
     fetchPending();
     super.initState();
   }
@@ -54,12 +55,22 @@ class _RequestListState extends State<RequestList> {
       setState(() {
         id = userId as String;
         for (int i = 0; i < fetchedUsers.length; i++) {
-          reqs.add(RequestModel(
+          reqs.add(
+            RequestModel(
               id: fetchedUsers[i]["_id"],
               name: fetchedUsers[i]["first_name"],
               pfp: fetchedUsers[i]["pfp"] != null
                   ? base64Decode(fetchedUsers[i]["pfp"]["data"])
-                  : null));
+                  : null,
+              about: fetchedUsers[i]["about"],
+              gender: fetchedUsers[i]["gender_identity"],
+              ginterest: fetchedUsers[i]["gender_interest"],
+              day: fetchedUsers[i]["dob_day"],
+              month: fetchedUsers[i]["dob_month"],
+              year: fetchedUsers[i]["dob_year"],
+              image: fetchedUsers[i]["pfp"]["data"],
+            ),
+          );
           decodedImage.add(fetchedUsers[i]["pfp"] != null
               ? base64Decode(fetchedUsers[i]["pfp"]["data"])
               : null);

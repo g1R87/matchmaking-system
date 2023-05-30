@@ -23,19 +23,20 @@ class _ProfilePageState extends State<ProfilePage> {
   var fname = "";
   var gender = '';
   var ginterest = '';
-  var image = '';
+  var image = "";
   String age = '';
 
   @override
   void initState() {
     final detail = widget.detail;
     if (detail != null) {
+      print(detail["month"]);
       isOther = true;
       about = detail["about"];
       fname = detail["fname"];
       gender = detail["gender"];
       ginterest = detail["ginterest"];
-      image = detail['image'];
+      image = detail['image'] ?? "";
       age = calculateAge(detail["year"], detail["month"], detail["day"]);
       isLoading = false;
     } else {
