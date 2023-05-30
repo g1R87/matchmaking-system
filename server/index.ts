@@ -97,6 +97,8 @@ io.on("connection", (socket) => {
     } else {
       const user = await User.findById(match.id);
       clients[sid].emit("found", user);
+      const uesr2 = await User.findById(sid);
+      clients[match.id].emit("found", uesr2);
     }
   });
 

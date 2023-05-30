@@ -224,23 +224,25 @@ class _SearchWallState extends State<SearchWall> {
                   )
                 ],
               ),
-              child: Center(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff2B2C43),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(35))),
-                    onPressed: () {
-                      socket.emit("search",
-                          {"sourceId": widget.id, "list": widget.interest});
-                    },
-                    child: const Text(
-                      "Find",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500),
-                    )),
+              child: const Center(
+                child: CircularProgressIndicator(),
+                // ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //         backgroundColor: const Color(0xff2B2C43),
+                //         shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(35))),
+                //     onPressed: () {
+                //       socket.emit("search",
+                //           {"sourceId": widget.id, "list": widget.interest});
+                //     },
+                //     child: const Text(
+                //       "Find",
+                //       style: TextStyle(
+                //           color: Colors.white,
+                //           fontSize: 20,
+                //           fontWeight: FontWeight.w500),
+                //     ),
+                //     ),
               ),
             ),
           ),
