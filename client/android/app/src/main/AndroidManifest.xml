@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.online_matchmaking_system">
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="online_matchmaking_system"
         android:name="${applicationName}"

@@ -11,7 +11,7 @@ import { Server } from "socket.io";
 import connectDB from "./db/connect";
 import errorHandlerMiddleware from "./middleware/error-handler";
 import notFound from "./middleware/not-found";
-import Msg from "./models/message.model";
+import Msg, { MsgInput } from "./models/message.model";
 import User from "./models/user.model";
 import appRouter from "./router";
 import { findId } from "./utils/find-id";
@@ -68,11 +68,26 @@ io.on("connection", (socket) => {
     const sid = data.sourceId;
     const tid = data.targetId;
     clients[sid] = socket;
-    const oldmsg = await Msg.find({
+    const oldmsg: Array<MsgInput> = await Msg.find({
       from_userId: { $in: [sid, tid] },
       to_userId: { $in: [sid, tid] },
     });
-    clients[sid].emit("history", oldmsg);
+
+    const historyMsg = oldmsg.map((e: MsgInput) => {
+      const date = e.createdAt;
+      const parsedDate = new Date(date);
+      parsedDate.setHours(parsedDate.getHours() + 5);
+      parsedDate.setMinutes(parsedDate.getMinutes() + 45);
+      return {
+        from_userId: e.from_userId,
+        to_userId: e.to_userId,
+        message: e.message,
+        createdAt: parsedDate,
+      };
+    });
+    console.log(historyMsg);
+
+    clients[sid].emit("history", historyMsg);
 
     console.log("the list are ", Object.keys(clients));
   });

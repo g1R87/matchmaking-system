@@ -1,5 +1,13 @@
 import mongoose from "mongoose";
 
+export interface MsgInput extends mongoose.Document {
+  from_userId: string;
+  to_userId: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const MessageSchema = new mongoose.Schema(
   {
     from_userId: {
@@ -20,4 +28,4 @@ const MessageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Message", MessageSchema);
+export default mongoose.model<MsgInput>("Message", MessageSchema);

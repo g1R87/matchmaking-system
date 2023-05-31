@@ -176,7 +176,6 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> refressSession() async {
     const appurl = Api.appurl;
     var refresh = await NetworkHandler.getValue('refresh');
-    print(refresh);
     final body = {
       'tokenrefresh': refresh,
     };
@@ -209,6 +208,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> loginFunc() async {
     const appurl = Api.appurl;
+    print(appurl);
 
     //gettting data from form
     final email = _emailController.text;
@@ -235,6 +235,8 @@ class _LoginPageState extends State<LoginPage> {
       await NetworkHandler.storeValue("pfp", responseData["pfp"] ?? "");
 
       if (!responseData["isUpdated"]) {
+        if (!mounted) return;
+
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
           return const DetailsPage();
