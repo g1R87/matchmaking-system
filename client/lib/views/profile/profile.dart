@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
@@ -40,7 +39,11 @@ class _ProfilePageState extends State<ProfilePage> {
       gender = detail["gender"];
       ginterest = detail["ginterest"];
       image = detail['image'] ?? "";
-      age = calculateAge(detail["year"], detail["month"], detail["day"]);
+      age = calculateAge(
+        detail["year"],
+        detail["month"],
+        detail["day"],
+      );
       isLoading = false;
     } else {
       profileFetch();

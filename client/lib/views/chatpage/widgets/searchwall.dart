@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/chatpage/searchpage.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
