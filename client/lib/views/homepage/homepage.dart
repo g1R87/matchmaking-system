@@ -8,7 +8,6 @@ import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/notification/notification.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:swipe_cards/swipe_cards.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../utils/constant.dart';
 
@@ -177,7 +176,7 @@ class _ShowingPageState extends State<ShowingPage> {
                   //!  temporarily commented
                   // voteFunc(users[i]["_id"], "voteup");
 
-                  actions(context, users[i]["first_name"], "Liked");
+                  // actions(context, users[i]["first_name"], "Liked");
                 },
                 nopeAction: () {
                   print("dislike");
@@ -185,7 +184,7 @@ class _ShowingPageState extends State<ShowingPage> {
                   //!  temporarily commented
                   // voteFunc(users[i]["_id"], "votedown");
 
-                  actions(context, users[i]["first_name"], 'Rejected');
+                  // actions(context, users[i]["first_name"], 'Rejected');
                 },
                 superlikeAction: () {
                   print('superlike');

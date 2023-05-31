@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/utils/routesname.dart';
-import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:online_matchmaking_system/views/loginpage/widgets/email.dart';
 import 'package:online_matchmaking_system/views/loginpage/widgets/forget_password.dart';
 import 'package:online_matchmaking_system/views/loginpage/widgets/signup_button.dart';
@@ -183,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
       'tokenrefresh': refresh,
     };
 
-    final url = "$appurl/auth/refresh";
+    const url = "$appurl/auth/refresh";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,
@@ -220,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
       "password": password,
     };
     //sending req
-    final url = "$appurl/auth/login";
+    const url = "$appurl/auth/login";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,
@@ -242,10 +240,8 @@ class _LoginPageState extends State<LoginPage> {
           return const DetailsPage();
         }));
       } else {
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) {
-          return const MultipleImageSelector();
-        }));
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
       }
     } else {
       showFailureMessage(responseData["msg"]);
