@@ -56,7 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
       gender = detail["gender"];
       ginterest = detail["ginterest"];
       image = detail['image'] ?? "";
-      age = calculateAge(detail["year"], detail["month"], detail["day"]);
+      age = calculateAge(
+        detail["year"],
+        detail["month"],
+        detail["day"],
+      );
       isLoading = false;
     } else {
       profileFetch();

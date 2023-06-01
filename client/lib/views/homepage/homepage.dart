@@ -54,7 +54,6 @@ class _ShowingPageState extends State<ShowingPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   imageWidget("images/image1.jpg"),
-                  buttonWidget(Icons.star, Colors.amber),
                   InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacement(
@@ -188,10 +187,6 @@ class _ShowingPageState extends State<ShowingPage> {
                   // voteFunc(users[i]["_id"], "votedown");
 
                   // actions(context, users[i]["first_name"], 'Rejected');
-                },
-                superlikeAction: () {
-                  print('superlike');
-                  actions(context, users[i], "SuperLiked");
                 },
               ),
             );

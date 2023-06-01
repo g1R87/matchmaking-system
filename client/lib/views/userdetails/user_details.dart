@@ -332,21 +332,21 @@ class _DetailsPageState extends State<DetailsPage> {
                             height: 45,
                             width: 280,
                             child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xff2B2C43),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(35))),
-                                onPressed: updateFunc,
-                                child: isLoading
-                                    ? const CircularProgressIndicator()
-                                    : const Text(
-                                        "Continue",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w500),
-                                      )),
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xff2B2C43),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(35))),
+                              onPressed: updateFunc,
+                              child: isLoading
+                                  ? const CircularProgressIndicator()
+                                  : const Text(
+                                      "Continue",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                            ),
                           ),
                         ),
                       ],
@@ -372,19 +372,20 @@ class _DetailsPageState extends State<DetailsPage> {
                 : FileImage(File(imageFile!.path)),
           ),
           Positioned(
-              bottom: 5,
-              right: 5,
-              child: InkWell(
-                onTap: () {
-                  showModalBottomSheet(
-                      context: context, builder: ((builder) => bottomSheet()));
-                },
-                child: const Icon(
-                  Icons.camera_alt,
-                  color: Colors.teal,
-                  size: 29,
-                ),
-              ))
+            bottom: 5,
+            right: 5,
+            child: InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                    context: context, builder: ((builder) => bottomSheet()));
+              },
+              child: const Icon(
+                Icons.camera_alt,
+                color: Colors.teal,
+                size: 29,
+              ),
+            ),
+          )
         ],
       ),
     );
