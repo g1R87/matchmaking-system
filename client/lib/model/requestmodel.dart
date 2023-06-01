@@ -10,16 +10,21 @@ class RequestModel {
   int? year;
   int? month;
   int? day;
-  String? image;
-  RequestModel(
-      {this.id,
-      this.name,
-      this.pfp,
-      this.about,
-      this.gender,
-      this.ginterest,
-      this.day,
-      this.year,
-      this.month,
-      this.image});
+  dynamic image;
+  dynamic image2;
+  dynamic image3;
+  RequestModel({
+    this.id,
+    this.name,
+    this.pfp,
+    this.about,
+    this.gender,
+    this.ginterest,
+    this.day,
+    this.year,
+    this.month,
+    this.image,
+    this.image2,
+    this.image3,
+  });
 }

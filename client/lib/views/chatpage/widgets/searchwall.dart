@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
-import 'package:online_matchmaking_system/views/chatpage/searchpage.dart';
+import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
+import 'package:online_matchmaking_system/views/profile/profile.dart';
 
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -15,7 +16,11 @@ import '../../../model/messagemodel.dart';
 class SearchWall extends StatefulWidget {
   final List? interest;
   final String id;
-  const SearchWall({super.key, required this.interest, required this.id});
+  const SearchWall({
+    super.key,
+    required this.interest,
+    required this.id,
+  });
 
   @override
   State<SearchWall> createState() => _SearchWallState();
@@ -26,6 +31,8 @@ class _SearchWallState extends State<SearchWall> {
   final appurl = Api.appurl;
   bool isLoading = true;
   bool notFound = false;
+
+  final RequestModel requestModel = RequestModel();
 
   late IO.Socket socket;
   List<MessageModel> messages = [];
@@ -72,6 +79,16 @@ class _SearchWallState extends State<SearchWall> {
       socket.on("found", (user) {
         if (!mounted) return;
         setState(() {
+          requestModel.about = user["about"];
+          requestModel.name = user["fname"];
+          requestModel.gender = user["gender_identity"];
+          requestModel.ginterest = user["gender_interest"];
+          requestModel.image = user["pfp"]["data"] ?? "";
+          requestModel.image2 = user["url2"] ?? "";
+          requestModel.image3 = user["url3"] ?? "";
+          requestModel.year = user["dob_year"];
+          requestModel.month = user["dob_month"];
+          requestModel.day = user["dob_day"];
           chatModel.id = user["_id"];
           chatModel.name = user["first_name"];
           isLoading = false;
@@ -98,7 +115,9 @@ class _SearchWallState extends State<SearchWall> {
               onTap: () {
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
-                  return const SearchPage();
+                  return const MainPage(
+                    index: 2,
+                  );
                 }));
               },
               child: const Icon(Icons.arrow_back_ios_outlined),
@@ -106,11 +125,30 @@ class _SearchWallState extends State<SearchWall> {
             iconTheme: const IconThemeData(color: Colors.black),
             backgroundColor: Colors.grey[50],
             elevation: 0,
-            title: Text(
-              chatModel.name as String,
-              style: const TextStyle(color: Colors.black),
+            title: InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ProfilePage(
+                    requestModel: requestModel,
+                  );
+                }));
+              },
+              child: Text(
+                chatModel.name as String,
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
             actions: [
+              IconButton(
+                  onPressed: () {
+                    //todo: api req
+                    print("Send request");
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.checkmark_alt_circle,
+                    color: Colors.green,
+                    size: 30,
+                  )),
               PopupMenuButton(
                 onSelected: (value) {
                   if (value == 'delete') {

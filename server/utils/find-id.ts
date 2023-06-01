@@ -1,6 +1,4 @@
 export const findId = (sid: string, obj: any) => {
-  console.log("func id", sid);
-  console.log("func obj,", obj);
   const curList = obj[sid];
   const priority: any = {};
 
@@ -14,8 +12,6 @@ export const findId = (sid: string, obj: any) => {
       }
     });
   }
-
-  console.log(priority);
 
   let id = "";
   let length = 0;

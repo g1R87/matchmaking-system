@@ -31,6 +31,8 @@ userRouter.get("/fetchpending", isLoggedIn, matchController.fetchPending);
 userRouter.post("/acceptreq", isLoggedIn, matchController.updateChatlist);
 //reject request
 userRouter.post("/rejectreq", isLoggedIn, matchController.updateMatches);
+//delete chat
+userRouter.delete("/chat", isLoggedIn, matchController.delChatlist);
 
 //! temp remove later
 userRouter.get("/updateall", userController.updateall);

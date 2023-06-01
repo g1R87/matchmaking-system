@@ -26,16 +26,7 @@ class _RequestCardState extends State<RequestCard> {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ProfilePage(
-            detail: {
-              "fname": widget.reqModel.name,
-              "about": widget.reqModel.about,
-              "gender": widget.reqModel.gender,
-              "ginterest": widget.reqModel.ginterest,
-              "image": widget.reqModel.image,
-              "year": widget.reqModel.year,
-              "month": widget.reqModel.month,
-              "day": widget.reqModel.day
-            },
+            requestModel: widget.reqModel,
           );
         }));
       },
@@ -126,7 +117,7 @@ class _RequestCardState extends State<RequestCard> {
               print("confirm");
               if (action == "accept") {
                 //make accept req api
-                handleChatRequest(action);
+                // handleChatRequest(action);
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
                   return const NotificationPage();
@@ -134,7 +125,7 @@ class _RequestCardState extends State<RequestCard> {
                 showToast("Chat accepted", "accept");
                 Navigator.pop(context);
               } else {
-                handleChatRequest(action);
+                // handleChatRequest(action);
                 //make reject req api call
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
@@ -11,7 +11,8 @@ import 'package:online_matchmaking_system/views/profile/widgets/profilepic.dart'
 
 class ProfilePage extends StatefulWidget {
   final Map? detail;
-  const ProfilePage({super.key, this.detail});
+  final RequestModel? requestModel;
+  const ProfilePage({super.key, this.detail, this.requestModel});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -33,7 +34,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     final detail = widget.detail;
-    if (detail != null) {
+    final userModel = widget.requestModel;
+    if (userModel != null) {
+      print(userModel.about);
+      isOther = true;
+      about = userModel.about as String;
+      fname = userModel.name as String;
+      gender = userModel.gender as String;
+      ginterest = userModel.gender as String;
+      image = userModel.image as String;
+      imgLink2 = userModel.image2 as String;
+      imgLink3 = userModel.image3 as String;
+      age = calculateAge(
+          userModel.year as int, userModel.month as int, userModel.day as int);
+      isLoading = false;
+    } else if (detail != null) {
+      print(detail);
       isOther = true;
       about = detail["about"];
       fname = detail["fname"];

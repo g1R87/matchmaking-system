@@ -1,20 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
+import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
+import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../model/messagemodel.dart';
 
 class ChatWall extends StatefulWidget {
-  const ChatWall({super.key, required this.chatModel, required this.id});
+  const ChatWall(
+      {super.key,
+      required this.chatModel,
+      required this.id,
+      required this.requestModel});
   final ChatModel chatModel;
   final String id;
+  final RequestModel requestModel;
 
   @override
   State<ChatWall> createState() => _ChatWallState();
@@ -55,7 +61,6 @@ class _ChatWallState extends State<ChatWall> {
 
     socket.onConnect((data) {
       socket.on("history", (data) {
-        print(data);
         for (var msg in data) {
           if (msg["from_userId"] == id) {
             setMessage("source", msg["message"], msg["createdAt"]);
@@ -91,9 +96,18 @@ class _ChatWallState extends State<ChatWall> {
             iconTheme: const IconThemeData(color: Colors.black),
             backgroundColor: Colors.grey[50],
             elevation: 0,
-            title: Text(
-              widget.chatModel.name as String,
-              style: const TextStyle(color: Colors.black),
+            title: InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ProfilePage(
+                    requestModel: widget.requestModel,
+                  );
+                }));
+              },
+              child: Text(
+                widget.chatModel.name as String,
+                style: const TextStyle(color: Colors.black),
+              ),
             ),
             actions: [
               PopupMenuButton(

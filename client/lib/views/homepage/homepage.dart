@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/alertfunctions.dart';
+import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/notification/notification.dart';
@@ -38,15 +39,6 @@ class _ShowingPageState extends State<ShowingPage> {
 
     super.initState();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   for (var item in loadedImage) {
-  //     precacheImage(item.image, context);
-  //     print("1");
-  //   }
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +92,6 @@ class _ShowingPageState extends State<ShowingPage> {
                                         ),
                                   // image: AssetImage(images[index]),
                                   fit: BoxFit.cover),
-                              color: Colors.red,
                               borderRadius: BorderRadius.circular(10)),
                           padding: const EdgeInsets.all(20),
                           child: Column(
@@ -111,18 +102,21 @@ class _ShowingPageState extends State<ShowingPage> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) {
                                       return ProfilePage(
-                                        detail: {
-                                          "fname": users[index]["first_name"],
-                                          "about": users[index]["about"],
-                                          "gender": users[index]
+                                        requestModel: RequestModel(
+                                          name: users[index]["first_name"],
+                                          about: users[index]["about"],
+                                          gender: users[index]
                                               ["gender_identity"],
-                                          "ginterest": users[index]
+                                          ginterest: users[index]
                                               ["gender_interest"],
-                                          "image": users[index]["pfp"]?["data"],
-                                          "year": users[index]["dob_year"],
-                                          "month": users[index]["dob_month"],
-                                          "day": users[index]["dob_day"],
-                                        },
+                                          image:
+                                              users[index]["pfp"]["data"] ?? "",
+                                          year: users[index]["dob_year"],
+                                          month: users[index]["dob_month"],
+                                          day: users[index]["dob_day"],
+                                          image2: users[index]["url2"] ?? "",
+                                          image3: users[index]["url3"] ?? "",
+                                        ),
                                       );
                                     },
                                   ));
@@ -155,13 +149,22 @@ class _ShowingPageState extends State<ShowingPage> {
     final response = await networkHandler.getData("/user/fetchuser");
     final fetchedUsers = await jsonDecode(response.body);
     if (response.statusCode == 200) {
+      for (int i = 0; i < fetchedUsers.length; i++) {
+        var imgRes =
+            await networkHandler.getData('/image/${fetchedUsers[i]["url1"]}');
+        if (imgRes.statusCode == 200) {
+          decodedImage.add(imgRes.bodyBytes);
+        } else {
+          decodedImage.add(null);
+        }
+      }
       if (mounted) {
         setState(() {
           users = fetchedUsers;
           for (int i = 0; i < users.length; i++) {
-            decodedImage.add(users[i]["pfp"] != null
-                ? base64Decode(users[i]["pfp"]["data"])
-                : null);
+            // decodedImage.add(users[i]["pfp"] != null
+            //     ? base64Decode(users[i]["pfp"]["data"])
+            //     : null);
             netImage.add(users[i]["url1"]);
             loadedImage.add(users[i]['url1'] != null
                 ? NetworkImage("$appurl/image/${users[i]['url1']}")

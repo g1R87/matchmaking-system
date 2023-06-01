@@ -1,13 +1,19 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/chatwall.dart';
 
 import '../../../model/chatmodel.dart';
 
 class CustomCard extends StatelessWidget {
-  const CustomCard({super.key, required this.chatModel, required this.id});
+  const CustomCard(
+      {super.key,
+      required this.chatModel,
+      required this.id,
+      required this.requestModel});
   final ChatModel chatModel;
+  final RequestModel requestModel;
   final String id;
 
   @override
@@ -20,6 +26,7 @@ class CustomCard extends StatelessWidget {
                 builder: (context) => ChatWall(
                       chatModel: chatModel,
                       id: id,
+                      requestModel: requestModel,
                     )));
       },
       child: Column(

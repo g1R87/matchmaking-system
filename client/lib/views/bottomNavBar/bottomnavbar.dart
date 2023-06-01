@@ -7,7 +7,8 @@ import 'package:online_matchmaking_system/views/profile/profile.dart';
 import '../chatpage/chat.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  final int? index;
+  const MainPage({super.key, this.index});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -27,6 +28,15 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    final i = widget.index;
+    if (i != null) {
+      _selectedIndex = i;
+    }
+    super.initState();
   }
 
   @override

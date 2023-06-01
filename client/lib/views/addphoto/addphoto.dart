@@ -70,68 +70,6 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
               const SizedBox(
                 height: 20,
               ),
-              // SizedBox(
-              //   height: MediaQuery.of(context).size.height * 0.4,
-              //   width: 300.0,
-              //   child: selectedImages.isEmpty
-              //       ? GestureDetector(
-              //           onTap: () {
-              //             getImages();
-              //           },
-              //           child: Row(
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               imagebox(),
-              //               const SizedBox(
-              //                 width: 10,
-              //               ),
-              //               imagebox(),
-              //               const SizedBox(
-              //                 width: 10,
-              //               ),
-              //               imagebox(),
-              //             ],
-              //           ),
-              //         )
-              //       : GridView.builder(
-              //           scrollDirection: Axis.vertical,
-              //           itemCount: selectedImages.length,
-              //           gridDelegate:
-              //               const SliverGridDelegateWithFixedCrossAxisCount(
-              //                   mainAxisSpacing: 20, crossAxisCount: 3),
-              //           itemBuilder: (BuildContext context, int index) {
-              //             return Center(
-              //               child: kIsWeb
-              //                   ? Container(
-              //                       height: MediaQuery.of(context).size.height *
-              //                           0.13,
-              //                       width:
-              //                           MediaQuery.of(context).size.width * 0.2,
-              //                       decoration: BoxDecoration(
-              //                           border: Border.all(width: 1)),
-              //                       child: Image.network(
-              //                         selectedImages[index].path,
-              //                         fit: BoxFit.cover,
-              //                       ))
-              //                   : Container(
-              //                       height: MediaQuery.of(context).size.height *
-              //                           0.13,
-              //                       width:
-              //                           MediaQuery.of(context).size.width * 0.2,
-              //                       decoration: BoxDecoration(
-              //                           border: Border.all(width: 1)),
-              //                       child: Image.file(
-              //                         selectedImages[index],
-              //                         fit: BoxFit.cover,
-              //                       ),
-              //                     ),
-              //             );
-              //           },
-              //         ),
-              // ),
-              // SizedBox(
-              //   height: MediaQuery.of(context).size.height * 0.05,
-              // ),
               Center(
                 child: SizedBox(
                   height: 45,

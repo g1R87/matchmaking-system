@@ -14,6 +14,7 @@ import notFound from "./middleware/not-found";
 import Msg, { MsgInput } from "./models/message.model";
 import User from "./models/user.model";
 import appRouter from "./router";
+import { convertDateList } from "./utils/date-convert";
 import { findId } from "./utils/find-id";
 const app = express();
 const server = http.createServer(app);
@@ -73,18 +74,19 @@ io.on("connection", (socket) => {
       to_userId: { $in: [sid, tid] },
     });
 
-    const historyMsg = oldmsg.map((e: MsgInput) => {
-      const date = e.createdAt;
-      const parsedDate = new Date(date);
-      parsedDate.setHours(parsedDate.getHours() + 5);
-      parsedDate.setMinutes(parsedDate.getMinutes() + 45);
-      return {
-        from_userId: e.from_userId,
-        to_userId: e.to_userId,
-        message: e.message,
-        createdAt: parsedDate,
-      };
-    });
+    // const historyMsg = oldmsg.map((e: MsgInput) => {
+    //   const date = e.createdAt;
+    //   const parsedDate = new Date(date);
+    //   parsedDate.setHours(parsedDate.getHours() + 5);
+    //   parsedDate.setMinutes(parsedDate.getMinutes() + 45);
+    //   return {
+    //     from_userId: e.from_userId,
+    //     to_userId: e.to_userId,
+    //     message: e.message,
+    //     createdAt: parsedDate,
+    //   };
+    // });
+    const historyMsg = convertDateList(oldmsg);
     console.log(historyMsg);
 
     clients[sid].emit("history", historyMsg);
