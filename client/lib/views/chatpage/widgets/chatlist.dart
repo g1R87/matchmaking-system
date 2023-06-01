@@ -59,11 +59,13 @@ class _ChatListState extends State<ChatList> {
       setState(() {
         id = userId as String;
         for (int i = 0; i < fetchedUsers.length; i++) {
+          var timeString = fetchedUsers[i]["createdAt"];
           chats.add(ChatModel(
               id: fetchedUsers[i]["_id"],
               name: fetchedUsers[i]["first_name"],
-              currentMessage: "input message here",
-              time: "4:49",
+              currentMessage:
+                  fetchedUsers[i]["message"] ?? "input message here",
+              time: timeString != null ? timeString.substring(11, 16) : "",
               pfp: fetchedUsers[i]["pfp"] != null
                   ? base64Decode(fetchedUsers[i]["pfp"]["data"])
                   : null));
