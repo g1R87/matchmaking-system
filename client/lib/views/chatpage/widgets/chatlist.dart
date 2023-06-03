@@ -63,8 +63,7 @@ class _ChatListState extends State<ChatList> {
           chats.add(ChatModel(
               id: fetchedUsers[i]["_id"],
               name: fetchedUsers[i]["first_name"],
-              currentMessage:
-                  fetchedUsers[i]["message"] ?? "input message here",
+              currentMessage: fetchedUsers[i]["message"] ?? "Say Hi!",
               time: timeString != null ? timeString.substring(11, 16) : "",
               pfp: fetchedUsers[i]["pfp"] != null
                   ? base64Decode(fetchedUsers[i]["pfp"]["data"])
