@@ -16,6 +16,7 @@ import User from "./models/user.model";
 import appRouter from "./router";
 import { convertDateList } from "./utils/date-convert";
 import { findId } from "./utils/find-id";
+import { deleteClient } from "./utils/socket-functions";
 const app = express();
 const server = http.createServer(app);
 
@@ -41,9 +42,12 @@ var interest: any = {};
 //*=============================socket section========================================================
 //socket io integration
 io.on("connection", (socket) => {
+  console.log(socket);
   console.log("a user is connected", socket.id);
   socket.on("disconnect", () => {
     console.log("disconnected", socket.id);
+    deleteClient(socket.id, clients);
+    console.log("updated clients: ", clients);
   });
 
   //normal chat
@@ -51,16 +55,19 @@ io.on("connection", (socket) => {
     console.log(msg);
     const targetId = msg.targetId;
 
-    const message = new Msg({
-      from_userId: msg.sourceId,
-      to_userId: msg.targetId,
-      message: msg.message,
-    });
-    message.save().then(() => {
-      if (clients[msg.targetId]) {
-        clients[msg.targetId].emit("message", msg);
-      }
-    });
+    // const message = new Msg({
+    //   from_userId: msg.sourceId,
+    //   to_userId: msg.targetId,
+    //   message: msg.message,
+    // });
+    // message.save().then(() => {
+    //   if (clients[msg.targetId]) {
+    //     clients[msg.targetId].emit("message", msg);
+    //   }
+    // });
+    if (clients[msg.sourceId]) {
+      clients[msg.sourceId].emit("message", msg);
+    }
     socket.broadcast.emit("message-received", msg);
   });
 
@@ -74,18 +81,6 @@ io.on("connection", (socket) => {
       to_userId: { $in: [sid, tid] },
     });
 
-    // const historyMsg = oldmsg.map((e: MsgInput) => {
-    //   const date = e.createdAt;
-    //   const parsedDate = new Date(date);
-    //   parsedDate.setHours(parsedDate.getHours() + 5);
-    //   parsedDate.setMinutes(parsedDate.getMinutes() + 45);
-    //   return {
-    //     from_userId: e.from_userId,
-    //     to_userId: e.to_userId,
-    //     message: e.message,
-    //     createdAt: parsedDate,
-    //   };
-    // });
     const historyMsg = convertDateList(oldmsg);
     console.log(historyMsg);
 

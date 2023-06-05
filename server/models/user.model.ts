@@ -28,6 +28,7 @@ export interface UserInput extends mongoose.Document {
   chatList: string[];
   pending: string[];
   coords: number[];
+  key: string;
   refreshToken: string;
   pfp: { data: string; contentType: string };
 
@@ -102,6 +103,7 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [27.7172, 85.324],
   },
+  key: String,
   refreshToken: String,
 });
 

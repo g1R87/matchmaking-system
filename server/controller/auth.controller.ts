@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 import BadRequestError from "../errors/bad-request";
 import ForbiddenError from "../errors/forbidden";
 import UnauthenticatedError from "../errors/unauthenticated";
-import User from "../models/user.model";
-
+import User, { UserInput } from "../models/user.model";
+import { generate } from "../utils/generatekey";
 interface jwtPayload {
   userId: string;
   name: string;
@@ -114,4 +114,33 @@ export const logout = async (req: Request, res: Response) => {
   //delete in db  && clear cookie
   // res.clearCookie("jwt", { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
   res.status(204).send("logout");
+};
+
+export const forgetPassword = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new BadRequestError("Please provide an email");
+  }
+  const key = generate(6);
+  await User.findOneAndUpdate(
+    { email },
+    { $set: { key: key } },
+    { upsert: true, setDefaultsOnInsert: true }
+  );
+  res.status(201).send({ msg: "Success" });
+};
+
+export const verifyForgetPassword = async (req: Request, res: Response) => {
+  const key = req.params as unknown as string;
+  const { email } = req.body;
+  if (!key) {
+    throw new UnauthenticatedError("Not authorized");
+  }
+  const user: UserInput | null = await User.findOne({ email });
+  if (user) {
+    if (user.key == key) {
+      res.status(200).send({ msg: "Success" });
+    }
+    throw new BadRequestError("Unauthorized");
+  }
 };

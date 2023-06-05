@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/services/rsa.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
@@ -29,6 +30,7 @@ class ChatWall extends StatefulWidget {
 class _ChatWallState extends State<ChatWall> {
   TextEditingController msgInputController = TextEditingController();
   final appurl = Api.appurl;
+  RSA rsa = RSA();
 
   late IO.Socket socket;
   List<MessageModel> messages = [];
@@ -72,7 +74,12 @@ class _ChatWallState extends State<ChatWall> {
 
       socket.on(("message"), (msg) {
         // print(msg["message"]);
-        setMessageReceiver(msg["message"]);
+        final keyPair = rsa.generateKeyPair();
+        final decryptedMessage =
+            rsa.decrypt(msg["message"], keyPair.privateKey);
+        print("message event");
+        print(decryptedMessage);
+        setMessageReceiver(decryptedMessage);
       });
     });
   }
@@ -252,15 +259,17 @@ class _ChatWallState extends State<ChatWall> {
     if (mounted) {
       setState(() {
         messages.add(messageModel);
-        print("After receive: length = ${messages.length}");
       });
     }
   }
 
   void sendMessage(String message, String targetId) {
+    final keyPair = rsa.generateKeyPair();
+
     setMessage("source", message);
+    final encryptedMessage = rsa.encrypt(message, keyPair.publicKey);
     var messageJson = {
-      "message": message,
+      "message": encryptedMessage,
       "sourceId": widget.id,
       "targetId": targetId
     };
