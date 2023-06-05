@@ -16,10 +16,14 @@ class RSA {
   }
 
   String encrypt(String message, PublicKey publicKey) {
-    final encryptedMessage = message.runes.map((charCode) {
-      final encryptedCharCode =
-          _modularExponentiation(charCode, publicKey.e, publicKey.n);
-      return encryptedCharCode.toString();
+    final encryptedMessage = message.runes.map((codePoint) {
+      if (_isEmoji(codePoint)) {
+        return codePoint.toString();
+      } else {
+        final encryptedCodePoint =
+            _modularExponentiation(codePoint, publicKey.e, publicKey.n);
+        return encryptedCodePoint.toString();
+      }
     }).join(',');
     return encryptedMessage;
   }
@@ -27,10 +31,14 @@ class RSA {
   // Decrypt a message using the private key
   String decrypt(String encryptedMessage, PrivateKey privateKey) {
     final decryptedMessage =
-        encryptedMessage.split(',').map((encryptedCharCode) {
-      final decryptedCharCode = _modularExponentiation(
-          int.parse(encryptedCharCode), privateKey.d, privateKey.n);
-      return String.fromCharCode(decryptedCharCode);
+        encryptedMessage.split(',').map((encryptedCodePoint) {
+      if (_isEmoji(int.parse(encryptedCodePoint))) {
+        return String.fromCharCode(int.parse(encryptedCodePoint));
+      } else {
+        final decryptedCodePoint = _modularExponentiation(
+            int.parse(encryptedCodePoint), privateKey.d, privateKey.n);
+        return String.fromCharCode(decryptedCodePoint);
+      }
     }).join();
     return decryptedMessage;
   }
@@ -79,5 +87,17 @@ class RSA {
       return a;
     }
     return _gcd(b, a % b);
+  }
+
+// to skip emoji
+  bool _isEmoji(int codePoint) {
+    return (codePoint >= 0x1F600 && codePoint <= 0x1F64F) ||
+        (codePoint >= 0x1F300 && codePoint <= 0x1F5FF) ||
+        (codePoint >= 0x1F680 && codePoint <= 0x1F6FF) ||
+        (codePoint >= 0x2600 && codePoint <= 0x26FF) ||
+        (codePoint >= 0x2700 && codePoint <= 0x27BF) ||
+        (codePoint >= 0xFE00 && codePoint <= 0xFE0F) ||
+        (codePoint >= 0x1F900 && codePoint <= 0x1F9FF) ||
+        (codePoint >= 0x1F1E6 && codePoint <= 0x1F1FF);
   }
 }
