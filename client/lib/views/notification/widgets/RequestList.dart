@@ -71,6 +71,7 @@ class _RequestListState extends State<RequestList> {
               image: fetchedUsers[i]["pfp"]["data"] ?? "",
               image2: fetchedUsers[i]["url2"] ?? "",
               image3: fetchedUsers[i]["url3"] ?? "",
+              interest: fetchedUsers[i]["interest"],
             ),
           );
           decodedImage.add(fetchedUsers[i]["pfp"] != null

@@ -6,9 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
-import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:http/http.dart' as http;
 import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
+import 'package:online_matchmaking_system/views/interest/uesr_interest.dart';
 
 class DetailsPage extends StatefulWidget {
   final Map? detail;
@@ -54,22 +54,22 @@ class _DetailsPageState extends State<DetailsPage> {
   String? gender;
   String? genderInterest;
 
-  String calculateAge(DateTime birthDate) {
-    DateTime currentDate = DateTime.now();
-    int age = currentDate.year - birthDate.year;
-    int month1 = currentDate.month;
-    int month2 = birthDate.month;
-    if (month2 > month1) {
-      age--;
-    } else if (month1 == month2) {
-      int day1 = currentDate.day;
-      int day2 = birthDate.day;
-      if (day2 > day1) {
-        age--;
-      }
-    }
-    return age.toString();
-  }
+  // String calculateAge(DateTime birthDate) {
+  //   DateTime currentDate = DateTime.now();
+  //   int age = currentDate.year - birthDate.year;
+  //   int month1 = currentDate.month;
+  //   int month2 = birthDate.month;
+  //   if (month2 > month1) {
+  //     age--;
+  //   } else if (month1 == month2) {
+  //     int day1 = currentDate.day;
+  //     int day2 = birthDate.day;
+  //     if (day2 > day1) {
+  //       age--;
+  //     }
+  //   }
+  //   return age.toString();
+  // }
 
   @override
   void dispose() {
@@ -174,27 +174,17 @@ class _DetailsPageState extends State<DetailsPage> {
                                         lastDate: DateTime(2101));
 
                                     if (pickedDate != null) {
-                                      setState(() {
-                                        age = calculateAge(pickedDate);
-                                        byear = pickedDate.year;
-                                        bmonth = pickedDate.month;
-                                        bday = pickedDate.day;
-                                      });
-                                    }
-
-                                    if (pickedDate != null) {
-                                      print(
-                                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                      print(pickedDate);
                                       String formattedDate =
                                           DateFormat('yyyy-MM-dd')
                                               .format(pickedDate);
-                                      print(
-                                          formattedDate); //formatted date output using intl package =>  2021-03-16
-                                      //you can implement different kind of Date Format here according to your requirement
-
                                       setState(() {
-                                        dateinput.text =
-                                            formattedDate; //set output date to TextField value.
+                                        //   age = calculateAge(pickedDate);
+                                        byear = pickedDate.year;
+                                        bmonth = pickedDate.month;
+                                        bday = pickedDate.day;
+
+                                        dateinput.text = formattedDate;
                                       });
                                     } else {
                                       print("Date is not selected");
@@ -519,7 +509,7 @@ class _DetailsPageState extends State<DetailsPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return const MultipleImageSelector();
+                    return const InterestsPage();
                   },
                 ),
               );
@@ -549,7 +539,7 @@ class _DetailsPageState extends State<DetailsPage> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) {
-                return const MultipleImageSelector();
+                return const InterestsPage();
               },
             ),
           );

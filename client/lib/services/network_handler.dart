@@ -70,12 +70,23 @@ class NetworkHandler {
 
   Future<http.Response> handleReq(String route, String id) async {
     final reqBody = {
-      "reqI": id,
+      "reqId": id,
     };
     final url = "$appurl$route";
     final uri = Uri.parse(url);
     final token = await getValue("token");
     final response = await http.post(uri, body: jsonEncode(reqBody), headers: {
+      "authorization": "Bearer $token",
+      "Content-type": "application/json",
+    });
+    return response;
+  }
+
+  Future<http.Response> updateData(String route, Map body) async {
+    final url = "$appurl$route";
+    final uri = Uri.parse(url);
+    final token = await getValue("token");
+    final response = await http.put(uri, body: jsonEncode(body), headers: {
       "authorization": "Bearer $token",
       "Content-type": "application/json",
     });
@@ -89,7 +100,6 @@ class NetworkHandler {
     final body = {
       "reqId": id,
     };
-
     var response = await http.delete(uri, body: jsonEncode(body), headers: {
       "authorization": "Bearer $token",
       "Content-type": "application/json",

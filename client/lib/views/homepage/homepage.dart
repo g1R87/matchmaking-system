@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
@@ -62,19 +61,23 @@ class _ShowingPageState extends State<ShowingPage> {
                         return const NotificationPage();
                       }));
                     },
-                    child: Stack(
-                      children: [
-                        buttonWidget(Icons.notifications, Colors.grey.shade400),
-                        const Positioned(
-                          left: 35,
-                          bottom: 5,
-                          child: CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.red,
+                    child: notf > 0
+                        ? buttonWidget(
+                            Icons.notifications, Colors.grey.shade400)
+                        : Stack(
+                            children: [
+                              buttonWidget(
+                                  Icons.notifications, Colors.grey.shade400),
+                              const Positioned(
+                                left: 35,
+                                bottom: 5,
+                                child: CircleAvatar(
+                                  radius: 10,
+                                  backgroundColor: Colors.red,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
                   ),
                 ],
               ),
@@ -97,11 +100,12 @@ class _ShowingPageState extends State<ShowingPage> {
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: netImage[index] == null
+                                  image: decodedImage[index] == null
                                       ? AssetImage(images[1]) as ImageProvider
-                                      : CachedNetworkImageProvider(
-                                          "$appurl/image/${netImage[index]}",
-                                        ),
+                                      : MemoryImage(decodedImage[index]),
+                                  // : CachedNetworkImageProvider(
+                                  //     "$appurl/image/${netImage[index]}",
+                                  //   ),
                                   // image: AssetImage(images[index]),
                                   fit: BoxFit.cover),
                               borderRadius: BorderRadius.circular(10)),
@@ -128,6 +132,7 @@ class _ShowingPageState extends State<ShowingPage> {
                                           day: users[index]["dob_day"],
                                           image2: users[index]["url2"] ?? "",
                                           image3: users[index]["url3"] ?? "",
+                                          interest: users[index]["interest"],
                                         ),
                                       );
                                     },
@@ -160,28 +165,29 @@ class _ShowingPageState extends State<ShowingPage> {
   void fetchUsers() async {
     final img = await NetworkHandler.getValue("pfp");
     final response = await networkHandler.getData("/user/fetchuser");
-    final pending = await networkHandler.getData("/user/fetchpending");
+    // final pending = await networkHandler.getData("/user/fetchpending");
     final fetchedUsers = await jsonDecode(response.body);
-    final pendingList = await jsonDecode(pending.body);
+    // final pendingList = await jsonDecode(pending.body);
     if (response.statusCode == 200) {
-      for (int i = 0; i < fetchedUsers.length; i++) {
-        var imgRes =
-            await networkHandler.getData('/image/${fetchedUsers[i]["url1"]}');
-        if (imgRes.statusCode == 200) {
-          decodedImage.add(imgRes.bodyBytes);
-        } else {
-          decodedImage.add(null);
-        }
-      }
+      // for (int i = 0; i < fetchedUsers.length; i++) {
+      //   var imgRes =
+      //       await networkHandler.getData('/image/${fetchedUsers[i]["url1"]}');
+      //   if (imgRes.statusCode == 200) {
+      //     decodedImage.add(imgRes.bodyBytes);
+      //   } else {
+      //     decodedImage.add(null);
+      //   }
+      // }
       if (mounted) {
         setState(() {
-          notf = pendingList.length;
+          // notf = pendingList.length;
+          // print(notf);
           image = img as String;
           users = fetchedUsers;
           for (int i = 0; i < users.length; i++) {
-            // decodedImage.add(users[i]["pfp"] != null
-            //     ? base64Decode(users[i]["pfp"]["data"])
-            //     : null);
+            decodedImage.add(users[i]["pfp"] != null
+                ? base64Decode(users[i]["pfp"]["data"])
+                : null);
             netImage.add(users[i]["url1"]);
             loadedImage.add(users[i]['url1'] != null
                 ? NetworkImage("$appurl/image/${users[i]['url1']}")
@@ -194,7 +200,7 @@ class _ShowingPageState extends State<ShowingPage> {
                   print("like");
 
                   //!  temporarily commented
-                  // voteFunc(users[i]["_id"], "voteup");
+                  voteFunc(users[i]["_id"], "voteup");
 
                   // actions(context, users[i]["first_name"], "Liked");
                 },
@@ -202,7 +208,7 @@ class _ShowingPageState extends State<ShowingPage> {
                   print("dislike");
 
                   //!  temporarily commented
-                  // voteFunc(users[i]["_id"], "votedown");
+                  voteFunc(users[i]["_id"], "votedown");
 
                   // actions(context, users[i]["first_name"], 'Rejected');
                 },

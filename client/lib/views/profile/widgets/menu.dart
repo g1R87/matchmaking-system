@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
+import 'package:online_matchmaking_system/views/interest/uesr_interest.dart';
 import 'package:online_matchmaking_system/views/profile/widgets/logout_alertbox.dart';
 import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
 
@@ -51,9 +52,16 @@ IconButton menu(BuildContext context,
                 ),
                 Expanded(
                     child: GestureDetector(
-                        onTap: () {},
-                        child:
-                            listofMenu(Icons.settings, "Settings", context))),
+                        onTap: () {
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) {
+                            return const InterestsPage(
+                              interest: [],
+                            );
+                          }));
+                        },
+                        child: listofMenu(
+                            Icons.settings, "Edit Interests", context))),
                 Expanded(
                     child: GestureDetector(
                         onTap: () {

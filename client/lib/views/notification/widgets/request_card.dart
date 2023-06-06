@@ -117,7 +117,7 @@ class _RequestCardState extends State<RequestCard> {
               print("confirm");
               if (action == "accept") {
                 //make accept req api
-                // handleChatRequest(action);
+                handleChatRequest(action);
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
                   return const NotificationPage();
@@ -125,7 +125,7 @@ class _RequestCardState extends State<RequestCard> {
                 showToast("Chat accepted", "accept");
                 Navigator.pop(context);
               } else {
-                // handleChatRequest(action);
+                handleChatRequest(action);
                 //make reject req api call
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
@@ -146,6 +146,7 @@ class _RequestCardState extends State<RequestCard> {
   }
 
   void handleChatRequest(String type) async {
+    print(type);
     if (type == "accept") {
       final response = await networkHandler.handleReq(
           "/user/acceptreq", widget.reqModel.id as String);

@@ -29,6 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String age = '';
   String imgLink2 = "";
   String imgLink3 = "";
+  List<dynamic> selectedInterests = [];
+
   final appurl = Api.appurl;
 
   @override
@@ -45,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
       image = userModel.image as String;
       imgLink2 = userModel.image2 as String;
       imgLink3 = userModel.image3 as String;
+      selectedInterests = [...userModel.interest as List<dynamic>];
       age = calculateAge(
           userModel.year as int, userModel.month as int, userModel.day as int);
       isLoading = false;
@@ -124,9 +127,18 @@ class _ProfilePageState extends State<ProfilePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [ProfilePic(image: image)],
                       ),
-                      SizedBox(
-                        height: getDeviceHeight(context) * 0.07,
-                      ),
+                      selectedInterests.isEmpty
+                          ? SizedBox(
+                              height: getDeviceHeight(context) * 0.07,
+                            )
+                          : Center(
+                              child: Wrap(
+                                spacing: 8.0,
+                                children: selectedInterests.map((interest) {
+                                  return Chip(label: Text(interest));
+                                }).toList(),
+                              ),
+                            ),
                       Container(
                         padding: const EdgeInsets.all(12),
                         height: 50,
@@ -322,6 +334,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final year = responseData['dob_year'];
       final month = responseData['dob_month'];
       final day = responseData['dob_day'];
+      final interests = responseData["interest"];
       print("$year $month $day");
       setState(() {
         about = userabout;
@@ -331,6 +344,7 @@ class _ProfilePageState extends State<ProfilePage> {
         image = userImage;
         imgLink2 = url2 ?? "";
         imgLink3 = url3 ?? "";
+        selectedInterests = [...interests];
         age = calculateAge(year, month, day);
         isLoading = false;
       });

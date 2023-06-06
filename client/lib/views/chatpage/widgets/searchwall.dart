@@ -89,6 +89,7 @@ class _SearchWallState extends State<SearchWall> {
           requestModel.year = user["dob_year"];
           requestModel.month = user["dob_month"];
           requestModel.day = user["dob_day"];
+          requestModel.interest = user["interest"];
           chatModel.id = user["_id"];
           chatModel.name = user["first_name"];
           isLoading = false;

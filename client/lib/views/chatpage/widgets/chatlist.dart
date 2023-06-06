@@ -91,6 +91,7 @@ class _ChatListState extends State<ChatList> {
             day: fetchedUsers[i]["dob_day"],
             month: fetchedUsers[i]["dob_month"],
             year: fetchedUsers[i]["dob_year"],
+            interest: fetchedUsers[i]["interest"],
           ));
         }
 

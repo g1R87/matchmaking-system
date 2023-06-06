@@ -13,18 +13,19 @@ class RequestModel {
   dynamic image;
   dynamic image2;
   dynamic image3;
-  RequestModel({
-    this.id,
-    this.name,
-    this.pfp,
-    this.about,
-    this.gender,
-    this.ginterest,
-    this.day,
-    this.year,
-    this.month,
-    this.image,
-    this.image2,
-    this.image3,
-  });
+  List<dynamic>? interest;
+  RequestModel(
+      {this.id,
+      this.name,
+      this.pfp,
+      this.about,
+      this.gender,
+      this.ginterest,
+      this.day,
+      this.year,
+      this.month,
+      this.image,
+      this.image2,
+      this.image3,
+      this.interest});
 }
