@@ -47,9 +47,11 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: const Color.fromARGB(255, 150, 235, 152),
         elevation: 0,
         shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30))),
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
       ),
       body: Form(
         key: _key,
