@@ -42,6 +42,15 @@ class _InterestsPageState extends State<InterestsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Interests'),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 150, 235, 152),
+        elevation: 0,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30),
+            bottomRight: Radius.circular(30),
+          ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),

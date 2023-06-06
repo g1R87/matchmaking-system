@@ -82,11 +82,15 @@ class _SearchPageState extends State<SearchPage> {
     final iList = interests.split(" ");
     if (!mounted) return;
 
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-      return SearchWall(
-        id: userId as String,
-        interest: iList,
-      );
-    }));
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) {
+          return SearchWall(
+            id: userId as String,
+            interest: iList,
+          );
+        },
+      ),
+    );
   }
 }
