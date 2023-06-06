@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
@@ -26,6 +25,8 @@ class _ShowingPageState extends State<ShowingPage> {
 
   bool isLoading = true;
   NetworkHandler networkHandler = NetworkHandler();
+  String image = "";
+  int notf = 0;
   List<dynamic> users = [];
   List<dynamic> decodedImage = [];
   List<dynamic> netImage = [];
@@ -53,7 +54,7 @@ class _ShowingPageState extends State<ShowingPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  imageWidget("images/image1.jpg"),
+                  imageWidget(image),
                   InkWell(
                       onTap: () {
                         Navigator.of(context).pushReplacement(
@@ -145,8 +146,11 @@ class _ShowingPageState extends State<ShowingPage> {
   }
 
   void fetchUsers() async {
+    final img = await NetworkHandler.getValue("pfp");
     final response = await networkHandler.getData("/user/fetchuser");
+    final pending = await networkHandler.getData("/user/fetchpending");
     final fetchedUsers = await jsonDecode(response.body);
+    final pendingList = await jsonDecode(pending.body);
     if (response.statusCode == 200) {
       for (int i = 0; i < fetchedUsers.length; i++) {
         var imgRes =
@@ -159,6 +163,8 @@ class _ShowingPageState extends State<ShowingPage> {
       }
       if (mounted) {
         setState(() {
+          notf = pendingList.length;
+          image = img as String;
           users = fetchedUsers;
           for (int i = 0; i < users.length; i++) {
             // decodedImage.add(users[i]["pfp"] != null
@@ -231,11 +237,12 @@ Widget imageWidget(String image) {
   return Container(
     height: 50,
     width: 50,
-    decoration: const BoxDecoration(
+    decoration: BoxDecoration(
       shape: BoxShape.circle,
       image: DecorationImage(
-        image: NetworkImage(
-            "https://scontent.fktm17-1.fna.fbcdn.net/v/t1.15752-9/345023834_724158982727906_461501518587806568_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=ae9488&_nc_ohc=eOIBVp1CyQkAX-m_Uka&_nc_ht=scontent.fktm17-1.fna&oh=03_AdRZgHT0WKPFMjXCNFglApEwsyMnmRPel_Z_BpHUVqd82A&oe=64997B49"),
+        image: image.isEmpty
+            ? const AssetImage("images/pfp_default.jpg") as ImageProvider
+            : MemoryImage(base64Decode(image)),
         fit: BoxFit.cover,
       ),
     ),

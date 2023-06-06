@@ -8,7 +8,7 @@ import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:http/http.dart' as http;
-import 'package:online_matchmaking_system/views/profile/profile.dart';
+import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 
 class DetailsPage extends StatefulWidget {
   final Map? detail;
@@ -509,7 +509,9 @@ class _DetailsPageState extends State<DetailsPage> {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return const ProfilePage();
+                    return const MainPage(
+                      index: 3,
+                    );
                   },
                 ),
               );
@@ -533,13 +535,25 @@ class _DetailsPageState extends State<DetailsPage> {
         showSuccessMessage("All set!");
         if (!mounted) return;
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) {
-              return const MultipleImageSelector();
-            },
-          ),
-        );
+        if (isEdit) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const MainPage(
+                  index: 3,
+                );
+              },
+            ),
+          );
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return const MultipleImageSelector();
+              },
+            ),
+          );
+        }
       } else {
         showFailureMessage(responseData["msg"]);
       }

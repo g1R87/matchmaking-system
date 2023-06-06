@@ -74,9 +74,18 @@ class _ChatWallState extends State<ChatWall> {
       "pubkey1": senderPubKey.e,
       "pubkey2": senderPubKey.n,
     });
+    socket.emit("getkey", {
+      "sourceId": widget.id,
+      "targetId": widget.chatModel.id,
+      "pubkey1": senderPubKey.e,
+      "pubkey2": senderPubKey.n,
+    });
 
     socket.onConnect((data) {
-      socket.on("key", (data) {});
+      socket.on("key", (data) {
+        print("data received!");
+        print("the data is $data");
+      });
 
       socket.on("history", (data) {
         for (var msg in data) {

@@ -80,7 +80,7 @@ class _SearchWallState extends State<SearchWall> {
         if (!mounted) return;
         setState(() {
           requestModel.about = user["about"];
-          requestModel.name = user["fname"];
+          requestModel.name = user["first_name"] ?? "";
           requestModel.gender = user["gender_identity"];
           requestModel.ginterest = user["gender_interest"];
           requestModel.image = user["pfp"]["data"] ?? "";

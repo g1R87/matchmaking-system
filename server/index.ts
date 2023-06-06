@@ -38,6 +38,7 @@ app.use(errorHandlerMiddleware);
 
 var clients: any = {};
 var interest: any = {};
+var key: any = {};
 
 //*=============================socket section========================================================
 //socket io integration
@@ -46,7 +47,7 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("disconnected", socket.id);
     deleteClient(socket.id, clients);
-    console.log("updated clients: ", clients);
+    console.log("updated clients: ", Object.keys(clients));
   });
 
   //normal chat
@@ -70,6 +71,7 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("message-received", msg);
   });
 
+  //
   socket.on("signin", async (data) => {
     console.log(data);
     const sid = data.sourceId;
@@ -77,6 +79,7 @@ io.on("connection", (socket) => {
     const e = data.pubkey1;
     const n = data.pubkey2;
     clients[sid] = socket;
+    key[sid] = [e, n];
     const oldmsg: Array<MsgInput> = await Msg.find({
       from_userId: { $in: [sid, tid] },
       to_userId: { $in: [sid, tid] },
@@ -85,11 +88,21 @@ io.on("connection", (socket) => {
     const historyMsg = convertDateList(oldmsg);
     console.log(historyMsg);
 
-    clients[sid].emit("key", { e, n });
+    // clients[sid].emit("key", { e, n });
 
     clients[sid].emit("history", historyMsg);
 
     console.log("the list are ", Object.keys(clients));
+  });
+
+  socket.on("getkey", (data) => {
+    console.log("getkey fired");
+    const sid = data.sourceId;
+    const tid = data.targetId;
+    if (clients[sid] && clients[tid]) {
+      clients[sid].emit("key", { e: key[tid][0], n: key[tid][1] });
+      clients[tid].emit("key", { e: key[sid][0], n: key[sid][1] });
+    }
   });
 
   //random chat

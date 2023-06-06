@@ -5,8 +5,8 @@ import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
-import 'package:online_matchmaking_system/utils/routesname.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 
 class MultipleImageSelector extends StatefulWidget {
   final Map? detail;
@@ -322,6 +322,7 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
     if (img2.isNotEmpty) {
       var file2 =
           await DefaultCacheManager().getSingleFile("$appurl/image/$img2");
+      if (!mounted) return;
       setState(() {
         imageFile2 = XFile(file2.path);
       });
@@ -349,7 +350,15 @@ class _MultipleImageSelectorState extends State<MultipleImageSelector> {
         });
 
         if (!mounted) return;
-        Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) {
+              return const MainPage(
+                index: 3,
+              );
+            },
+          ),
+        );
       }
     }
   }
