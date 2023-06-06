@@ -56,14 +56,26 @@ class _ShowingPageState extends State<ShowingPage> {
                 children: [
                   imageWidget(image),
                   InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                          return const NotificationPage();
-                        }));
-                      },
-                      child: buttonWidget(
-                          Icons.notifications, Colors.grey.shade400))
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return const NotificationPage();
+                      }));
+                    },
+                    child: Stack(
+                      children: [
+                        buttonWidget(Icons.notifications, Colors.grey.shade400),
+                        const Positioned(
+                          left: 35,
+                          bottom: 5,
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.red,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
