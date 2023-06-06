@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:online_matchmaking_system/functions/alertfunctions.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
@@ -55,14 +54,26 @@ class _ShowingPageState extends State<ShowingPage> {
                 children: [
                   imageWidget("images/image1.jpg"),
                   InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) {
-                          return const NotificationPage();
-                        }));
-                      },
-                      child: buttonWidget(
-                          Icons.notifications, Colors.grey.shade400))
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return const NotificationPage();
+                      }));
+                    },
+                    child: Stack(
+                      children: [
+                        buttonWidget(Icons.notifications, Colors.grey.shade400),
+                        const Positioned(
+                          left: 35,
+                          bottom: 5,
+                          child: CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.red,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
