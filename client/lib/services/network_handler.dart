@@ -58,6 +58,17 @@ class NetworkHandler {
     return response;
   }
 
+  Future<http.Response> getDataWithBody(String route, Map body) async {
+    final url = "$appurl$route";
+    final uri = Uri.parse(url);
+    final token = await getValue("token");
+    var response = await http.post(uri, body: jsonEncode(body), headers: {
+      "authorization": "Bearer $token",
+      "Content-type": "application/json",
+    });
+    return response;
+  }
+
   Future<http.Response> vote(String route) async {
     final url = "$appurl$route";
     final uri = Uri.parse(url);

@@ -64,9 +64,9 @@ export const searchUser = async (req: Request, res: Response) => {
   const { targetInterest } = req.body;
   const allUsers: UserInput[] = await User.find({
     _id: { $nin: [ownId] },
-  }).select("-password -pfp");
-  console.log(allUsers.length);
+  }).select("-password");
   const foundUsers = searchUserWithInterest(allUsers, targetInterest);
+  console.log(foundUsers.length);
   res.send(foundUsers);
 };
 
