@@ -18,6 +18,19 @@ class UserSearch extends StatelessWidget {
           ),
         ),
       ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: TextFormField(
+              decoration: InputDecoration(
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
