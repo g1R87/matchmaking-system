@@ -52,6 +52,7 @@ export const updateUser = async (req: Request, res: Response) => {
       url: formData.url ?? undefined,
       about: formData.about ?? undefined,
       matched: formData.matches ?? undefined,
+      interest: formData.interest ?? undefined,
       isUpdated: formData.isUpdated ?? undefined,
       isVerified: formData.isVerified ?? undefined,
     },
@@ -135,10 +136,7 @@ export const updateLocation = async (req: Request, res: Response) => {
 
 //! update all (to be removed)
 export const updateall = async (req: Request, res: Response) => {
-  const updatedUser = await User.updateMany(
-    {},
-    { chatList: [], coord: [27.7172, 85.324] }
-  );
+  const updatedUser = await User.updateMany({}, { interest: [] });
   res.status(200).send(updatedUser);
   // res.send(res.locals.user);
 };

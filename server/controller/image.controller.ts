@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
+import path from "path";
 import BadRequestError from "../errors/bad-request";
 import User from "../models/user.model";
 import { compressImage, processImage } from "../utils/image-compress";
+import { compressImg } from "../utils/test2";
 
 // get profile pic
 export const getPfp = async (req: Request, res: Response) => {
@@ -19,6 +21,13 @@ export const uploadPfp = async (req: Request, res: Response) => {
     throw new BadRequestError("Please chose files");
   }
   console.log(file.length);
+
+  // compressImg(
+  //   file.path,
+  //   path.resolve(file.destination, "resized", "compressed.jpg")
+  // );
+
+  // res.send("done");
 
   const img = await compressImage(file, `myImage-${_id}.jpg`);
   await processImage(file, `myImage-${_id}.jpg`);

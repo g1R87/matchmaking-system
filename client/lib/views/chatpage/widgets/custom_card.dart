@@ -6,7 +6,7 @@ import 'package:online_matchmaking_system/views/chatpage/widgets/chatwall.dart';
 
 import '../../../model/chatmodel.dart';
 
-class CustomCard extends StatelessWidget {
+class CustomCard extends StatefulWidget {
   const CustomCard(
       {super.key,
       required this.chatModel,
@@ -17,6 +17,13 @@ class CustomCard extends StatelessWidget {
   final String id;
 
   @override
+  State<CustomCard> createState() => _CustomCardState();
+}
+
+class _CustomCardState extends State<CustomCard> {
+  Offset _tapPosition = Offset.zero;
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -24,34 +31,38 @@ class CustomCard extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) => ChatWall(
-                      chatModel: chatModel,
-                      id: id,
-                      requestModel: requestModel,
+                      chatModel: widget.chatModel,
+                      id: widget.id,
+                      requestModel: widget.requestModel,
                     )));
       },
+      // onLongPress: () {
+      //   _showContextMenu(context);
+      // },
       child: Column(
         children: [
           ListTile(
             leading: CircleAvatar(
               radius: 35,
-              backgroundImage: (chatModel.pfp == null || chatModel.pfp!.isEmpty)
+              backgroundImage: (widget.chatModel.pfp == null ||
+                      widget.chatModel.pfp!.isEmpty)
                   ? const AssetImage("images/pfp_default.jpg") as ImageProvider
-                  : MemoryImage(chatModel.pfp as Uint8List),
+                  : MemoryImage(widget.chatModel.pfp as Uint8List),
             ),
             title: Text(
-              chatModel.name as String,
+              widget.chatModel.name as String,
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             subtitle: Text(
-              chatModel.currentMessage as String,
+              widget.chatModel.currentMessage as String,
               style: const TextStyle(
                 fontSize: 13,
               ),
             ),
-            trailing: Text(chatModel.time as String),
+            trailing: Text(widget.chatModel.time as String),
           ),
           const Padding(
             padding: EdgeInsets.only(right: 10, left: 80),
@@ -62,5 +73,46 @@ class CustomCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showContextMenu(BuildContext context) async {
+    final RenderObject? overlay =
+        Overlay.of(context).context.findRenderObject();
+
+    final result = await showMenu(
+        context: context,
+        position: RelativeRect.fromRect(
+            Rect.fromLTWH(_tapPosition.dx, _tapPosition.dy, 100, 100),
+            Rect.fromLTWH(0, 0, overlay!.paintBounds.size.width,
+                overlay.paintBounds.size.height)),
+        items: [
+          const PopupMenuItem(
+            value: "fav",
+            child: Text('Add Me'),
+          ),
+          const PopupMenuItem(
+            value: "close",
+            child: Text('Close'),
+          )
+        ]);
+    // perform action on selected menu item
+    switch (result) {
+      case 'fav':
+        print("fav");
+        break;
+      case 'close':
+        print('close');
+        Navigator.pop(context);
+        break;
+    }
+  }
+
+  void _getTapPosition(TapDownDetails tapPosition) {
+    final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+    setState(() {
+      _tapPosition = referenceBox.globalToLocal(tapPosition
+          .globalPosition); // store the tap positon in offset variable
+      print(_tapPosition);
+    });
   }
 }

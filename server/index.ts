@@ -42,7 +42,6 @@ var interest: any = {};
 //*=============================socket section========================================================
 //socket io integration
 io.on("connection", (socket) => {
-  console.log(socket);
   console.log("a user is connected", socket.id);
   socket.on("disconnect", () => {
     console.log("disconnected", socket.id);
@@ -65,8 +64,8 @@ io.on("connection", (socket) => {
     //     clients[msg.targetId].emit("message", msg);
     //   }
     // });
-    if (clients[msg.sourceId]) {
-      clients[msg.sourceId].emit("message", msg);
+    if (clients[msg.targetId]) {
+      clients[msg.targetId].emit("message", msg);
     }
     socket.broadcast.emit("message-received", msg);
   });
@@ -75,6 +74,8 @@ io.on("connection", (socket) => {
     console.log(data);
     const sid = data.sourceId;
     const tid = data.targetId;
+    const e = data.pubkey1;
+    const n = data.pubkey2;
     clients[sid] = socket;
     const oldmsg: Array<MsgInput> = await Msg.find({
       from_userId: { $in: [sid, tid] },
@@ -83,6 +84,8 @@ io.on("connection", (socket) => {
 
     const historyMsg = convertDateList(oldmsg);
     console.log(historyMsg);
+
+    clients[sid].emit("key", { e, n });
 
     clients[sid].emit("history", historyMsg);
 

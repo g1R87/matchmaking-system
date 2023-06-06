@@ -15,6 +15,7 @@ type FileType = {
 
 export const compressImage = async (file: FileType, filename: string) => {
   //   const filename = `${file.filename.split(".")[0]}.jpeg`;
+
   await sharp(file.path)
     .resize(200, 200)
     .jpeg({ quality: 90, force: true, mozjpeg: true })

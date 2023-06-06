@@ -18,6 +18,7 @@ export interface UserInput extends mongoose.Document {
   show_gender: boolean;
   gender_identity: string;
   gender_interest: string;
+  interest: string[];
   url1: string;
   url2: string;
   url3: string;
@@ -74,6 +75,10 @@ const UserSchema = new mongoose.Schema({
     },
   },
   gender_interest: { type: String },
+  interest: {
+    type: Array,
+    default: [],
+  },
   pfp: {
     data: String,
     contentType: String,
@@ -103,7 +108,7 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [27.7172, 85.324],
   },
-  key: String,
+  key: { type: String },
   refreshToken: String,
 });
 

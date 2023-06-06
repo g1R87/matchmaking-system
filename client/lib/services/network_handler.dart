@@ -81,4 +81,19 @@ class NetworkHandler {
     });
     return response;
   }
+
+  Future<http.Response> deleteData(String route, String id) async {
+    final url = "$appurl$route";
+    final uri = Uri.parse(url);
+    final token = await getValue("token");
+    final body = {
+      "reqId": id,
+    };
+
+    var response = await http.delete(uri, body: jsonEncode(body), headers: {
+      "authorization": "Bearer $token",
+      "Content-type": "application/json",
+    });
+    return response;
+  }
 }

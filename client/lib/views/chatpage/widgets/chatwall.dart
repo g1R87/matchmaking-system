@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:online_matchmaking_system/model/chatmodel.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
+import 'package:online_matchmaking_system/services/models/keypair.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/services/rsa.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
@@ -10,6 +11,8 @@ import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart
 import 'package:online_matchmaking_system/views/chatpage/widgets/sent_card.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:online_matchmaking_system/services/models/privatekey.dart';
+import 'package:online_matchmaking_system/services/models/publickey.dart';
 
 import '../../../model/messagemodel.dart';
 
@@ -30,6 +33,10 @@ class ChatWall extends StatefulWidget {
 class _ChatWallState extends State<ChatWall> {
   TextEditingController msgInputController = TextEditingController();
   final appurl = Api.appurl;
+  late PublicKey senderPubKey;
+  late PublicKey receiverPubKey;
+  late PrivateKey senderPriKey;
+  late PrivateKey receiverPriKey;
   RSA rsa = RSA();
 
   late IO.Socket socket;
@@ -37,6 +44,9 @@ class _ChatWallState extends State<ChatWall> {
 
   @override
   void initState() {
+    final KeyPair keyPair = rsa.generateKeyPair();
+    senderPriKey = keyPair.privateKey;
+    senderPubKey = keyPair.publicKey;
     connect();
     super.initState();
   }
@@ -58,10 +68,16 @@ class _ChatWallState extends State<ChatWall> {
             .build());
     socket.connect();
     final id = await NetworkHandler.getValue("userId");
-    socket.emit(
-        "signin", {"sourceId": widget.id, "targetId": widget.chatModel.id});
+    socket.emit("signin", {
+      "sourceId": widget.id,
+      "targetId": widget.chatModel.id,
+      "pubkey1": senderPubKey.e,
+      "pubkey2": senderPubKey.n,
+    });
 
     socket.onConnect((data) {
+      socket.on("key", (data) {});
+
       socket.on("history", (data) {
         for (var msg in data) {
           if (msg["from_userId"] == id) {
@@ -77,8 +93,6 @@ class _ChatWallState extends State<ChatWall> {
         final keyPair = rsa.generateKeyPair();
         final decryptedMessage =
             rsa.decrypt(msg["message"], keyPair.privateKey);
-        print("message event");
-        print(decryptedMessage);
         setMessageReceiver(decryptedMessage);
       });
     });
