@@ -27,7 +27,7 @@ class UserSearch extends StatelessWidget {
                 borderRadius: BorderRadius.circular(30),
                 boxShadow: const [
                   BoxShadow(
-                    color: Colors.black54,
+                    color: Colors.black26,
                     blurRadius: 14,
                     offset: Offset(0, 7),
                   )
