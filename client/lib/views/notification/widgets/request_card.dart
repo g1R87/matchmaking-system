@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
+import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 import 'package:online_matchmaking_system/views/notification/notification.dart';
 import 'package:online_matchmaking_system/views/profile/profile.dart';
 
@@ -118,11 +119,14 @@ class _RequestCardState extends State<RequestCard> {
               if (action == "accept") {
                 //make accept req api
                 handleChatRequest(action);
+
+                showToast("Chat accepted", "accept");
                 Navigator.of(context)
                     .pushReplacement(MaterialPageRoute(builder: (context) {
-                  return const NotificationPage();
+                  return const MainPage(
+                    index: 1,
+                  );
                 }));
-                showToast("Chat accepted", "accept");
                 Navigator.pop(context);
               } else {
                 handleChatRequest(action);

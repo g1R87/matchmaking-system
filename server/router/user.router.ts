@@ -18,6 +18,7 @@ userRouter.put("/match", userController.matchUser);
 //*Algorithm endpoints
 //fetching algorithm endpoint
 userRouter.get("/fetchuser", isLoggedIn, filterController.fetchUser);
+userRouter.get("/search", isLoggedIn, filterController.searchUser);
 
 //*Match endpoints
 //vote

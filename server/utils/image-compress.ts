@@ -17,8 +17,8 @@ export const compressImage = async (file: FileType, filename: string) => {
   //   const filename = `${file.filename.split(".")[0]}.jpeg`;
 
   await sharp(file.path)
-    .resize(200, 200)
-    .jpeg({ quality: 90, force: true, mozjpeg: true })
+    // .resize(200, 200)
+    .jpeg({ quality: 90, mozjpeg: true })
     .toFile(path.resolve(file.destination, "resized", filename));
   const resizedPath = path.join("uploads", "resized", filename);
   return {
