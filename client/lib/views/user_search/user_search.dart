@@ -29,7 +29,7 @@ class _UserSearchState extends State<UserSearch> {
           IconButton(
               onPressed: searchFunction,
               icon: const Icon(
-                CupertinoIcons.checkmark_alt_circle,
+                CupertinoIcons.search,
                 color: Colors.green,
                 size: 30,
               )),

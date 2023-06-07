@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
+import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 import 'package:online_matchmaking_system/views/chatpage/widgets/reply_card.dart';
@@ -31,6 +32,7 @@ class _SearchWallState extends State<SearchWall> {
   final appurl = Api.appurl;
   bool isLoading = true;
   bool notFound = false;
+  NetworkHandler networkHandler = NetworkHandler();
 
   final RequestModel requestModel = RequestModel();
 
@@ -79,6 +81,7 @@ class _SearchWallState extends State<SearchWall> {
       socket.on("found", (user) {
         if (!mounted) return;
         setState(() {
+          requestModel.id = user["_id"];
           requestModel.about = user["about"];
           requestModel.name = user["first_name"] ?? "";
           requestModel.gender = user["gender_identity"];
@@ -141,10 +144,7 @@ class _SearchWallState extends State<SearchWall> {
             ),
             actions: [
               IconButton(
-                  onPressed: () {
-                    //todo: api req
-                    print("Send request");
-                  },
+                  onPressed: sendRequest,
                   icon: const Icon(
                     CupertinoIcons.checkmark_alt_circle,
                     color: Colors.green,
@@ -329,5 +329,11 @@ class _SearchWallState extends State<SearchWall> {
     };
 
     socket.emit('chat', messageJson);
+  }
+
+  Future<void> sendRequest() async {
+    final reqId = requestModel.id;
+    final response = await networkHandler.vote("/user/voteup?id=$reqId");
+    response.statusCode == 200 ? print("success") : print("fail");
   }
 }

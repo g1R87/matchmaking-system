@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/model/requestmodel.dart';
@@ -52,6 +53,26 @@ class _SearchCardState extends State<SearchCard> {
               style: TextStyle(
                 fontSize: 13,
               ),
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    onPressed: sendRequest,
+                    icon: const Icon(
+                      CupertinoIcons.add_circled,
+                      color: Colors.green,
+                      size: 30,
+                    )),
+                // IconButton(
+                //     onPressed: () {
+                //     },
+                //     icon: const Icon(
+                //       CupertinoIcons.xmark_circle,
+                //       color: Colors.red,
+                //       size: 30,
+                //     )),
+              ],
             ),
           ),
           const Padding(
@@ -134,6 +155,16 @@ class _SearchCardState extends State<SearchCard> {
     } else {
       await networkHandler.handleReq(
           "/user/rejectreq", widget.reqModel.id as String);
+    }
+  }
+
+  Future<void> sendRequest() async {
+    final reqId = widget.reqModel.id;
+    final response = await networkHandler.vote("user/voteup?id=$reqId");
+    if (response.statusCode == 200) {
+      showToast("Req sent", "accept");
+    } else {
+      print("fail");
     }
   }
 }
