@@ -14,20 +14,28 @@ export const fetchUser = async (req: Request, res: Response) => {
   const allUsers: any = await User.find({});
 
   const user: any = await User.findById(_id);
-  const interest = user.gender_interest;
-
-  const likedUserIds = Object.keys(user.matches).filter(
-    (id) => user.matches[id] > 0
-  );
 
   //users that have score below negative 3 are not fetched anymore
   const blacklistUsersIds = Object.keys(user.matches).filter((id) => {
     user.matches[id] < -3;
   });
+  const interest = user.gender_interest;
+  const chatList = user.chatList;
+
+  //algo starts
+  // N
+  let likedUserIds = Object.keys(user.matches).filter(
+    (id) => user.matches[id] > 0
+  );
+
+  //add chatlist to N
+  likedUserIds = [...new Set([...likedUserIds, ...chatList])];
 
   const likedUsers: any = await User.find({
     _id: { $in: likedUserIds },
   });
+
+  // N'
   const likedUsersPrime = likedUsers.reduce((acc: any, cur: any) => {
     if (!cur.matches) {
       return acc;
@@ -38,28 +46,41 @@ export const fetchUser = async (req: Request, res: Response) => {
     return [].concat(likedUsersIds_, acc);
   }, []);
 
-  const doublePrimearray: any = [];
+  // N"
+  let doublePrimearray: any = [];
   allUsers.forEach((user: any) => {
     likedUsersPrime.forEach((id: any) => {
-      if (Object.keys(user.matches).includes(id)) {
+      // if (Object.keys(user.matches).includes(id) && user.matches[id] > 0) {
+      if (user.matches[id] > 0) {
         doublePrimearray.push(user._id);
       }
     });
   });
+  console.log(doublePrimearray);
 
-  //used to generate leastlikey list(non including own id)
+  //splice user whose reqs already accepted
+  doublePrimearray = doublePrimearray.filter((x: any) => !chatList.includes(x));
+  console.log(doublePrimearray);
+
+  //used to generate leastlikey list(non including own id, blacklist and current chatlist)
   const doublePrimearray2 = doublePrimearray
     .concat([_id])
-    .concat(blacklistUsersIds);
+    .concat(blacklistUsersIds)
+    .concat(chatList);
 
+  //todo: remove -pfp
   const mostLikely: any = await User.find({
     _id: { $in: doublePrimearray },
-  }).select("-password -isVerified -isUpdated -__v -refreshToken -matches");
+  }).select(
+    "-password -isVerified -isUpdated -__v -refreshToken -matches -pfp"
+  );
 
   const leastLikely: any = await User.find({
     _id: { $nin: doublePrimearray2 },
     gender_identity: interest,
-  }).select("-password -isVerified -isUpdated -__v -refreshToken -matches");
+  }).select(
+    "-password -isVerified -isUpdated -__v -refreshToken -matches -pfp"
+  );
 
   const fetchedUsers = mostLikely.concat(leastLikely);
 

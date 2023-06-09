@@ -15,6 +15,14 @@ interface reqbody {
   confirmPassword: String;
 }
 
+/*
+  Match score
+    like = 1
+    dislike = no fixed score, starts decreasing by 1
+    blacklist = < -3
+    chatlist = 99 
+*/
+
 //vote user
 export const voteUserUp = async (req: Request, res: Response) => {
   const id = req.query.id as string;
@@ -26,7 +34,8 @@ export const voteUserUp = async (req: Request, res: Response) => {
     _id: ownId,
   });
   if (user) {
-    user.matches[id] = user.matches[id] ? user.matches[id] + 1 : 1;
+    user.matches[id] = 1;
+    // user.matches[id] = user.matches[id] ? user.matches[id] + 1 : 1;
     const updatedMatch = user.matches;
     const updateduser = await User.updateOne(
       { _id: ownId },
@@ -140,18 +149,36 @@ export const updateChatlist = async (req: Request, res: Response) => {
   const ownUser: UserInput | null = await User.findById(ownId);
   const reqUser: UserInput | null = await User.findById(reqId);
   if (ownUser && reqUser) {
+    //update matches(accept req => score = 99)
+    ownUser.matches[reqId] = 99;
+    reqUser.matches[ownId] = 99;
+    const updatedMatches1 = ownUser.matches;
+    const updatedMatches2 = reqUser.matches;
+
+    //remove from pending list
     const pendingList = ownUser.pending;
     const index = pendingList.indexOf(reqId);
     if (index > -1) {
       pendingList.splice(index, 1);
     }
+
+    //add to chatlist
     const updatedChatlist1 = ownUser.chatList.concat([reqId]);
+    const updatedChatlist2 = reqUser.chatList.concat([ownId]);
+
+    //update action
     await User.updateOne(
       { _id: ownId },
-      { chatList: updatedChatlist1, pending: pendingList }
+      {
+        chatList: updatedChatlist1,
+        pending: pendingList,
+        matches: updatedMatches1,
+      }
     );
-    const updatedChatlist2 = reqUser.chatList.concat([ownId]);
-    await User.updateOne({ _id: reqId }, { chatList: updatedChatlist2 });
+    await User.updateOne(
+      { _id: reqId },
+      { chatList: updatedChatlist2, matches: updatedMatches2 }
+    );
     res.status(200).send({ msg: "Success" });
   }
 };
@@ -190,18 +217,30 @@ export const delChatlist = async (req: Request, res: Response) => {
   const ownUser: UserInput | null = await User.findById(ownId);
   const reqUser: UserInput | null = await User.findById(reqId);
   if (ownUser && reqUser) {
+    //update matches score
+    ownUser.matches[reqId] = 0;
+    reqUser.matches[ownId] = 1;
+    const updatedMatches1 = ownUser.matches;
+    const updatedMatches2 = reqUser.matches;
+
     const ownChatList = ownUser.chatList;
     const reqIndex = ownChatList.indexOf(reqId);
     if (reqIndex > -1) {
       ownChatList.splice(reqIndex, 1);
     }
-    await User.updateOne({ _id: ownId }, { chatList: ownChatList });
+    await User.updateOne(
+      { _id: ownId },
+      { chatList: ownChatList, matches: updatedMatches1 }
+    );
     const reqChatList = reqUser.chatList;
     const ownIndex = reqChatList.indexOf(ownId);
     if (ownIndex > -1) {
       reqChatList.splice(ownIndex, 1);
     }
-    await User.updateOne({ _id: reqId }, { chatList: reqChatList });
+    await User.updateOne(
+      { _id: reqId },
+      { chatList: reqChatList, matches: updatedMatches2 }
+    );
     res.status(200).send({ msg: "Success" });
   }
 };
