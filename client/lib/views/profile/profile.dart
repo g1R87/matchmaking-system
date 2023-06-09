@@ -29,7 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
   String age = '';
   String imgLink2 = "";
   String imgLink3 = "";
-  List<dynamic> selectedInterests = [];
+  String date = "";
+  List selectedInterests = [];
 
   final appurl = Api.appurl;
 
@@ -107,6 +108,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 : menu(context,
                     name: fname,
                     aboutme: about,
+                    date: date,
+                    gender: gender,
+                    genderInterest: ginterest,
+                    iList: selectedInterests,
                     url2: imgLink2,
                     url3: imgLink3),
           ],
@@ -335,8 +340,9 @@ class _ProfilePageState extends State<ProfilePage> {
       final month = responseData['dob_month'];
       final day = responseData['dob_day'];
       final interests = responseData["interest"];
-      print("$year $month $day");
       setState(() {
+        date = "$year-$month-$day";
+        print("the date in profile page is $date");
         about = userabout;
         fname = userfname;
         gender = userGender;

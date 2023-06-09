@@ -83,8 +83,10 @@ class _ChatWallState extends State<ChatWall> {
 
     socket.onConnect((data) {
       socket.on("key", (data) {
-        print("data received!");
-        print("the data is $data");
+        print("receiver's public key:  $data");
+        setState(() {
+          receiverPubKey = PublicKey(data["e"], data["n"]);
+        });
       });
 
       socket.on("history", (data) {

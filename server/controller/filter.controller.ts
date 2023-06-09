@@ -15,9 +15,16 @@ export const fetchUser = async (req: Request, res: Response) => {
 
   const user: any = await User.findById(_id);
   const interest = user.gender_interest;
+
   const likedUserIds = Object.keys(user.matches).filter(
     (id) => user.matches[id] > 0
   );
+
+  //users that have score below negative 3 are not fetched anymore
+  const blacklistUsersIds = Object.keys(user.matches).filter((id) => {
+    user.matches[id] < -3;
+  });
+
   const likedUsers: any = await User.find({
     _id: { $in: likedUserIds },
   });
@@ -41,7 +48,9 @@ export const fetchUser = async (req: Request, res: Response) => {
   });
 
   //used to generate leastlikey list(non including own id)
-  const doublePrimearray2 = doublePrimearray.concat([_id]);
+  const doublePrimearray2 = doublePrimearray
+    .concat([_id])
+    .concat(blacklistUsersIds);
 
   const mostLikely: any = await User.find({
     _id: { $in: doublePrimearray },
@@ -55,7 +64,7 @@ export const fetchUser = async (req: Request, res: Response) => {
   const fetchedUsers = mostLikely.concat(leastLikely);
 
   res.send(fetchedUsers);
-  res.send(mostLikely);
+  // res.send(mostLikely);
 };
 
 //searching algo

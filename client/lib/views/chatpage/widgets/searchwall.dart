@@ -57,6 +57,9 @@ class _SearchWallState extends State<SearchWall> {
     socket.disconnect();
     chatModel;
     widget.interest;
+    socket;
+    messages;
+
     super.dispose();
   }
 
@@ -86,7 +89,7 @@ class _SearchWallState extends State<SearchWall> {
           requestModel.name = user["first_name"] ?? "";
           requestModel.gender = user["gender_identity"];
           requestModel.ginterest = user["gender_interest"];
-          requestModel.image = user["pfp"]["data"] ?? "";
+          requestModel.image = user["pfp"] != null ? user["pfp"]["data"] : "";
           requestModel.image2 = user["url2"] ?? "";
           requestModel.image3 = user["url3"] ?? "";
           requestModel.year = user["dob_year"];

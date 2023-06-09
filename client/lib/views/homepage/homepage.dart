@@ -153,8 +153,9 @@ class _ShowingPageState extends State<ShowingPage> {
                                               ["gender_identity"],
                                           ginterest: users[index]
                                               ["gender_interest"],
-                                          image:
-                                              users[index]["pfp"]["data"] ?? "",
+                                          image: users[index]["pfp"] != null
+                                              ? users[index]["pfp"]["data"]
+                                              : "",
                                           year: users[index]["dob_year"],
                                           month: users[index]["dob_month"],
                                           day: users[index]["dob_day"],

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
 import 'package:online_matchmaking_system/views/loginpage/login.dart';
@@ -239,7 +239,7 @@ class _SignupState extends State<Signup> {
       "confirmPassword": conpas,
     };
     //sending req
-    final url = "$appurl/user/signup";
+    const url = "$appurl/user/signup";
     final uri = Uri.parse(url);
     final response = await http.post(
       uri,
@@ -248,12 +248,14 @@ class _SignupState extends State<Signup> {
         "Content-type": "application/json",
       },
     );
+    final responseBody = jsonDecode(response.body);
     if (response.statusCode == 201) {
+      if (!mounted) return;
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => const LoginPage(),
       ));
     } else {
-      print("Not created");
+      showToast(responseBody["msg"], "reject");
     }
   }
 }

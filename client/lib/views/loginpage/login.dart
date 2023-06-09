@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:online_matchmaking_system/functions/toastfunction.dart';
 import 'package:online_matchmaking_system/services/network_handler.dart';
 import 'package:online_matchmaking_system/shared_data/device_size.dart';
 import 'package:online_matchmaking_system/utils/api.dart';
@@ -204,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
       }
     } else {
-      showFailureMessage("Session has expired, Please login");
+      showToast("Session Expired. Please Login", "reject");
     }
   }
 
@@ -248,25 +249,25 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
       }
     } else {
-      showFailureMessage(responseData["msg"]);
+      showToast(responseData["msg"], "reject");
     }
   }
 
-  void showSuccessMessage(String message) {
-    final snackBar = SnackBar(content: Text(message));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  // void showSuccessMessage(String message) {
+  //   final snackBar = SnackBar(content: Text(message));
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
 
-  void showFailureMessage(String message) {
-    final snackBar = SnackBar(
-      backgroundColor: Colors.red,
-      content: Text(
-        message,
-        style: const TextStyle(
-          color: Colors.white,
-        ),
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  // void showFailureMessage(String message) {
+  //   final snackBar = SnackBar(
+  //     backgroundColor: Colors.red,
+  //     content: Text(
+  //       message,
+  //       style: const TextStyle(
+  //         color: Colors.white,
+  //       ),
+  //     ),
+  //   );
+  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  // }
 }

@@ -4,7 +4,7 @@ import 'package:online_matchmaking_system/views/addphoto/addphoto.dart';
 import 'package:online_matchmaking_system/views/bottomNavBar/bottomnavbar.dart';
 
 class InterestsPage extends StatefulWidget {
-  final List<String>? interest;
+  final List? interest;
   const InterestsPage({super.key, this.interest});
 
   @override
@@ -165,7 +165,7 @@ class _InterestsPageState extends State<InterestsPage> {
     }
     if (!mounted) return;
     if (isEdit) {
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) {
             return const MainPage(

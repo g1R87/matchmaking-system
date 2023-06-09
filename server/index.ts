@@ -16,7 +16,7 @@ import User from "./models/user.model";
 import appRouter from "./router";
 import { convertDateList } from "./utils/date-convert";
 import { findId } from "./utils/find-id";
-import { deleteClient } from "./utils/socket-functions";
+import { deleteClient, deleteInterest } from "./utils/socket-functions";
 const app = express();
 const server = http.createServer(app);
 
@@ -32,7 +32,6 @@ app.use(cookieParser());
 app.use(express.static("public"));
 app.use("/image", express.static(join(__dirname, "Uploads", "Resized")));
 app.use("/", appRouter);
-const host = "192.168.1.109";
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
@@ -47,7 +46,9 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("disconnected", socket.id);
     deleteClient(socket.id, clients);
+    deleteInterest(socket.id, interest);
     console.log("updated clients: ", Object.keys(clients));
+    console.log("updated interest: ", Object.keys(interest));
   });
 
   //normal chat
@@ -92,7 +93,7 @@ io.on("connection", (socket) => {
 
     clients[sid].emit("history", historyMsg);
 
-    console.log("the list are ", Object.keys(clients));
+    console.log("The clients: ", Object.keys(clients));
   });
 
   socket.on("getkey", (data) => {
@@ -110,9 +111,10 @@ io.on("connection", (socket) => {
     const sid = data.sourceId;
     const iList = data.list;
     clients[sid] = socket;
-    interest[sid] = iList;
-    console.log("interest list updated: ", interest);
-    console.log("the list are ", Object.keys(clients));
+    interest[sid] = { id: socket.id, iList };
+    // interest[sid] = iList;
+    console.log("interest list updated: ", Object.keys(interest));
+    console.log("the clients are ", Object.keys(clients));
   });
 
   socket.on("search", async (data) => {
@@ -126,10 +128,11 @@ io.on("connection", (socket) => {
       const user = await User.findById(match.id);
       clients[sid].emit("found", user);
       const uesr2 = await User.findById(sid);
-      clients[match.id].emit("found", uesr2);
+      if (clients[match.id]) {
+        clients[match.id].emit("found", uesr2);
+      }
     }
   });
-
   socket.on("chat", (msg) => {
     console.log(msg);
 

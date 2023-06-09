@@ -43,9 +43,13 @@ class _DetailsPageState extends State<DetailsPage> {
     super.initState();
     final detail = widget.detail;
     if (detail != null) {
+      print("the date is ${detail["date"]}");
       isEdit = true;
-      fnamecontroller.text = detail["fname"];
-      aboutmecontroller.text = detail["aboutme"];
+      fnamecontroller.text = detail["fname"] ?? "";
+      aboutmecontroller.text = detail["aboutme"] ?? "";
+      dateinput.text = detail["date"] ?? "";
+      gender = detail["gender"] ?? "";
+      genderInterest = detail["ginterest"] ?? "";
     }
   }
 
@@ -185,6 +189,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                         bday = pickedDate.day;
 
                                         dateinput.text = formattedDate;
+                                        print(
+                                            "date controller: ${dateinput.text}");
                                       });
                                     } else {
                                       print("Date is not selected");
@@ -446,8 +452,7 @@ class _DetailsPageState extends State<DetailsPage> {
     // final dobDay = int.parse(bday[2]);
     final about = aboutmecontroller.text;
     if (isEdit == false &&
-        (gender == null ||
-            genderInterest == null ||
+        (genderInterest == null ||
             fname.isEmpty ||
             about.isEmpty ||
             datefiled.isEmpty)) {
@@ -496,7 +501,7 @@ class _DetailsPageState extends State<DetailsPage> {
             }
             if (!mounted) return;
             if (isEdit) {
-              Navigator.of(context).push(
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) {
                     return const MainPage(
@@ -526,7 +531,7 @@ class _DetailsPageState extends State<DetailsPage> {
         if (!mounted) return;
 
         if (isEdit) {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(
               builder: (context) {
                 return const MainPage(

@@ -9,8 +9,13 @@ import 'package:online_matchmaking_system/views/userdetails/user_details.dart';
 IconButton menu(BuildContext context,
     {String name = "",
     String aboutme = "",
+    String gender = "",
+    String genderInterest = "",
+    List? iList,
+    String date = "",
     String url2 = "",
     String url3 = ""}) {
+  iList ?? [];
   return IconButton(
     onPressed: () {
       showModalBottomSheet(
@@ -55,8 +60,8 @@ IconButton menu(BuildContext context,
                         onTap: () {
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) {
-                            return const InterestsPage(
-                              interest: [],
+                            return InterestsPage(
+                              interest: iList,
                             );
                           }));
                         },
@@ -68,7 +73,13 @@ IconButton menu(BuildContext context,
                           Navigator.of(context).pushReplacement(
                               MaterialPageRoute(builder: (context) {
                             return DetailsPage(
-                              detail: {"fname": name, "aboutme": aboutme},
+                              detail: {
+                                "fname": name,
+                                "aboutme": aboutme,
+                                "date": date,
+                                "gender": gender,
+                                "ginterest": genderInterest
+                              },
                             );
                           }));
                         },

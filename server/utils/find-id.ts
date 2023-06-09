@@ -1,5 +1,6 @@
 export const findId = (sid: string, obj: any) => {
-  const curList = obj[sid];
+  console.log(obj);
+  const curList = obj[sid].iList;
   const priority: any = {};
 
   for (var key in obj) {
@@ -7,7 +8,7 @@ export const findId = (sid: string, obj: any) => {
 
     if (key == sid) continue;
     curList.forEach((e: any) => {
-      if (obj[key].includes(e)) {
+      if (obj[key].iList.includes(e)) {
         priority[key] = [...priority[key], e];
       }
     });

@@ -5,3 +5,11 @@ export const deleteClient = (id: string, clients: any) => {
     }
   }
 };
+
+export const deleteInterest = (id: string, interest: any) => {
+  for (var key in interest) {
+    if (interest[key].id == id) {
+      delete interest[key];
+    }
+  }
+};

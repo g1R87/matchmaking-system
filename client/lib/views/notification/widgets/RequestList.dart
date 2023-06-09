@@ -68,7 +68,7 @@ class _RequestListState extends State<RequestList> {
               day: fetchedUsers[i]["dob_day"],
               month: fetchedUsers[i]["dob_month"],
               year: fetchedUsers[i]["dob_year"],
-              image: fetchedUsers[i]["pfp"]["data"] ?? "",
+              image: fetchedUsers[i]["pfp"]?["data"] ?? "",
               image2: fetchedUsers[i]["url2"] ?? "",
               image3: fetchedUsers[i]["url3"] ?? "",
               interest: fetchedUsers[i]["interest"],
