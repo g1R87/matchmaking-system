@@ -177,79 +177,88 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> refressSession() async {
-    const appurl = Api.appurl;
-    var refresh = await NetworkHandler.getValue('refresh');
-    final body = {
-      'tokenrefresh': refresh,
-    };
+    try {
+      const appurl = Api.appurl;
+      var refresh = await NetworkHandler.getValue('refresh');
+      final body = {
+        'tokenrefresh': refresh,
+      };
 
-    const url = "$appurl/auth/refresh";
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {"Content-type": "application/json"},
-    );
-    var responseData = jsonDecode(response.body);
-    if (response.statusCode == 200) {
-      await NetworkHandler.storeValue("token", responseData["token"]);
-      await NetworkHandler.storeValue("userId", responseData["userId"]);
-      if (!responseData["isUpdated"]) {
-        if (!mounted) return;
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) {
-          return const DetailsPage();
-        }));
+      const url = "$appurl/auth/refresh";
+      final uri = Uri.parse(url);
+      final response = await http.post(
+        uri,
+        body: jsonEncode(body),
+        headers: {"Content-type": "application/json"},
+      );
+      var responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        await NetworkHandler.storeValue("token", responseData["token"]);
+        await NetworkHandler.storeValue("userId", responseData["userId"]);
+        if (!responseData["isUpdated"]) {
+          if (!mounted) return;
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) {
+            return const DetailsPage();
+          }));
+        } else {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+        }
       } else {
-        if (!mounted) return;
-        Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+        showToast("Session Expired. Please Login", "reject");
       }
-    } else {
-      showToast("Session Expired. Please Login", "reject");
+    } catch (e) {
+      showToast("network error", "reject");
     }
   }
 
   Future<void> loginFunc() async {
-    const appurl = Api.appurl;
-    print(appurl);
+    try {
+      const appurl = Api.appurl;
+      print(appurl);
 
-    //gettting data from form
-    final email = _emailController.text;
-    final password = _passwordController.text;
-    final body = {
-      "email": email,
-      "password": password,
-    };
-    //sending req
-    const url = "$appurl/auth/login";
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {"Content-type": "application/json"},
-    );
-    var responseData = jsonDecode(response.body);
+      //gettting data from form
+      final email = _emailController.text;
+      final password = _passwordController.text;
+      final body = {
+        "email": email,
+        "password": password,
+      };
+      //sending req
+      const url = "$appurl/auth/login";
+      final uri = Uri.parse(url);
+      final response = await http.post(
+        uri,
+        body: jsonEncode(body),
+        headers: {"Content-type": "application/json"},
+      );
+      var responseData = jsonDecode(response.body);
 
-    if (response.statusCode == 200) {
-      await NetworkHandler.deleteOne("pfp");
-      await NetworkHandler.storeValue("token", responseData["token"]);
-      await NetworkHandler.storeValue("userId", responseData["userId"]);
-      await NetworkHandler.storeValue("refresh", responseData["tokenrefresh"]);
-      await NetworkHandler.storeValue("pfp", responseData["pfp"] ?? "");
+      if (response.statusCode == 200) {
+        await NetworkHandler.deleteOne("pfp");
+        await NetworkHandler.storeValue("token", responseData["token"]);
+        await NetworkHandler.storeValue("userId", responseData["userId"]);
+        await NetworkHandler.storeValue(
+            "refresh", responseData["tokenrefresh"]);
+        await NetworkHandler.storeValue("pfp", responseData["pfp"] ?? "");
 
-      if (!responseData["isUpdated"]) {
-        if (!mounted) return;
+        if (!responseData["isUpdated"]) {
+          if (!mounted) return;
 
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) {
-          return const DetailsPage();
-        }));
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) {
+            return const DetailsPage();
+          }));
+        } else {
+          if (!mounted) return;
+          Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+        }
       } else {
-        if (!mounted) return;
-        Navigator.pushReplacementNamed(context, RoutesName.bottonNavBar);
+        showToast(responseData["msg"], "reject");
       }
-    } else {
-      showToast(responseData["msg"], "reject");
+    } on Exception catch (_) {
+      showToast("network trouble", "reject");
     }
   }
 
