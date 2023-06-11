@@ -1,39 +1,42 @@
-import Fuse from "fuse.js";
 import { UserInput } from "../models/user.model";
 export const searchUserWithInterest = (
-  users: Array<UserInput>,
+  users: UserInput[],
   targetInterest: string
 ) => {
-  const matchingUsers: UserInput[] = [];
-  // const queue = [];
+  const foundUsers: UserInput[] = [];
+  const threshold = 0.5;
 
-  const options: Fuse.IFuseOptions<UserInput> = {
-    includeScore: true,
-    minMatchCharLength: 3,
-    findAllMatches: true,
-    keys: ["interest"],
-  };
+  //iteration over each user
+  for (const user of users) {
+    const userInterest = user.interest;
+    const targetLength = targetInterest.length;
 
-  // for (const user of users) {
-  //   queue.push(user);
-  // }
+    // calculation of similarity score
+    for (const interest of userInterest) {
+      let score = 0;
+      let i = 0;
+      let j = 0;
+      while (i < interest.length && j < targetLength) {
+        if (interest[i].toLowerCase() === targetInterest[j].toLowerCase()) {
+          score++;
+          j++;
+        }
+        i++;
+      }
 
-  // while (queue.length > 0) {
-  //   const currentUser: UserInput | undefined = queue.shift();
-  //   if (currentUser) {
-  //     console.log(currentUser.interest);
-  //     if (currentUser.interest.includes(targetInterest)) {
-  //       matchingUsers.push(currentUser);
-  //     }
-  //   }
-  // }
+      //normalization of score
+      const similarity = score / interest.length;
 
-  const fuse = new Fuse(users, options);
+      //testing
+      console.log("for string:", interest);
+      console.log("target string:", targetInterest);
+      console.log("score:", score);
+      // console.log("similarity:", similarity);
 
-  const searchResult = fuse.search(targetInterest);
-
-  for (const result of searchResult) {
-    matchingUsers.push(result.item);
+      if (similarity >= threshold) {
+        foundUsers.push(user);
+      }
+    }
   }
-  return matchingUsers;
+  return foundUsers;
 };

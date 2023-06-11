@@ -93,6 +93,8 @@ io.on("connection", (socket) => {
 
     clients[sid].emit("history", historyMsg);
 
+    //todo: add "key" event here
+
     console.log("The clients: ", Object.keys(clients));
   });
 
