@@ -13,3 +13,13 @@ export const deleteInterest = (id: string, interest: any) => {
     }
   }
 };
+
+export const getIdDeletePair = (id: string, pair: any) => {
+  for (var key in pair) {
+    if (key == id) {
+      const tid = pair[key].tid;
+      delete pair[key];
+      return tid;
+    }
+  }
+};

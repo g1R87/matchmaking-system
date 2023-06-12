@@ -1,16 +1,18 @@
 export const findId = (sid: string, obj: any) => {
   console.log(obj);
   const curList = obj[sid].iList;
+  console.log("current user's list", curList);
   const priority: any = {};
   const threshold = 0.6;
 
   for (var key in obj) {
-    priority[key] = [];
     if (key == sid) continue;
+    priority[key] = [];
 
-    for (const query in curList) {
+    for (const query of curList) {
+      console.log("query", query);
       const queryLength = query.length;
-      for (const str in obj[key].iList) {
+      for (const str of obj[key].iList) {
         let score = 0;
         const strLength = str.length;
 
@@ -23,8 +25,12 @@ export const findId = (sid: string, obj: any) => {
           }
           i++;
         }
-
+        console.log("for word:", str);
+        console.log("query:", query);
+        console.log("score:", score);
         const similarity = score / strLength;
+        console.log("similarity:", similarity);
+        console.log("priority obj", priority);
         if (similarity >= threshold) {
           priority[key] = [...priority[key], query];
         }
@@ -42,12 +48,12 @@ export const findId = (sid: string, obj: any) => {
   let length = 0;
   for (var key in priority) {
     let tlength = priority[key].length;
+    if (tlength == 0) continue;
     if (tlength > length) {
       length = tlength;
       id = key;
     } else if (tlength == length) {
-      let val = Math.round(Math.random());
-      if (val == 1) {
+      if (Math.round(Math.random())) {
         length = tlength;
         id = key;
       }

@@ -33,6 +33,7 @@ class _SearchWallState extends State<SearchWall> {
   bool isLoading = true;
   bool notFound = false;
   NetworkHandler networkHandler = NetworkHandler();
+  String infoText = "Searching for people";
 
   final RequestModel requestModel = RequestModel();
 
@@ -101,9 +102,20 @@ class _SearchWallState extends State<SearchWall> {
           isLoading = false;
         });
       });
+
       socket.on(("chat"), (msg) {
         // print(msg["message"]);
         setMessageReceiver(msg["message"]);
+      });
+
+      socket.on("offline", (data) {
+        print("disconnected");
+        if (!mounted) return;
+        setState(() {
+          chatModel = ChatModel(name: "", id: "");
+          infoText = "User Disconnected. Searching...";
+          isLoading = true;
+        });
       });
     });
   }
@@ -146,13 +158,15 @@ class _SearchWallState extends State<SearchWall> {
               ),
             ),
             actions: [
-              IconButton(
-                  onPressed: sendRequest,
-                  icon: const Icon(
-                    CupertinoIcons.checkmark_alt_circle,
-                    color: Colors.green,
-                    size: 30,
-                  )),
+              isLoading
+                  ? Container()
+                  : IconButton(
+                      onPressed: sendRequest,
+                      icon: const Icon(
+                        CupertinoIcons.checkmark_alt_circle,
+                        color: Colors.green,
+                        size: 30,
+                      )),
               PopupMenuButton(
                 onSelected: (value) {
                   if (value == 'delete') {
@@ -267,8 +281,19 @@ class _SearchWallState extends State<SearchWall> {
                   )
                 ],
               ),
-              child: const Center(
-                child: CircularProgressIndicator(),
+              child: Center(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 2.75,
+                    ),
+                    const CircularProgressIndicator(),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    Text(infoText),
+                  ],
+                ),
                 // ElevatedButton(
                 //     style: ElevatedButton.styleFrom(
                 //         backgroundColor: const Color(0xff2B2C43),

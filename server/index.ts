@@ -16,7 +16,11 @@ import User from "./models/user.model";
 import appRouter from "./router";
 import { convertDateList } from "./utils/date-convert";
 import { findId } from "./utils/find-id";
-import { deleteClient, deleteInterest } from "./utils/socket-functions";
+import {
+  deleteClient,
+  deleteInterest,
+  getIdDeletePair,
+} from "./utils/socket-functions";
 const app = express();
 const server = http.createServer(app);
 
@@ -36,6 +40,7 @@ app.use(notFound);
 app.use(errorHandlerMiddleware);
 
 var clients: any = {};
+var pair: any = {};
 var interest: any = {};
 var key: any = {};
 
@@ -47,8 +52,10 @@ io.on("connection", (socket) => {
     console.log("disconnected", socket.id);
     deleteClient(socket.id, clients);
     deleteInterest(socket.id, interest);
-    console.log("updated clients: ", Object.keys(clients));
-    console.log("updated interest: ", Object.keys(interest));
+    const tid = getIdDeletePair(socket.id, pair);
+    if (clients[tid]) {
+      clients[tid].emit("offline", { tid });
+    }
   });
 
   //normal chat
@@ -80,6 +87,8 @@ io.on("connection", (socket) => {
     const e = data.pubkey1;
     const n = data.pubkey2;
     clients[sid] = socket;
+    pair[socket.id] = { sid, tid };
+    console.log(pair);
     key[sid] = [e, n];
     const oldmsg: Array<MsgInput> = await Msg.find({
       from_userId: { $in: [sid, tid] },
@@ -114,6 +123,7 @@ io.on("connection", (socket) => {
     const iList = data.list;
     clients[sid] = socket;
     interest[sid] = { id: socket.id, iList };
+
     // interest[sid] = iList;
     console.log("interest list updated: ", Object.keys(interest));
     console.log("the clients are ", Object.keys(clients));
@@ -127,6 +137,8 @@ io.on("connection", (socket) => {
     if (match.id == "") {
       clients[sid].emit("notfound", { msg: "Not Found" });
     } else {
+      pair[socket.id] = { sid, tid: match.id };
+      console.log(pair);
       const user = await User.findById(match.id);
       clients[sid].emit("found", user);
       const uesr2 = await User.findById(sid);

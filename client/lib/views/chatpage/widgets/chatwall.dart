@@ -16,6 +16,13 @@ import 'package:online_matchmaking_system/services/models/publickey.dart';
 
 import '../../../model/messagemodel.dart';
 
+/*
+  3 types of messages:
+    - "source": own message
+    - "received": received message
+    - "info": online/offline message
+ */
+
 class ChatWall extends StatefulWidget {
   const ChatWall(
       {super.key,
@@ -84,28 +91,44 @@ class _ChatWallState extends State<ChatWall> {
     socket.onConnect((data) {
       socket.on("key", (data) {
         print("receiver's public key:  $data");
+        setMessage("info", "User Online");
+        if (!mounted) return;
         setState(() {
           receiverPubKey = PublicKey(data["e"], data["n"]);
         });
       });
 
-      socket.on("history", (data) {
-        for (var msg in data) {
-          if (msg["from_userId"] == id) {
-            setMessage("source", msg["message"], msg["createdAt"]);
-          } else {
-            setMessage("received", msg["message"], msg["createdAt"]);
+      socket.on(
+        "history",
+        (data) {
+          for (var msg in data) {
+            if (msg["from_userId"] == id) {
+              setMessage("source", msg["message"], msg["createdAt"]);
+            } else {
+              setMessage("received", msg["message"], msg["createdAt"]);
+            }
           }
-        }
-      });
+        },
+      );
 
-      socket.on(("message"), (msg) {
-        // print(msg["message"]);
-        final keyPair = rsa.generateKeyPair();
-        final decryptedMessage =
-            rsa.decrypt(msg["message"], keyPair.privateKey);
-        setMessageReceiver(decryptedMessage);
-      });
+      socket.on(
+        ("message"),
+        (msg) {
+          // print(msg["message"]);
+          final keyPair = rsa.generateKeyPair();
+          final decryptedMessage =
+              rsa.decrypt(msg["message"], keyPair.privateKey);
+          setMessageReceiver(decryptedMessage);
+        },
+      );
+
+      socket.on(
+        "offline",
+        (data) {
+          if (!mounted) return;
+          setMessage("info", "User disconnected");
+        },
+      );
     });
   }
 
@@ -182,8 +205,12 @@ class _ChatWallState extends State<ChatWall> {
                       itemCount: messages.length,
                       itemBuilder: ((context, index) {
                         int reverseIndex = messages.length - 1 - index;
-
-                        if (messages[reverseIndex].type == "source") {
+                        if (messages[reverseIndex].type == "info") {
+                          return Center(
+                              heightFactor: 2,
+                              child: Text(
+                                  messages[reverseIndex].message as String));
+                        } else if (messages[reverseIndex].type == "source") {
                           return SentMessageCard(
                             time: messages[reverseIndex].time as String,
                             message: messages[reverseIndex].message as String,
