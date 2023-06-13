@@ -30,6 +30,11 @@ export const voteUserUp = async (req: Request, res: Response) => {
   if (!id) {
     throw new BadRequestError("Please provide id");
   }
+
+  if (id == ownId) {
+    throw new BadRequestError("Cannot vote yourself");
+  }
+
   const user: UserInput | null = await User.findById({
     _id: ownId,
   });
@@ -64,8 +69,14 @@ export const voteUserUp = async (req: Request, res: Response) => {
 //vote down
 export const voteUserDown = async (req: Request, res: Response) => {
   const id = req.query.id as string;
+  const ownId = res.locals.user.userID;
+
   if (!id) {
     throw new BadRequestError("Please provide id");
+  }
+
+  if (ownId == id) {
+    throw new BadRequestError("Cannot vote yourself");
   }
   const user: any = await User.findById({ _id: res.locals.user.userID });
   user.matches[id] = user.matches[id] ? user.matches[id] - 1 : -1;
